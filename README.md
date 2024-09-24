@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> Das Pflichtenheft ist noch nicht vollständig
+
 # TadeotTools
 
 ## Team-Mitglieder
@@ -40,16 +43,29 @@ Neue Features:
 - Erstellung + Export von Schichtplänen pro Station
 - Feedback-Fragen-Konfigurator
 - Mobile Version hinzufügen
+- Version Upgrades & Refactoring im Frontend Angular und im Backend .NET auf jeweils möglichst neue Version
 
-Fragen:
+Noch unklar:
 - Inwiefern? -> Warteschlangen-Management
 - Aktueller Standpunkt? -> Historisierung (=> Archivierung der Daten von Vorjahren)
-- Backend - welche Technologien? 
 - Integration Schülys-Buffetgutscheinverwaltung -> möglich?
-- Version Upgrades & Refactoring? -> Kann man auf aktuellem Backend aufbauen?
 
 ## User Stories
 1. mehrere Stories für komplett neue UI (Ablauf aus Userperspektive)
 2. Stations- und Mitarbeiterverwaltung
 3. Erstellung + Export von Schichtplänen pro Station
 4. Feedback-Fragen-Konfigurator
+
+## Milestones
+
+
+
+## Technologien
+Frontend: 
+- Angular mit Tailwind
+- komplett neu aufsetzen
+- neueste Angular Version verwenden
+
+Backend:
+- .NET auf neueste Version upgraden
+- Große Teile übernehmen
