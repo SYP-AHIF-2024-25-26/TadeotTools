@@ -54,7 +54,19 @@ Noch unklar:
 1. mehrere Stories für komplett neue UI (Ablauf aus Userperspektive) 
 2. Stations- und Mitarbeiterverwaltung
 3. Erstellung + Export von Schichtplänen pro Station
+
 4. Feedback-Fragen-Konfigurator
+   
+  - Administrator kann Feedback-Fragen für den Tag der offenen Tür konfigurieren
+  - Als ein: Administrator
+  - Möchte ich: Einen Feedback-Fragen-Konfigurator für den Tag der offenen Tür erstellen
+  - Damit: Besucher einfach Feedback zu ihrer Erfahrung geben und angeben können, ob sie sich vorstellen können, in Zukunft die Schule zu besuchen
+
+  <strong>Akzeptanzkriterien:</strong>
+  1.	Der Administrator kann Fragen erstellen, bei denen es mehrere Antwortoptionen gibt.
+  2.	Die Fragen und Antworten werden in einer Datenbank abgespeichert.
+  3.	Der Administrator kann auch Fragen bearbeiten und löschen.
+  4.	Der Administrator erhält eine Ansicht über die aktuellen Fragen.
 
 ## Milestones
 
