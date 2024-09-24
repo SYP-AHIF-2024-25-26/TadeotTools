@@ -49,7 +49,7 @@ Fragen:
 - Version Upgrades & Refactoring? -> Kann man auf aktuellem Backend aufbauen?
 
 ## User Stories
-1. mehrere Stories für komplett neue UI (Ablauf aus Userperspektive)
+1. mehrere Stories für komplett neue UI (Ablauf aus Userperspektive) 
 2. Stations- und Mitarbeiterverwaltung
 3. Erstellung + Export von Schichtplänen pro Station
 4. Feedback-Fragen-Konfigurator
