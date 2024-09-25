@@ -51,11 +51,11 @@ Noch unklar:
 - Integration Schülys-Buffetgutscheinverwaltung -> möglich?
 
 ## User Stories
-1. mehrere Stories für komplett neue UI (Ablauf aus Userperspektive) 
-2. Stations- und Mitarbeiterverwaltung
-3. Erstellung + Export von Schichtplänen pro Station
+1. <strong>mehrere Stories für komplett neue UI (Ablauf aus Userperspektive)</strong>
+2. <strong>Stations- und Mitarbeiterverwaltung</strong>
+3. <strong>Erstellung + Export von Schichtplänen pro Station</strong>
 
-4. Feedback-Fragen-Konfigurator
+4. <strong>Feedback-Fragen-Konfigurator</strong>
    
   - Administrator kann Feedback-Fragen für den Tag der offenen Tür konfigurieren
   - Als ein: Administrator
@@ -68,9 +68,16 @@ Noch unklar:
   3.	Der Administrator kann auch Fragen bearbeiten und löschen.
   4.	Der Administrator erhält eine Ansicht über die aktuellen Fragen.
 
-## Milestones
+## Planung
+1. Milestone 24. Oktober: Prototyp mit neuem Frontend (aber noch kein Fokus auf Design), Code Refactoring vom Backend 
+2. Milestone 21. November: Frontend funktionert vollständigc, Backend Refactoring vollständig
+3. Milestone 7.Jänner: Schönes, übersichtliches neue Frontend; Feedback-Fragen-Konfigurator
 
+Weitere Milestones werden nach Feedback hinzugefügt.
 
+## Chancen und Risiken
+Wir haben die Chance, dass wir das Design auf ein höheres Niveau bringen. Zudem können wir eine integrierte Stationsverwaltung aufbauen. Außerdem werden wir den Code durch Refactoring und Version Upgrades auf ein neues Level befördern.
+Ein Risiko ist, dass unser Design nicht gut genug wird. Zudem kann es sein, dass uns die Zeit ausgeht, um alle vorgenommenen Features zu implementieren. 
 
 ## Technologien
 Frontend: 
