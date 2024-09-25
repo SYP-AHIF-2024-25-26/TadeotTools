@@ -11,7 +11,7 @@
 ## 1. Ausgangslage
 
 ### 1.1. Ist-Situation
-Es gab bereits ein Projekt zu den TadeoT-Tools. Dabei kann man Auswahllisten konfigurieren und Besucherdaten als CSV exportieren und sich die Fotos der Besucher ansehen. 
+Es gab bereits ein Projekt zu den TadeoT-Tools. Darin kann man Auswahllisten konfigurieren und Besucherdaten als CSV exportieren und sich die Fotos der Besucher ansehen. 
 
 Unter Anmeldung erfolgt die Besucheranmeldung.
 
@@ -25,7 +25,7 @@ Dann gibt es noch eine Feedback-App, in der man als Besucher Feedback geben kann
 
 ### 1.2. Verbesserungspotentiale
 
-Das Design fragwürdig und viele Features noch nicht ganz ausgereift. Wir würden gerne das Projekt von Grund auf neu starten und somit ein sauberes Fundament schaffen.
+Das Design ist fragwürdig und viele Features noch nicht ganz ausgereift. Wir würden gerne das Projekt von Grund auf neu starten und somit ein sauberes Fundament schaffen.
 
 ## Zielsetzung
 
