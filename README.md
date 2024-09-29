@@ -57,17 +57,18 @@ Noch unklar:
 - Integration Schülys-Buffetgutscheinverwaltung -> möglich?
 
 ## User Stories
-1. <strong>mehrere Stories für komplett neue UI (Ablauf aus Userperspektive)</strong>
-2. <strong>Stations- und Mitarbeiterverwaltung</strong>
-3. <strong>Erstellung + Export von Schichtplänen pro Station</strong>
+bis 30.09. 23:59 Uhr
+1. Main View mit Stationen als Cards (Andreas)
+2. Station View + als interessiert / erledigt setzen + Auslastung (Luca)
+3. auf Karte Stationen ansehen (interaktiv mit Stationen anzeigen und dann auf 2. gehen) (Melanie)
+4. Login Screen mit Besuchernummer (Luca)
 
+(im Moment unwichtig, erst nach Mobile View für Besucher)
 
-
-
-
-
-(im Moment unwichtig, erst nach App)
-4. <strong>Feedback-Fragen-Konfigurator</strong>
+(A) <strong>mehrere Stories für komplett neue UI (Ablauf aus Userperspektive)</strong>
+(B) <strong>Stations- und Mitarbeiterverwaltung</strong>
+(C) <strong>Erstellung + Export von Schichtplänen pro Station</strong>
+(D) <strong>Feedback-Fragen-Konfigurator</strong>
    
   - Administrator kann Feedback-Fragen für den Tag der offenen Tür konfigurieren
   - Als ein: Administrator
@@ -80,9 +81,12 @@ Noch unklar:
   3.	Der Administrator kann auch Fragen bearbeiten und löschen.
   4.	Der Administrator erhält eine Ansicht über die aktuellen Fragen.
 
+## GUI-Mockups
+
+
 ## Planung
 1. Milestone 8. Oktober: GUI-Mockups für Mobile mit paint, 
-2. Milestone . November: 
+2. Milestone 3. November: Main View mit Stationen als Cards, Datenbank 
 3. Milestone 7.Jänner: Schönes, übersichtliches neue Frontend; Feedback-Fragen-Konfigurator
 
 Weitere Milestones werden nach Feedback hinzugefügt.
