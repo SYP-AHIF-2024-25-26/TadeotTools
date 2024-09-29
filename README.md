@@ -1,6 +1,3 @@
-> [!IMPORTANT]
-> Das Pflichtenheft ist noch nicht vollständig
-
 # TadeotTools
 
 ## Team-Mitglieder
@@ -31,19 +28,28 @@ Das Design ist fragwürdig und viele Features noch nicht ganz ausgereift. Wir w�
 
 Im Generellen werden wir die gesamte UI überarbeiten.
 
+Mobile Version (wichtig!): 
+- Stationen als Cards anzeigen, auch als "erledigt" setzen
+- für Station Reminder "interessiert" setzen -> Auslastung!
+- Station Auslastung ansehen
+- Stationen bewerten
+- auf Karte Stationen ansehen 
+- Login System mit Besuchernummer (über QR Code bei Tablet) (Besuchernummer in localstorage)
+- Besucher entfernen, sobald nicht mehr in Schule oder in Zeitintervall
+- dockern + hosten
+
+Weitere Features:
+- Stations- und Mitarbeiterverwaltung
+- Erstellung + Export von Schichtplänen pro Station
+- Feedback-Fragen-Konfigurator
+- Version Upgrades & Refactoring im Frontend Angular und im Backend .NET auf jeweils möglichst neue Version
+
 Features, die schon existieren, deren genereller Aufbau aber Verbesserungspotential hat:
 - Genereller Aufbau der Website (andere Sidebar, Links die teilweise nicht funktionieren)
 - Kassa-App
 - Buffet Statistiken 
 - Buffet Verwaltung
 - Administration Feedback
-
-Neue Features:
-- Stations- und Mitarbeiterverwaltung
-- Erstellung + Export von Schichtplänen pro Station
-- Feedback-Fragen-Konfigurator
-- Mobile Version hinzufügen
-- Version Upgrades & Refactoring im Frontend Angular und im Backend .NET auf jeweils möglichst neue Version
 
 Noch unklar:
 - Inwiefern? -> Warteschlangen-Management
@@ -55,6 +61,12 @@ Noch unklar:
 2. <strong>Stations- und Mitarbeiterverwaltung</strong>
 3. <strong>Erstellung + Export von Schichtplänen pro Station</strong>
 
+
+
+
+
+
+(im Moment unwichtig, erst nach App)
 4. <strong>Feedback-Fragen-Konfigurator</strong>
    
   - Administrator kann Feedback-Fragen für den Tag der offenen Tür konfigurieren
@@ -69,8 +81,8 @@ Noch unklar:
   4.	Der Administrator erhält eine Ansicht über die aktuellen Fragen.
 
 ## Planung
-1. Milestone 24. Oktober: Prototyp mit neuem Frontend (aber noch kein Fokus auf Design), Code Refactoring vom Backend 
-2. Milestone 21. November: Frontend funktionert vollständigc, Backend Refactoring vollständig
+1. Milestone 8. Oktober: GUI-Mockups für Mobile mit paint, 
+2. Milestone . November: 
 3. Milestone 7.Jänner: Schönes, übersichtliches neue Frontend; Feedback-Fragen-Konfigurator
 
 Weitere Milestones werden nach Feedback hinzugefügt.
