@@ -60,15 +60,26 @@ Noch unklar:
 bis 30.09. 23:59 Uhr
 1. Main View mit Stationen als Cards (Andreas)
 2. Station View + als interessiert / erledigt setzen + Auslastung (Luca)
-3. auf Karte Stationen ansehen (interaktiv mit Stationen anzeigen und dann auf 2. gehen) (Melanie)
+3. Karte mit Stationen
+
+Als Besucher des TadeoT möchte ich eine interaktive Karte mit Stationen sehen, damit ich visuell die verfügbaren Stationen erkunden und durch Anklicken mehr Informationen zu den einzelnen Stationen erhalten kann.
+
+Akzeptanzkriterien:
+- Eine interaktive Karte wird angezeigt, auf der alle Stationen Symbole sichtbar sind. Die Karte kann verschoben und gezoomt werden, um verschiedene Räume anzuzeigen.
+
+- Jede Station wird als anklickbarer Marker oder Symbol auf der Karte dargestellt.
+
+- Beim Klick auf eine Station soll sich die 2. User Story erfüllen
+
 4. Login Screen mit Besuchernummer (Luca)
 
 (im Moment unwichtig, erst nach Mobile View für Besucher)
 
-(A) <strong>mehrere Stories für komplett neue UI (Ablauf aus Userperspektive)</strong>
-(B) <strong>Stations- und Mitarbeiterverwaltung</strong>
-(C) <strong>Erstellung + Export von Schichtplänen pro Station</strong>
-(D) <strong>Feedback-Fragen-Konfigurator</strong>
+(A) mehrere Stories für komplett neue UI (Ablauf aus Userperspektive)
+
+(B) Stations- und Mitarbeiterverwaltung
+(C) Erstellung + Export von Schichtplänen pro Station
+(D) Feedback-Fragen-Konfigurator
    
   - Administrator kann Feedback-Fragen für den Tag der offenen Tür konfigurieren
   - Als ein: Administrator
@@ -87,7 +98,9 @@ bis 30.09. 23:59 Uhr
 ## Planung
 1. Milestone 8. Oktober: GUI-Mockups für Mobile mit paint, 
 2. Milestone 3. November: Main View mit Stationen als Cards, Datenbank 
-3. Milestone 7.Jänner: Schönes, übersichtliches neue Frontend; Feedback-Fragen-Konfigurator
+3. Milestone 5. Dezember: Karte + alles von Stationen funktioniert
+4. Milestone 6. Jänner: Login System + Dockern 
+5. Milestone 23. und 24. Jänner: Tag der offenen Tür, System muss funktionieren + QR Codes
 
 Weitere Milestones werden nach Feedback hinzugefügt.
 
