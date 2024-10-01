@@ -58,9 +58,20 @@ Noch unklar:
 
 ## User Stories
 bis 30.09. 23:59 Uhr
-1. Main View mit Stationen als Cards (Andreas)
-2. Station View + als interessiert / erledigt setzen + Auslastung (Luca)
-3. Karte mit Stationen
+1. Main View mit Stationen als Cards
+
+Als Besucher möchte ich auf der Hauptseite Stationen als übersichtliche Karten sehen, um schnell Informationen zu den Angeboten zu bekommen und entscheiden zu können, welche ich besuchen möchte.
+
+Akzeptanzkriterien:
+   - Hauptseite zeigt Stationen als Karten mit Bild, Titel und kurzer Beschreibung.
+   - Klicken auf eine Card führt zu Details einer Station.
+   - Karten passen sich responsiv an alle Geräte an.
+   - Filter- und Suchfunktion für Stationen.
+
+	
+
+3. Station View + als interessiert / erledigt setzen + Auslastung (Luca)
+4. Karte mit Stationen
 
 Als Besucher des TadeoT möchte ich eine interaktive Karte mit Stationen sehen, damit ich visuell die verfügbaren Stationen erkunden und durch Anklicken mehr Informationen zu den einzelnen Stationen erhalten kann.
 
