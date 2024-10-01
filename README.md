@@ -70,7 +70,7 @@ Akzeptanzkriterien:
 
 	
 
-3. Station View + als interessiert / erledigt setzen + Auslastung
+2. Station View + als interessiert / erledigt setzen + Auslastung
 
 Als Besucher des TadeoT möchte ich Uhrzeitein, Name, Beschreibung, Auslastung und Standort einer bestimmten Station angezeigt bekommen. Außerdem möchte ich Stationen auf erledigt und interessiert setzten.
 Außerdem möchte ich auswählen können für welchen Kurs ich mich interessiere und 5 min vorher durch eine Benachrichtigung daran erinnert werden.
@@ -81,7 +81,7 @@ Akzeptanzkriterien:
 - Beim Klick auf den Interessiert Button wird die Station zu den interessierten Stationen hinzugefügt.
 - Beim Klick auf den Anmelde Button wird ein PopUp geöffnet und Man kann die Uhrzeit auswählen und die Anmeldung bestätigen. Die Auslastung wird bei allen Benutzern geändert. 5 min vor Beginn der ausgewählten Einheit der Station wird, soweit der Benutzer es erlaubt, eine Benachrichtigung gesendet.
 
-4. Karte mit Stationen
+3. Karte mit Stationen
 
 Als Besucher des TadeoT möchte ich eine interaktive Karte mit Stationen sehen, damit ich visuell die verfügbaren Stationen erkunden und durch Anklicken mehr Informationen zu den einzelnen Stationen erhalten kann.
 
@@ -92,7 +92,7 @@ Akzeptanzkriterien:
 
 - Beim Klick auf eine Station soll sich die 2. User Story erfüllen
 
-5. Login Screen mit Besuchernummer
+4. Login Screen mit Besuchernummer
 
 Als Benutzer möchte ich mich mit meiner Besuchernummer anmelden und somit auf die Hauptseite weitergeleitet werden.
 
