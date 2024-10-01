@@ -5,6 +5,8 @@
 - Andreas Huber
 - Melanie Dohr
 
+Issues sind auf Jira zu finden : https://htblaleonding.atlassian.net/jira/software/projects/KAN/boards/1
+
 ## 1. Ausgangslage
 
 ### 1.1. Ist-Situation
