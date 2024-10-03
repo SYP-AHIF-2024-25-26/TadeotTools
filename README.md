@@ -148,9 +148,9 @@ Von Schulwebsite:
 
 ## Planung
 1. Milestone 8. Oktober: GUI-Mockups für Mobile als Prototyp
-2. Milestone 3. November: Main View mit Stationen als Cards, Datenbank 
-3. Milestone 5. Dezember: Karte + alles von Stationen funktioniert
-4. Milestone 6. Jänner: Login System + Dockern 
+2. Milestone 3. November: Main View mit Stationen als Cards, Datenbank, Leitfaden
+3. Milestone 5. Dezember: Karte + Stationen separate View
+4. Milestone 6. Jänner: Login System + Dockern + Stationsverwaltungsystemdashboard
 5. Milestone 23. und 24. Jänner: Tag der offenen Tür, System muss funktionieren + QR Codes
 
 Weitere Milestones werden nach Feedback hinzugefügt.
