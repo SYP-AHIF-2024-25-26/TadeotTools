@@ -41,6 +41,7 @@ Mobile Version (wichtig!):
 - dockern + hosten
 
 Weitere Features:
+- In-Haus Standort Recherche wegen neuen Technologien für Karte + Besucher-Stationen automatisch erkennen (?)
 - Stations- und Mitarbeiterverwaltung
 - Erstellung + Export von Schichtplänen pro Station
 - Feedback-Fragen-Konfigurator
