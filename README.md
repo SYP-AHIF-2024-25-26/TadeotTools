@@ -59,8 +59,7 @@ Noch unklar:
 - Integration Schülys-Buffetgutscheinverwaltung -> möglich?
 
 ## User Stories
-bis 30.09. 23:59 Uhr
-1. Main View mit Stationen als Cards
+### 1. Main View mit Stationen als Cards
 
 Als Besucher möchte ich auf der Hauptseite Stationen als übersichtliche Karten sehen, um schnell Informationen zu den Angeboten zu bekommen und entscheiden zu können, welche ich besuchen möchte.
 
@@ -70,8 +69,8 @@ Akzeptanzkriterien:
    - Karten passen sich responsiv an alle Geräte an.
    - Filter- und Suchfunktion für Stationen.
    - Die Stationen sind je nach Abteilung in der jeweiligen Farbe eingefärbt 
-2. Station View + als interessiert / erledigt setzen + Auslastung
 
+### 2. Station View + als interessiert / erledigt setzen + Auslastung
 Als Besucher des TadeoT möchte ich Uhrzeitein, Name, Beschreibung, Auslastung und Standort einer bestimmten Station angezeigt bekommen. Außerdem möchte ich Stationen auf erledigt und interessiert setzten.
 Außerdem möchte ich auswählen können für welchen Kurs ich mich interessiere und 5 min vorher durch eine Benachrichtigung daran erinnert werden.
 
@@ -81,8 +80,7 @@ Akzeptanzkriterien:
 - Beim Klick auf den Interessiert Button wird die Station zu den interessierten Stationen hinzugefügt.
 - Beim Klick auf den Anmelde Button wird ein PopUp geöffnet und Man kann die Uhrzeit auswählen und die Anmeldung bestätigen. Die Auslastung wird bei allen Benutzern geändert. 5 min vor Beginn der ausgewählten Einheit der Station wird, soweit der Benutzer es erlaubt, eine Benachrichtigung gesendet.
 
-3. Karte mit Stationen
-
+### 3. Karte mit Stationen
 Als Besucher des TadeoT möchte ich eine interaktive Karte mit Stationen sehen, damit ich visuell die verfügbaren Stationen erkunden und durch Anklicken mehr Informationen zu den einzelnen Stationen erhalten kann.
 
 Akzeptanzkriterien:
@@ -92,27 +90,26 @@ Akzeptanzkriterien:
 
 - Beim Klick auf eine Station soll sich die 2. User Story erfüllen
 
-4. Login Screen mit Besuchernummer (bevor diese Userstory umgesetzt wird gibt es einen anonymen Modus)
-
+### 4. Login Screen mit Besuchernummer (bevor diese Userstory umgesetzt wird gibt es einen anonymen Modus)
 Als Benutzer möchte ich mich mit meiner Besuchernummer anmelden und somit auf die Hauptseite weitergeleitet werden. 
 
 Akzeptanzkriterien:
 - Beim Klick auf den Anmelde Button wird der Inhalt des Textfeldes ausgelesen und mit der DB verglichen. Wenn diese übereinstimmen wird man auf die Hauptseite weitergeleitet.
 
-5. Leitfaden für Besucher
+### 5. Leitfaden für Besucher
 Als Besucher möchte ich einen Leitfaden haben, anhand dem ich mich orientieren kann, wann ich was erledige. Dieser Leitfaden soll nach der Anmeldung als erstes angezeigt werden.
 
 Akzeptanzkriterien:
 - Sobald man einen Punkt des Leitfadens auf erledigt setzt, wird der Punkt ausgegraut und gerät in den Hintergrund. Der nächste Punkt wird hervorgehoben
 - Nach dem Punkt der Kurzpräsentation hat man die Wahl zwischen den 2 Touren, sobald man auf eine Tour klickt kommt man zur Stationenview mit dem Filter, dass nur die Stationen der jeweiligen Tour angezeigt werden
 
-6. Main View als Guide
+### 6. Main View als Guide
 Als Guide möchte ich statt dem Leitfaden sofort nach der Anmeldung meine eigenen Stationen in der richtigen Reihenfolge sehen, diese möchte ich zudem als "erledigt" setzen können (und auch wieder rückgängig machen). Das möchte ich, weil es für mich als Guide praktisch ist, nur alle meine Stationen pro Tour abzuhaken und dann wieder zurückzusetzen.
 
 Akzeptanzkriterien:
 - der Guide muss sich als solcher anders anmelden, sodass er den Leitfaden nicht angezeigt bekommt (auch dahingegend für Erweiterungen praktisch)
 
-7. Stationsverwaltungsdashboard als Admin
+### 7. Stationsverwaltungsdashboard als Admin
 Als Administrator möchte ich in der Form eines Dashbord Stationen hinzufügen und verändern können. Das möchte ich, damit die Besucher und Guides alle Stationen korrekt sehen können.
 
 Akzeptanzkriterien:
