@@ -125,7 +125,7 @@ Akzeptanzkriterien:
 
 
 ## Planung
-1. Milestone 8. Oktober: GUI-Mockups für Mobile mit paint, 
+1. Milestone 8. Oktober: GUI-Mockups für Mobile als Prototyp
 2. Milestone 3. November: Main View mit Stationen als Cards, Datenbank 
 3. Milestone 5. Dezember: Karte + alles von Stationen funktioniert
 4. Milestone 6. Jänner: Login System + Dockern 
