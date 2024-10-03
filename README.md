@@ -122,7 +122,15 @@ Akzeptanzkriterien:
   4.	Der Administrator erhält eine Ansicht über die aktuellen Fragen.
 
 ## GUI-Mockups
+Farben:
+Buttons: #e8704f
+Secondary: #c81b6
+Accent: #B0AC96
 
+Von Schulwebsite:
+Hinter Cards: #ededed
+Schrift: #000000
+Navbar: #ffffff 
 
 ## Planung
 1. Milestone 8. Oktober: GUI-Mockups für Mobile als Prototyp
