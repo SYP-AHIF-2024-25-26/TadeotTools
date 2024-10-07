@@ -70,8 +70,6 @@ Akzeptanzkriterien:
    - Karten passen sich responsiv an alle Geräte an.
    - Filter- und Suchfunktion für Stationen.
 
-	
-
 2. Station View + als interessiert / erledigt setzen + Auslastung
 
 Als Besucher des TadeoT möchte ich Uhrzeitein, Name, Beschreibung, Auslastung und Standort einer bestimmten Station angezeigt bekommen. Außerdem möchte ich Stationen auf erledigt und interessiert setzten.
@@ -105,7 +103,6 @@ Akzeptanzkriterien:
 (im Moment unwichtig, erst nach Mobile View für Besucher)
 
 (A) mehrere Stories für komplett neue UI (Ablauf aus Userperspektive)
-
 (B) Stations- und Mitarbeiterverwaltung
 (C) Erstellung + Export von Schichtplänen pro Station
 (D) Feedback-Fragen-Konfigurator
@@ -122,7 +119,7 @@ Akzeptanzkriterien:
   4.	Der Administrator erhält eine Ansicht über die aktuellen Fragen.
 
 ## GUI-Mockups
-
+https://www.figma.com/design/S6GgNZndmHKVjgICvqunbq/User-Frontend?node-id=0-1&t=LRR9BtzlgJq6Yk8M-1
 
 ## Planung
 1. Milestone 8. Oktober: GUI-Mockups für Mobile mit paint, 
