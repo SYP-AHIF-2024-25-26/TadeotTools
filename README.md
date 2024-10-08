@@ -1,5 +1,14 @@
 # TadeotTools
 
+## Sprint Planung
+1. Milestone 8. Oktober: GUI-Mockups für Mobile als Prototyp
+2. Milestone 5. November: Stationen als Cards + Unterpages, Datenmodell + Datenbank mit Zugriffsfunktionen
+3. Milestone 5. Dezember: Dockern + Stationsverwaltungsystemdashboard
+4. Milestone 7. Jänner: Karte + Stationen separate View
+5. Milestone 23. und 24. Jänner: Tag der offenen Tür, System muss funktionieren + ein QR Code für generelle Website
+
+Weitere Milestones werden nach Feedback hinzugefügt.
+
 ## Team-Mitglieder
 - Luca Haas
 - Andreas Huber
@@ -139,15 +148,6 @@ Von Schulwebsite:
 - Hinter Cards: #ededed
 - Schrift: #000000
 - Navbar: #ffffff 
-
-## Planung
-1. Milestone 8. Oktober: GUI-Mockups für Mobile als Prototyp
-2. Milestone 5. November: Stationen als Cards + Unterpages, Datenmodell + Datenbank mit Zugriffsfunktionen
-3. Milestone 5. Dezember: Dockern + Stationsverwaltungsystemdashboard
-4. Milestone 7. Jänner: Karte + Stationen separate View
-5. Milestone 23. und 24. Jänner: Tag der offenen Tür, System muss funktionieren + ein QR Code für generelle Website
-
-Weitere Milestones werden nach Feedback hinzugefügt.
 
 ## Chancen und Risiken
 Wir haben die Chance, dass wir das Design auf ein höheres Niveau bringen. Zudem können wir eine integrierte Stationsverwaltung aufbauen. Außerdem werden wir den Code durch Refactoring und Version Upgrades auf ein neues Level befördern.
