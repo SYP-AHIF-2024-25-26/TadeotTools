@@ -2,10 +2,10 @@
 
 ## Sprint Planung
 1. Milestone 8. Oktober: GUI-Mockups für Mobile als Prototyp
-2. Milestone 5. November: Stationen als Cards + Unterpages, Datenmodell + Datenbank mit Zugriffsfunktionen
+2. Milestone 5. November: Leitfaden + Unterpages der Touren, Datenmodell + Datenbank mit Zugriffsfunktionen + Schnittstellen
 3. Milestone 5. Dezember: Dockern + Stationsverwaltungsystemdashboard
 4. Milestone 7. Jänner: Karte + Stationen separate View
-5. Milestone 23. und 24. Jänner: Tag der offenen Tür, System muss funktionieren + ein QR Code für generelle Website
+5. Milestone 23. und 24. Jänner: Bugfixes, Tag der offenen Tür, System muss funktionieren + ein QR Code für generelle Website, falls noch Zeit Feedback
 
 Weitere Milestones werden nach Feedback hinzugefügt.
 
