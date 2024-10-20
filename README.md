@@ -162,3 +162,7 @@ Frontend:
 Backend:
 - .NET auf neueste Version upgraden
 - (Große Teile übernehmen)
+
+
+## Datenmodel
+<img src="./assets/datamodel.png" alt="Datenmodell">
