@@ -9,5 +9,8 @@
 3. Datagrip öffnen und mit DB verbinden
     - Configure Data source
     - Host: 172.0.0.1
-    - User: user, Password: test
+    - User: root, Password: test
 4. init_script.sql ausführen
+5. In Visual Studio ist das für MySQL notwendig: 
+    - https://downloads.mysql.com/archives/visualstudio/
+    - https://dev.mysql.com/downloads/connector/net
