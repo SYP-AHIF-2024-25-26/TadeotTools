@@ -9,11 +9,11 @@ public class Program
 {
     static void Main(string[] args)
     {
-        using var context = new TadeoTDbContext();
+        TadeoTDbContext context = new();
         context.Database.EnsureCreated();
 
         // example program
-        var stopGroup = new StopGroup
+        StopGroup stopGroup = new()
         {
             Name = "Main Building",
             Description = "Group for stops in the main building",
@@ -21,7 +21,7 @@ public class Program
             Stops = []
         };
 
-        var stop = new Stop
+        Stop stop = new()
         {
             Name = "Room 101",
             Description = "Meeting room 101",
@@ -35,11 +35,11 @@ public class Program
 
         context.SaveChanges();
 
-        var stopGroups = context.StopGroups.Include(sg => sg.Stops).ToList();
-        foreach (var sg in stopGroups)
+        List<StopGroup> stopGroups = context.StopGroups.Include(sg => sg.Stops).ToList();
+        foreach (StopGroup sg in stopGroups)
         {
             Console.WriteLine($"StopGroup: {sg.Name}, Color: {sg.Color}");
-            foreach (var s in sg.Stops)
+            foreach (Stop s in sg.Stops)
             {
                 Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
             }

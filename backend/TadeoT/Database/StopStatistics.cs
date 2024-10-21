@@ -1,12 +1,10 @@
-﻿namespace TadeoT.Database
-{
-    public class StopStatistic
-    {
-        public required int StopStatisticID { get; set; }
-        public required DateTime Time { get; set; }
-        public required bool IsDone { get; set; }
-        public required int StopID { get; set; }
+﻿namespace TadeoT.Database;
 
-        public required Stop Stop { get; set; }
-    }
+public class StopStatistic {
+    public required int StopStatisticID { get; set; }
+    public required DateTime Time { get; set; }
+    public required bool IsDone { get; set; }
+    public required int StopID { get; set; }
+
+    public required Stop Stop { get; set; }
 }
