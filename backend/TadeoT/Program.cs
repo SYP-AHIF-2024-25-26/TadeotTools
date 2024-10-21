@@ -1,76 +1,18 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using TadeoT.Database;
 
 namespace TadeoT;
 
-public class StopGroup
-{
-    public int StopGroupID { get; set; }
-    public required string Name { get; set; }
-    public required string Description { get; set; }
-    public required string Color { get; set; }
-
-    public required ICollection<Stop> Stops { get; set; }
-}
-
-public class Stop
-{
-    public int StopID { get; set; }
-    public required string Name { get; set; }
-    public required string Description { get; set; }
-    public required string RoomNr { get; set; }
-    public int? StopGroupID { get; set; }
-
-    public required StopGroup StopGroup { get; set; }
-
-    public required ICollection<StopStatistic> StopStatistics { get; set; }
-}
-
-public class StopStatistic
-{
-    public required int StopStatisticID { get; set; }
-    public required DateTime Time { get; set; }
-    public required bool IsDone { get; set; }
-    public required int StopID { get; set; }
-
-    public required Stop Stop { get; set; }
-}
-
-public class MyDbContext : DbContext
-{
-    public DbSet<StopGroup> StopGroups { get; set; }
-    public DbSet<Stop> Stops { get; set; }
-    public DbSet<StopStatistic> StopStatistics { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var connectionString = "Server=localhost;Port=4100;Database=tadeot;User=root;Password=test;";
-        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Stop>()
-            .HasOne(s => s.StopGroup)
-            .WithMany(sg => sg.Stops)
-            .HasForeignKey(s => s.StopGroupID);
-
-        modelBuilder.Entity<StopStatistic>()
-            .HasOne(ss => ss.Stop)
-            .WithMany(s => s.StopStatistics)
-            .HasForeignKey(ss => ss.StopID);
-    }
-}
-
-class Program
+public class Program
 {
     static void Main(string[] args)
     {
-        using var context = new MyDbContext();
+        using var context = new TadeoTDbContext();
         context.Database.EnsureCreated();
 
-        // Test example
+        // example program
         var stopGroup = new StopGroup
         {
             Name = "Main Building",
