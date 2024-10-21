@@ -2,37 +2,39 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
+namespace TadeoT;
+
 public class StopGroup
 {
     public int StopGroupID { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string Color { get; set; }
+    public required string Name { get; set; }
+    public required string Description { get; set; }
+    public required string Color { get; set; }
 
-    public ICollection<Stop> Stops { get; set; }
+    public required ICollection<Stop> Stops { get; set; }
 }
 
 public class Stop
 {
     public int StopID { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string RoomNr { get; set; }
+    public required string Name { get; set; }
+    public required string Description { get; set; }
+    public required string RoomNr { get; set; }
     public int? StopGroupID { get; set; }
 
-    public StopGroup StopGroup { get; set; }
+    public required StopGroup StopGroup { get; set; }
 
-    public ICollection<StopStatistic> StopStatistics { get; set; }
+    public required ICollection<StopStatistic> StopStatistics { get; set; }
 }
 
 public class StopStatistic
 {
-    public int StopStatisticID { get; set; }
-    public DateTime Time { get; set; }
-    public bool IsDone { get; set; }
-    public int StopID { get; set; }
+    public required int StopStatisticID { get; set; }
+    public required DateTime Time { get; set; }
+    public required bool IsDone { get; set; }
+    public required int StopID { get; set; }
 
-    public Stop Stop { get; set; }
+    public required Stop Stop { get; set; }
 }
 
 public class MyDbContext : DbContext
@@ -65,7 +67,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        // Ensure the database is created
         using var context = new MyDbContext();
         context.Database.EnsureCreated();
 
@@ -74,7 +75,8 @@ class Program
         {
             Name = "Main Building",
             Description = "Group for stops in the main building",
-            Color = "#FF5733"
+            Color = "#FF5733",
+            Stops = []
         };
 
         var stop = new Stop
@@ -82,7 +84,8 @@ class Program
             Name = "Room 101",
             Description = "Meeting room 101",
             RoomNr = "101",
-            StopGroup = stopGroup
+            StopGroup = stopGroup,
+            StopStatistics = []
         };
 
         context.StopGroups.Add(stopGroup);
@@ -96,7 +99,7 @@ class Program
             Console.WriteLine($"StopGroup: {sg.Name}, Color: {sg.Color}");
             foreach (var s in sg.Stops)
             {
-                Console.WriteLine($"  Stop: {s.Name}, RoomNr: {s.RoomNr}");
+                Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
             }
         }
     }
