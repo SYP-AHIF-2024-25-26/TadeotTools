@@ -6,11 +6,12 @@ public class StopFunctions {
     private readonly TadeoTDbContext context = new();
 
     public Stop GetStopById(int id) {
+        Console.WriteLine(this.context.Stops);
         Stop? stop = this.context.Stops
             .Include(s => s.StopGroup)
             .Include(s => s.StopStatistics)
             .FirstOrDefault(s => s.StopID == id);
-        return stop ?? throw new Exception("Stop not found");
+        return stop ?? throw new TadeoTDatabaseException("Stop not found");
     }
 
     public int GetMaxId() {
@@ -22,7 +23,7 @@ public class StopFunctions {
             this.context.Stops.Add(stop);
             this.context.SaveChanges();
         } catch (Exception e) {
-            Console.WriteLine("Could not add Stop: " + e.Message);
+            throw new TadeoTDatabaseException("Could not add Stop: " + e.Message);
         }
     }
 
@@ -31,7 +32,7 @@ public class StopFunctions {
             this.context.Stops.Update(stop);
             this.context.SaveChanges();
         } catch (Exception e) {
-            Console.WriteLine("Could not update Stop: " + e.Message);
+            throw new TadeoTDatabaseException("Could not update Stop: " + e.Message);
         }
     }
 
@@ -41,7 +42,7 @@ public class StopFunctions {
             this.context.Stops.Remove(stop);
             this.context.SaveChanges();
         } catch (Exception e) {
-            Console.WriteLine("Could not delete Stop: " + e.Message);
+            throw new TadeoTDatabaseException("Could not delete Stop: " + e.Message);
         }
     }
 
@@ -50,8 +51,7 @@ public class StopFunctions {
             Stop stop = this.GetStopById(stopId);
             return stop.StopGroup;
         } catch (Exception e) {
-            Console.WriteLine("Could not get StopGroup: " + e.Message);
-            return null;
+            throw new TadeoTDatabaseException("Could not get StopGroup: " + e.Message);
         }
     }
 
@@ -60,8 +60,7 @@ public class StopFunctions {
             Stop stop = this.GetStopById(stopId);
             return [.. stop.StopStatistics];
         } catch (Exception e) {
-            Console.WriteLine("Could not get StopStatistics: " + e.Message);
-            return [];
+            throw new TadeoTDatabaseException("Could not get StopStatistics: " + e.Message);
         }
     }
 }

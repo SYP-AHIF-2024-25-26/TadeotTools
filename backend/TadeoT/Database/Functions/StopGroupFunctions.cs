@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 namespace TadeoT.Database.Functions;
+
 public class StopGroupFunctions {
     private readonly TadeoTDbContext context = new();
 
@@ -8,11 +9,15 @@ public class StopGroupFunctions {
         StopGroup? group = this.context.StopGroups
             .Include(sg => sg.Stops)
             .FirstOrDefault(sg => sg.StopGroupID == id);
-        return group ?? throw new Exception("StopGroup not found");
+        return group ?? throw new TadeoTDatabaseException("StopGroup not found");
     }
 
     public int GetMaxId() {
-        return this.context.StopGroups.Max(s => s.StopGroupID);
+        try {
+            return this.context.StopGroups.Max(s => s.StopGroupID);
+        } catch(Exception e) {
+            throw new TadeoTDatabaseException("Could not get MaxId: " + e.Message);
+        }
     }
 
     public void AddStopGroup(StopGroup group) {
@@ -20,7 +25,7 @@ public class StopGroupFunctions {
             this.context.StopGroups.Add(group);
             this.context.SaveChanges();
         } catch (Exception e) {
-            Console.WriteLine("Could not add StopGroup: " + e.Message);
+            throw new TadeoTDatabaseException("Could not add StopGroup: " + e.Message);
         }
     }
 
@@ -29,7 +34,7 @@ public class StopGroupFunctions {
             this.context.StopGroups.Update(group);
             this.context.SaveChanges();
         } catch (Exception e) {
-            Console.WriteLine("Could not update StopGroup: " + e.Message);
+            throw new TadeoTDatabaseException("Could not update StopGroup: " + e.Message);
         }
     }
 
@@ -39,7 +44,7 @@ public class StopGroupFunctions {
             this.context.StopGroups.Remove(group);
             this.context.SaveChanges();
         } catch (Exception e) {
-            Console.WriteLine("Could not delete StopGroup: " + e.Message);
+            throw new TadeoTDatabaseException("Could not delete StopGroup: " + e.Message);
         }
     }
 
@@ -48,8 +53,7 @@ public class StopGroupFunctions {
             StopGroup group = this.GetStopGroupById(groupId);
             return [.. group.Stops];
         } catch (Exception e) {
-            Console.WriteLine("Could not get Stops of StopGroup: " + e.Message);
-            return [];
+            throw new TadeoTDatabaseException("Could not get Stops: " + e.Message);
         }
     }
 }

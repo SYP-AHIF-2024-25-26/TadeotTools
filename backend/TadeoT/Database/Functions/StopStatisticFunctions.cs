@@ -9,11 +9,15 @@ public class StopStatisticFunctions {
         StopStatistic? statistic = this.context.StopStatistics
             .Include(s => s.Stop)
             .FirstOrDefault(s => s.StopStatisticID == id);
-        return statistic ?? throw new Exception("StopStatistic not found");
+        return statistic ?? throw new TadeoTDatabaseException("StopStatistic not found");
     }
 
     public int GetMaxId() {
-        return this.context.StopStatistics.Max(s => s.StopID);
+        try {
+            return this.context.StopStatistics.Max(s => s.StopID);
+        } catch (Exception e) {
+            throw new TadeoTDatabaseException("Could not get MaxId: " + e.Message);
+        }
     }
 
     public void AddStopStatistic(StopStatistic statistic) {
@@ -21,7 +25,7 @@ public class StopStatisticFunctions {
             this.context.StopStatistics.Add(statistic);
             this.context.SaveChanges();
         } catch (Exception e) {
-            Console.WriteLine("Could not add StopStatistic: " + e.Message);
+            throw new TadeoTDatabaseException("Could not add StopStatistic: " + e.Message);
         }
     }
 
@@ -30,7 +34,7 @@ public class StopStatisticFunctions {
             this.context.StopStatistics.Update(statistic);
             this.context.SaveChanges();
         } catch (Exception e) {
-            Console.WriteLine("Could not update StopStatistic: " + e.Message);
+            throw new TadeoTDatabaseException("Could not update StopStatistic: " + e.Message);
         }
     }
 
@@ -40,7 +44,7 @@ public class StopStatisticFunctions {
             this.context.StopStatistics.Remove(statistic);
             this.context.SaveChanges();
         } catch (Exception e) {
-            Console.WriteLine("Could not delete StopStatistic: " + e.Message);
+            throw new TadeoTDatabaseException("Could not delete StopStatistic: " + e.Message);
         }
     }
     public Stop? GetStopOfStopStatistic(int stopId) {
@@ -48,8 +52,7 @@ public class StopStatisticFunctions {
             StopStatistic statistic = this.GetStopStatisticById(stopId);
             return statistic.Stop;
         } catch (Exception e) {
-            Console.WriteLine("Could not get Stop of StopStatistic: " + e.Message);
-            return null;
+            throw new TadeoTDatabaseException("Could not get Stop: " + e.Message);
         }
     }
 }
