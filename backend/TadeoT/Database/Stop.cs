@@ -9,5 +9,5 @@ public class Stop {
 
     public required StopGroup StopGroup { get; set; }
 
-    public required ICollection<StopStatistic> StopStatistics { get; set; }
+    public ICollection<StopStatistic> ?StopStatistics { get; set; }
 }
