@@ -1,0 +1,15 @@
+<label class="flex items-center cursor-pointer">
+  <!-- Checkbox input -->
+  <input type="checkbox" class="hidden" [(ngModel)]="isChecked" (click)="toggleCheckbox()">
+
+  <!-- Custom checkbox design -->
+  <span 
+  class="w-6 h-6 border-2 border-gray-500 rounded-md flex items-center justify-center transition-shadow checked:shadow-orange-500 ease-in-out"
+        [ngClass]="{'bg-gray-100': isChecked()}">
+    <!-- Orange checkmark -->
+    <svg *ngIf="isChecked()" class="w-full h-full text-orange-500 text-3xl animate-jump-in animate-once animate-duration-[600ms] animate-ease-in-out"
+         fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M5 13l4 4L19 7"></path>
+    </svg>
+  </span>
+</label>
