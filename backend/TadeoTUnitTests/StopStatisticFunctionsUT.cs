@@ -43,35 +43,46 @@ public class StopStatisticFunctionsTests {
             IsDone = false
         };
     }
-    [Test, Order(1)]
-    public void AddStopStatisticTest() {
-        this.stopGroupFunctions.AddStopGroup(this.testGroup);
-        this.stopFunctions.AddStop(this.testStop);
-        this.stopStatisticFunctions.AddStopStatistic(this.testStatistic);
-        StopStatistic result = this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
-        Assert.That(result != null, Is.True);
+
+    [OneTimeSetUp]
+    public void Setup() {
+        // this.stopStatisticFunctions.AddStopStatistic(this.testStatistic);
     }
 
-    [Test]
+    [Test, Order(1)]
+    public void AddStopStatisticTest() {
+        StopStatistic stopStatistic = new StopStatistic() {
+            StopStatisticID = this.stopStatisticFunctions.GetMaxId() + 1,
+            StopID = this.testStop.StopID,
+            Stop = this.testStop,
+            Time = DateTime.Now,
+            IsDone = false
+        };
+        this.stopStatisticFunctions.AddStopStatistic(stopStatistic);
+        StopStatistic result = this.stopStatisticFunctions.GetStopStatisticById(stopStatistic.StopStatisticID);
+        Assert.That(result, Is.Not.EqualTo(null));
+    }
+
+    [Test, Order(2)]
     public void GetStopStatisticByIdTest() {
         StopStatistic result = this.stopStatisticFunctions.GetStopStatisticById(1);
         Assert.That(result.StopStatisticID, Is.EqualTo(1));
     }
 
-    [Test]
+    [Test, Order(3)]
     public void UpdateStopStatisticTest() {
-        StopStatistic stat = this.stopStatisticFunctions.GetStopStatisticById(this.testGroup.StopGroupID);
+        StopStatistic stat = this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
         stat.IsDone = true;
         this.stopStatisticFunctions.UpdateStopStatistic(stat);
-        StopGroup result = this.stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
-        Assert.That(result.Name, Is.EqualTo("UpdatedName"));
+        StopStatistic result = this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
+        Assert.That(result.IsDone, Is.EqualTo(true));
     }
 
-    [Test]
+    [Test, Order(4)]
     public void DeleteStopStatistic() {
-        StopStatistic stat = this.stopStatisticFunctions.GetStopStatisticById(this.testGroup.StopGroupID);
-        this.stopGroupFunctions.DeleteStopGroupById(stat.StopStatisticID);
-        Assert.Throws<TadeoTDatabaseException>(() => this.stopStatisticFunctions.GetStopStatisticById(this.testGroup.StopGroupID));
+        StopStatistic stat = this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
+        this.stopStatisticFunctions.DeleteStopStopStatisticById(stat.StopStatisticID);
+        Assert.Throws<TadeoTDatabaseException>(() => this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID));
     }
 }
 

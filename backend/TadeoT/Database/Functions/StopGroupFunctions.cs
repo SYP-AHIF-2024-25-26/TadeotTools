@@ -21,6 +21,9 @@ public class StopGroupFunctions {
     }
 
     public void AddStopGroup(StopGroup group) {
+        if (group == null) {
+            throw new TadeoTDatabaseException("Could not add StopGroup because it was null");
+        }
         try {
             this.context.StopGroups.Add(group);
             this.context.SaveChanges();

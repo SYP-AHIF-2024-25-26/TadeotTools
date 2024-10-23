@@ -12,8 +12,6 @@ public class StopFunctionsUT {
     private readonly StopGroup testGroup;
     private readonly Stop testStop;
 
-    //private readonly GlobalSetup setup = new GlobalSetup();
-
     public StopFunctionsUT() {
         testGroup = new StopGroup() {
             StopGroupID = stopGroupFunctions.GetMaxId() + 1,
@@ -32,20 +30,32 @@ public class StopFunctionsUT {
         };
     }
 
+    [OneTimeSetUp]
+    public void Setup() {
+        this.stopFunctions.AddStop(this.testStop);
+    }
+
     [Test, Order(1)]
     public void AddStopTest() {
-        this.stopGroupFunctions.AddStopGroup(this.testGroup);
-        StopGroup resultG = this.stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
+        StopGroup group = new StopGroup() {
+            StopGroupID = stopGroupFunctions.GetMaxId() + 1,
+            Name = "add group",
+            Stops = [],
+            Description = "TestDescription",
+            Color = "#ffffff"
+        };
+        this.stopGroupFunctions.AddStopGroup(group);
+        StopGroup resultG = this.stopGroupFunctions.GetStopGroupById(group.StopGroupID);
         Assert.That(resultG, Is.Not.EqualTo(null));
     }
 
-    [Test]
+    [Test, Order(2)]
     public void GetStopByIdTest() {
         Stop result = this.stopFunctions.GetStopById(1);
         Assert.That(result.StopID, Is.EqualTo(1));
     }
 
-    [Test]
+    [Test, Order(3)]
     public void UpdateStopTest() {
         Stop stop = this.stopFunctions.GetStopById(this.testStop.StopID);
         stop.Name = "UpdatedName";
@@ -54,7 +64,7 @@ public class StopFunctionsUT {
         Assert.That(result.Name, Is.EqualTo("UpdatedName"));
     }
 
-    [Test]
+    [Test, Order(4)]
     public void DeleteStop() {
         Stop stop = this.stopFunctions.GetStopById(this.testStop.StopID);
         this.stopFunctions.DeleteStopById(stop.StopID);
