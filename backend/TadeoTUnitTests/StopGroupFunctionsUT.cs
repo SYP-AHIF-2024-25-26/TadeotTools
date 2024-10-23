@@ -9,7 +9,6 @@ using TadeoT.Database;
 namespace TadeoTUnitTests;
 
 public class StopGroupFunctionsTests {
-    private readonly TadeoTDbContext context = new();
     private readonly StopGroupFunctions stopGroupFunctions = new();
     private readonly StopGroup testGroup;
 

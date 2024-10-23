@@ -5,6 +5,10 @@ namespace TadeoT.Database.Functions;
 public class StopStatisticFunctions {
     private readonly TadeoTDbContext context = new();
 
+    public List<StopStatistic> GetAllStopStatistics() {
+        return [.. this.context.StopStatistics.Include(s => s.Stop)];
+    }
+
     public StopStatistic GetStopStatisticById(int id) {
         StopStatistic? statistic = this.context.StopStatistics
             .Include(s => s.Stop)

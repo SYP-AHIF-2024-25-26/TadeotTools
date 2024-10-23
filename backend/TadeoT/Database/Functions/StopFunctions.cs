@@ -4,9 +4,14 @@ namespace TadeoT.Database.Functions;
 
 public class StopFunctions {
     private readonly TadeoTDbContext context = new();
+    
+    public List<Stop> GetAllStops() {
+        return [.. this.context.Stops
+            .Include(s => s.StopGroup)
+            .Include(s => s.StopStatistics)];
+    }
 
     public Stop GetStopById(int id) {
-        Console.WriteLine(this.context.Stops);
         Stop? stop = this.context.Stops
             .Include(s => s.StopGroup)
             .Include(s => s.StopStatistics)

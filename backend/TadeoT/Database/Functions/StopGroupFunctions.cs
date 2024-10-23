@@ -5,6 +5,11 @@ namespace TadeoT.Database.Functions;
 public class StopGroupFunctions {
     private readonly TadeoTDbContext context = new();
 
+    public List<StopGroup> GetAllStopGroups() {
+        return [.. this.context.StopGroups
+            .Include(sg => sg.Stops)];
+    }
+
     public StopGroup GetStopGroupById(int id) {
         StopGroup? group = this.context.StopGroups
             .Include(sg => sg.Stops)
