@@ -1,10 +1,19 @@
-<div class="flex flex-col w-full h-screen justify-star bg-gray-50">
+<div class="flex flex-col w-full h-screen justify-star bg-gray-50 overflow-y-scroll">
   <div>
-    <app-header class=""></app-header>
+    <app-header></app-header>
   </div>
+  @if (viewModeService.viewMode()) {
   <div class="flex flex-col justify-center">
     @for (card of cards(); track card.id) {
-      <app-card [card]="card" class="mt-4"></app-card>
+      <app-card [card]="card"  class="mt-4" [id]="card.id.toString()"></app-card>
     }
   </div>
+  <div class="fixed bottom-8 left-0 right-0 mx-4 ">
+    <app-navbar></app-navbar>
+  </div>
+  } @else {
+    <div class="fixed bottom-8 left-0 right-0 mx-4">
+      <app-navbar></app-navbar>
+    </div>
+  }
 </div>
