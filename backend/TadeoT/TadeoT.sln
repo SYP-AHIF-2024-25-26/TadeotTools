@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TadeoT", "TadeoT.csproj", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TadeoTUnitTests", "..\TadeoTUnitTests\TadeoTUnitTests.csproj", "{4EAFE278-3C5D-4966-98A2-59268576CFB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "..\API\API.csproj", "{D1A76C4D-3F1F-4918-ACE3-88A068FA8731}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4EAFE278-3C5D-4966-98A2-59268576CFB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EAFE278-3C5D-4966-98A2-59268576CFB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EAFE278-3C5D-4966-98A2-59268576CFB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1A76C4D-3F1F-4918-ACE3-88A068FA8731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1A76C4D-3F1F-4918-ACE3-88A068FA8731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1A76C4D-3F1F-4918-ACE3-88A068FA8731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1A76C4D-3F1F-4918-ACE3-88A068FA8731}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
