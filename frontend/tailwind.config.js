@@ -6,7 +6,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'background-main': '#D9D9D9',
+        'informatic-blue': '#0059A7',
+        'media-technology-blue': '#70B4D9',
+        'elecronics-red': '#CE1223',
+        'medicin-technology-yellow': '#f1a102',
+        'neutral-green': '#80c076',
       }
     },
   },
