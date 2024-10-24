@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, Input, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgClass, NgIf } from '@angular/common';
 
@@ -14,9 +14,17 @@ import { NgClass, NgIf } from '@angular/common';
   styleUrl: './checkbox.component.css'
 })
 export class CheckboxComponent {
-  isChecked = signal(false);
+  @Input() id!: string;
+  isChecked: WritableSignal<boolean> = signal(false);
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.isChecked.update(old => old || sessionStorage.getItem(this.id) === 'true');
+    }, 0);
+  }
 
   toggleCheckbox() {
     this.isChecked.update(old => !old);
+    sessionStorage.setItem(this.id, String(this.isChecked()));
   }
 }
