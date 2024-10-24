@@ -1,9 +1,9 @@
-<div class="flex justify-center content-center w-full h-20">
-  <div class="flex items-center justify-between w-full h-full rounded shadow-lg bg-white mx-4">
+<div class="flex justify-center content-center w-full">
+  <div class="flex items-center justify-between w-full rounded-lg shadow-lg mx-4 duration-300 ease-in-out" [ngClass]="[bgColor || 'bg-white', isChecked() ? 'h-12' : 'h-20']">
     <div class="px-6 py-4 flex flex-row space-x-4 justify-between content-center w-full">
       <p class="text-gray-700 text-base justify-self-start ml-2 font-bold">{{ card.title }}</p>
       <p class="text-gray-700 text-base mr-2">{{ card.description }}</p>
-      <app-checkbox></app-checkbox>
+      <app-checkbox [id]="id"></app-checkbox>
     </div>
   </div>
 </div>
