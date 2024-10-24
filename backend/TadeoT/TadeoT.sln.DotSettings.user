@@ -1,0 +1,8 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8d4e37a7_002Df9e0_002D4a20_002Dab65_002D4eb485bba252/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="StopFunctionsUT" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;NUnit3x::4EAFE278-3C5D-4966-98A2-59268576CFB5::net8.0::TadeoTUnitTests.StopFunctionsUT&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::4EAFE278-3C5D-4966-98A2-59268576CFB5::net8.0::TadeoTUnitTests.StopGroupFunctionsTests&lt;/TestId&gt;
+    &lt;TestId&gt;NUnit3x::4EAFE278-3C5D-4966-98A2-59268576CFB5::net8.0::TadeoTUnitTests.StopStatisticFunctionsTests&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
