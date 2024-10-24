@@ -4,6 +4,16 @@ namespace TadeoT.Database.Functions;
 
 public class StopFunctions {
     private readonly TadeoTDbContext context = new();
+    private static StopFunctions instance;
+    
+    private StopFunctions() { }
+
+    public static StopFunctions GetInstance() {
+        if (instance == null) {
+            instance = new StopFunctions();
+        }
+        return instance;
+    }
     
     public List<Stop> GetAllStops() {
         return [.. this.context.Stops
@@ -20,7 +30,7 @@ public class StopFunctions {
     }
 
     public int GetMaxId() {
-        return this.context.Stops.Max(s => s.StopID);
+        return !this.context.Stops.Any() ? 0 : this.context.Stops.Max(s => s.StopID);
     }
 
     public void AddStop(Stop stop) {

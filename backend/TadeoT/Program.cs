@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using TadeoT.Database;
+using TadeoT.Database.Functions;
 
 namespace TadeoT;
 
@@ -31,12 +32,18 @@ public class Program {
 
         context.SaveChanges();
 
-        List<StopGroup> stopGroups = context.StopGroups.Include(sg => sg.Stops).ToList();
+        List<StopGroup> stopGroups = StopGroupFunctions.GetInstance().GetAllStopGroups();
         foreach (StopGroup sg in stopGroups) {
             Console.WriteLine($"StopGroup: {sg.Name}, Color: {sg.Color}");
             foreach (Stop s in sg.Stops) {
                 Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
             }
         }
+        Console.WriteLine("Stops: ");
+        List<Stop> stops = StopFunctions.GetInstance().GetAllStops();
+        foreach (Stop s in stops) {
+            Console.WriteLine($"Stop: {s.Name}, RoomNr: {s.RoomNr}");
+        }
+
     }
 }

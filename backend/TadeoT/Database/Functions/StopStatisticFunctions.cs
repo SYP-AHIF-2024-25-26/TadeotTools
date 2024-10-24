@@ -5,6 +5,17 @@ namespace TadeoT.Database.Functions;
 public class StopStatisticFunctions {
     private readonly TadeoTDbContext context = new();
 
+    private static StopStatisticFunctions instance;
+    
+    private StopStatisticFunctions() { }
+
+    public static StopStatisticFunctions GetInstance() {
+        if (instance == null) {
+            instance = new StopStatisticFunctions();
+        }
+        return instance;
+    }
+    
     public List<StopStatistic> GetAllStopStatistics() {
         return [.. this.context.StopStatistics.Include(s => s.Stop)];
     }
@@ -18,7 +29,7 @@ public class StopStatisticFunctions {
 
     public int GetMaxId() {
         try {
-            return this.context.StopStatistics.Max(s => s.StopID);
+            return !this.context.StopStatistics.Any() ? 0 : this.context.StopStatistics.Max(s => s.StopID);
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get MaxId: " + e.Message);
         }

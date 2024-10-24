@@ -15,4 +15,14 @@
     <PackageReference Include="Xunit.Priority" Version="1.1.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="API\obj\API.csproj.nuget.dgspec.json" />
+    <_ContentIncludedByDefault Remove="API\obj\project.assets.json" />
+    <_ContentIncludedByDefault Remove="API\obj\project.packagespec.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="API\" />
+  </ItemGroup>
+
 </Project>

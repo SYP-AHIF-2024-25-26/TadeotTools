@@ -5,6 +5,17 @@ namespace TadeoT.Database.Functions;
 public class StopGroupFunctions {
     private readonly TadeoTDbContext context = new();
 
+    private static StopGroupFunctions instance;
+    
+    private StopGroupFunctions() { }
+
+    public static StopGroupFunctions GetInstance() {
+        if (instance == null) {
+            instance = new StopGroupFunctions();
+        }
+        return instance;
+    }
+    
     public List<StopGroup> GetAllStopGroups() {
         return [.. this.context.StopGroups
             .Include(sg => sg.Stops)];
@@ -19,7 +30,7 @@ public class StopGroupFunctions {
 
     public int GetMaxId() {
         try {
-            return this.context.StopGroups.Max(s => s.StopGroupID);
+            return !this.context.StopGroups.Any() ? 0 : this.context.StopGroups.Max(s => s.StopGroupID);
         } catch(Exception e) {
             throw new TadeoTDatabaseException("Could not get MaxId: " + e.Message);
         }
