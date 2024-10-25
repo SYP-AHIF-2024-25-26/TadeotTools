@@ -14,8 +14,7 @@ public class Program {
         StopGroup stopGroup = new() {
             Name = "Main Building",
             Description = "Group for stops in the main building",
-            Color = "#FF5733",
-            Stops = []
+            Color = "#FF5733"
         };
 
         Stop stop = new() {
@@ -34,7 +33,7 @@ public class Program {
         List<StopGroup> stopGroups = context.StopGroups.Include(sg => sg.Stops).ToList();
         foreach (StopGroup sg in stopGroups) {
             Console.WriteLine($"StopGroup: {sg.Name}, Color: {sg.Color}");
-            foreach (Stop s in sg.Stops) {
+            foreach (Stop s in StopGroupFunctions.GetInstance().GetStopsOfStopGroup(sg.StopGroupID)) {
                 Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
             }
         }
