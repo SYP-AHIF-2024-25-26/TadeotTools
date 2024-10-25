@@ -20,7 +20,6 @@ public class StopGroupFunctionsTests {
         this.testGroup = new StopGroup() {
             StopGroupID = StopGroupFunctions.GetInstance().GetMaxId() + 1,
             Name = "TestGroup",
-            Stops = [],
             Description = "TestDescription",
             Color = "#ffffff"
         };
@@ -31,7 +30,6 @@ public class StopGroupFunctionsTests {
         StopGroup group = new () {
             StopGroupID = StopGroupFunctions.GetInstance().GetMaxId() + 1,
             Name = "add group",
-            Stops = [],
             Description = "TestDescription",
             Color = "#ffffff"
         };
