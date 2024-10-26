@@ -35,10 +35,11 @@ public class StopStatisticFunctions {
         }
     }
 
-    public void AddStopStatistic(StopStatistic statistic) {
+    public int AddStopStatistic(StopStatistic statistic) {
         try {
             this.context.StopStatistics.Add(statistic);
             this.context.SaveChanges();
+            return statistic.StopStatisticID;
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not add StopStatistic: " + e.Message);
         }
