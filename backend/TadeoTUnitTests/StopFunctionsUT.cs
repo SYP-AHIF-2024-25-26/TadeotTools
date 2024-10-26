@@ -14,7 +14,6 @@ public class StopFunctionsUT {
         testGroup = new StopGroup() {
             StopGroupID = StopGroupFunctions.GetInstance().GetMaxId() + 1,
             Name = "TestGroup",
-            Stops = [],
             Description = "TestDescription",
             Color = "#ffffff"
         };
@@ -38,7 +37,6 @@ public class StopFunctionsUT {
         StopGroup group = new StopGroup() {
             StopGroupID = StopGroupFunctions.GetInstance().GetMaxId() + 1,
             Name = "add group",
-            Stops = [],
             Description = "TestDescription",
             Color = "#ffffff"
         };

@@ -19,7 +19,6 @@ public class StopStatisticFunctionsTests {
         testGroup = new StopGroup() {
             StopGroupID = StopGroupFunctions.GetInstance().GetMaxId() + 1,
             Name = "TestGroup",
-            Stops = [],
             Description = "TestDescription",
             Color = "#ffffff"
         };

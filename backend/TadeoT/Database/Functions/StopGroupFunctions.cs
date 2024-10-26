@@ -17,13 +17,11 @@ public class StopGroupFunctions {
     }
     
     public List<StopGroup> GetAllStopGroups() {
-        return [.. this.context.StopGroups
-            .Include(sg => sg.Stops)];
+        return [.. this.context.StopGroups];
     }
 
     public StopGroup GetStopGroupById(int id) {
         StopGroup? group = this.context.StopGroups
-            .Include(sg => sg.Stops)
             .FirstOrDefault(sg => sg.StopGroupID == id);
         return group ?? throw new TadeoTDatabaseException("StopGroup not found");
     }
@@ -69,8 +67,7 @@ public class StopGroupFunctions {
 
     public List<Stop> GetStopsOfStopGroup(int groupId) {
         try {
-            StopGroup group = this.GetStopGroupById(groupId);
-            return [.. group.Stops];
+            return context.Stops.Where(sg => sg.StopGroupID == groupId).ToList();
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get Stops: " + e.Message);
         }
