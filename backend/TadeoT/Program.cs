@@ -26,8 +26,13 @@ public class Program {
             StopStatistics = []
         };
 
+        APIKey key = new() {
+            APIKeyValue = "test-T34est"
+        };
+
         context.StopGroups.Add(stopGroup);
         context.Stops.Add(stop);
+        context.APIKeys.Add(key);
 
         context.SaveChanges();
 
@@ -44,5 +49,9 @@ public class Program {
             Console.WriteLine($"Stop: {s.Name}, RoomNr: {s.RoomNr}");
         }
 
+        List<APIKey> keys = APIKeyFunctions.GetInstance().GetAllAPIKeys();
+        foreach (APIKey k in keys) {
+            Console.WriteLine($"APIKey: {k.APIKeyValue}");
+        }
     }
 }

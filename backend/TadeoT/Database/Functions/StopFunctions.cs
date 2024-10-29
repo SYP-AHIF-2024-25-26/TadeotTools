@@ -4,14 +4,12 @@ namespace TadeoT.Database.Functions;
 
 public class StopFunctions {
     private readonly TadeoTDbContext context = new();
-    private static StopFunctions instance;
+    private static StopFunctions? instance;
     
     private StopFunctions() { }
 
     public static StopFunctions GetInstance() {
-        if (instance == null) {
-            instance = new StopFunctions();
-        }
+        instance ??= new StopFunctions();
         return instance;
     }
     

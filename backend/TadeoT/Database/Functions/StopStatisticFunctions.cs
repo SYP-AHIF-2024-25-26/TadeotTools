@@ -5,14 +5,12 @@ namespace TadeoT.Database.Functions;
 public class StopStatisticFunctions {
     private readonly TadeoTDbContext context = new();
 
-    private static StopStatisticFunctions instance;
+    private static StopStatisticFunctions? instance;
     
     private StopStatisticFunctions() { }
 
     public static StopStatisticFunctions GetInstance() {
-        if (instance == null) {
-            instance = new StopStatisticFunctions();
-        }
+        instance ??= new StopStatisticFunctions();
         return instance;
     }
     

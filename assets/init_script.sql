@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS StopStatistics (
 );
 
 CREATE TABLE IF NOT EXISTS APIKeys(
-    api_key VARCHAR(255) NOT NULL PRIMARY KEY
+    apiKeyValue VARCHAR(255) NOT NULL PRIMARY KEY
 );
 
 INSERT INTO StopGroups (name, description, color) VALUES

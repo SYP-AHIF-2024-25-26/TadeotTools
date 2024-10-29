@@ -5,14 +5,12 @@ namespace TadeoT.Database.Functions;
 public class StopGroupFunctions {
     private readonly TadeoTDbContext context = new();
 
-    private static StopGroupFunctions instance;
+    private static StopGroupFunctions? instance;
     
     private StopGroupFunctions() { }
 
     public static StopGroupFunctions GetInstance() {
-        if (instance == null) {
-            instance = new StopGroupFunctions();
-        }
+        instance ??= new StopGroupFunctions();
         return instance;
     }
     
