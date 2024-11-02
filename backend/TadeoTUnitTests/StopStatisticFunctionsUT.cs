@@ -25,8 +25,7 @@ public class StopStatisticFunctionsTests {
             Name = "TestStop",
             Description = "TestDescription",
             RoomNr = "E72",
-            StopGroup = testGroup,
-            StopStatistics = []
+            StopGroup = testGroup
         };
         testStatistic = new StopStatistic() {
             StopID = this.testStop.StopID,

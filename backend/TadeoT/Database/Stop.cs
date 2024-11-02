@@ -8,6 +8,4 @@ public class Stop {
     public int? StopGroupID { get; set; }
 
     public required StopGroup StopGroup { get; set; }
-
-    public ICollection<StopStatistic> ?StopStatistics { get; set; }
 }

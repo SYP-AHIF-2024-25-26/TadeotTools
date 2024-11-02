@@ -20,8 +20,7 @@ public class StopFunctionsUT {
             Name = "TestStop",
             Description = "TestDescription",
             RoomNr = "E72",
-            StopGroup = testGroup,
-            StopStatistics = []
+            StopGroup = testGroup
         };
     }
 

@@ -14,15 +14,15 @@ public class StopFunctions {
     }
     
     public List<Stop> GetAllStops() {
-        return [.. this.context.Stops
-            .Include(s => s.StopGroup)
-            .Include(s => s.StopStatistics)];
+        return [
+            .. this.context.Stops
+                .Include(s => s.StopGroup)
+        ];
     }
 
     public Stop GetStopById(int id) {
         Stop? stop = this.context.Stops
             .Include(s => s.StopGroup)
-            .Include(s => s.StopStatistics)
             .FirstOrDefault(s => s.StopID == id);
         return stop ?? throw new TadeoTDatabaseException("Stop not found");
     }
@@ -72,7 +72,7 @@ public class StopFunctions {
     public List<StopStatistic> GetStopStatisticsOfStop(int stopId) {
         try {
             Stop stop = this.GetStopById(stopId);
-            return [.. stop.StopStatistics];
+            return StopFunctions.GetInstance().GetStopStatisticsOfStop(stopId);
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get StopStatistics: " + e.Message);
         }

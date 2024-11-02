@@ -16,11 +16,6 @@ public class TadeoTDbContext : DbContext {
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<Stop>()
             .HasOne(s => s.StopGroup);
-
-        modelBuilder.Entity<StopStatistic>()
-            .HasOne(ss => ss.Stop)
-            .WithMany(s => s.StopStatistics)
-            .HasForeignKey(ss => ss.StopID);
         
         modelBuilder.Entity<APIKey>()
             .HasKey(k => k.APIKeyValue);
