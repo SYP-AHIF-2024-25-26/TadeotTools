@@ -17,6 +17,11 @@ public class StopGroupsController : ControllerBase {
         }
     }
 
+    [HttpGet("api")]
+    public IActionResult GetGroupsApi() {
+        return GetGroups();
+    }
+
     [HttpGet("{groupId}")]
     public IActionResult GetGroupById(int groupId) {
         try {
@@ -39,6 +44,7 @@ public class StopGroupsController : ControllerBase {
             if (group == null) {
                 return StatusCode(400, "Missing Request Body");
             }
+
             StopGroup stopGroupToAdd = new StopGroup {
                 Name = group.Name,
                 Description = group.Description,
@@ -54,11 +60,13 @@ public class StopGroupsController : ControllerBase {
     }
 
     [HttpPut("{groupId}")]
-    public IActionResult UpdateGroup([FromBody] StopGroup? group) {
+    public IActionResult UpdateGroup(int groupId, [FromBody] StopGroup? group) {
         try {
             if (group == null) {
                 return StatusCode(406, "Missing group data");
             }
+
+            group.StopGroupID = groupId;
 
             StopGroupFunctions.GetInstance().UpdateStopGroup(group);
             return Ok();
@@ -71,7 +79,7 @@ public class StopGroupsController : ControllerBase {
     [HttpDelete("{groupId}")]
     public IActionResult DeleteGroup(int groupId) {
         try {
-           StopGroupFunctions.GetInstance().DeleteStopGroupById(groupId);
+            StopGroupFunctions.GetInstance().DeleteStopGroupById(groupId);
             return Ok();
         }
         catch (TadeoTDatabaseException) {
