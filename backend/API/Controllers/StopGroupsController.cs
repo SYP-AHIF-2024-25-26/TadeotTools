@@ -31,18 +31,17 @@ public class StopGroupsController : ControllerBase {
     [HttpPost]
     public IActionResult CreateGroup([FromBody] StopGroupDTO? group) {
         try {
-            StopGroupFunctions.GetInstance().AddStopGroup(new StopGroup {
+            StopGroup stopGroupToAdd = new StopGroup {
                 Name = group!.Name,
                 Description = group.Description,
-                Color = group.Color,
-            });
-            return Ok();
+                Color = group.Color
+            };
+            int stopGroupId = StopGroupFunctions.GetInstance().AddStopGroup(stopGroupToAdd);
+            stopGroupToAdd.StopGroupID = stopGroupId;
+            return Ok(stopGroupToAdd);
         }
         catch (TadeoTDatabaseException) {
             return StatusCode(500, $"Could not create group {group!.Name}");
-        }
-        catch (NullReferenceException) {
-            return StatusCode(406, "Missing group data");
         }
     }
 
@@ -52,6 +51,7 @@ public class StopGroupsController : ControllerBase {
             if (group == null) {
                 return StatusCode(406, "Missing group data");
             }
+
             StopGroupFunctions.GetInstance().UpdateStopGroup(group);
             return Ok();
         }
@@ -63,17 +63,11 @@ public class StopGroupsController : ControllerBase {
     [HttpDelete("{groupId}")]
     public IActionResult DeleteGroup(int groupId) {
         try {
-            try {
-                StopGroupFunctions.GetInstance().GetStopGroupById(groupId);
-            }
-            catch (TadeoTDatabaseException) {
-                return StatusCode(404, "No group found");
-            }
-            StopGroupFunctions.GetInstance().DeleteStopGroupById(groupId);
+           StopGroupFunctions.GetInstance().DeleteStopGroupById(groupId);
             return Ok();
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, "Could not delete group");
+            return StatusCode(500, "No StopGroup with this id");
         }
     }
 }
