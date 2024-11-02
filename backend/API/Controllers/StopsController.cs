@@ -1,51 +1,74 @@
 using Microsoft.AspNetCore.Mvc;
+using TadeoT.Database;
+using TadeoT.Database.Functions;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("v1/stops")]
-public class StopsController : ControllerBase
-{
+public class StopsController : ControllerBase {
     [HttpGet("{stopId}")]
-    public IActionResult GetStopById(int stopId)
-    {
-        throw new NotImplementedException();
+    public IActionResult GetStopById(int stopId) {
+        try {
+            return Ok(StopFunctions.GetInstance().GetStopById(stopId));
+        }
+        catch (TadeoTDatabaseException) {
+            return StatusCode(404, "Could not find Stop");
+        }
     }
 
     [HttpPost]
-    [Route("stats/{stopId}")]
-    public IActionResult CreateStopStats(int stopId, [FromBody] object stats)
-    {
-        throw new NotImplementedException();
-    }
-
-    [HttpPut("stats/{stopId}")]
-    public IActionResult UpdateStopStats(int stopId, [FromBody] object stats)
-    {
-        throw new NotImplementedException();
-    }
-
-    [HttpDelete("stats/{stopId}")]
-    public IActionResult DeleteStopStats(int stopId)
-    {
-        throw new NotImplementedException();
-    }
-
-    [HttpPost]
-    public IActionResult CreateStop([FromBody] object stop)
-    {
-        throw new NotImplementedException();
+    public IActionResult CreateStop([FromBody] Stop stop) {
+        try {
+            StopFunctions.GetInstance().AddStop(stop);
+            return Ok();
+        }
+        catch (TadeoTDatabaseException) {
+            return StatusCode(500, "Could not add Stop");
+        }
     }
 
     [HttpPut("{stopId}")]
-    public IActionResult UpdateStop(int stopId, [FromBody] object stop)
-    {
-        throw new NotImplementedException();
+    public IActionResult UpdateStop(int stopId, [FromBody] Stop stop) {
+        try {
+            StopFunctions.GetInstance().UpdateStop(stop);
+            return Ok();
+        }
+        catch (TadeoTDatabaseException) {
+            return StatusCode(500, "Could not update Stop");
+        }
     }
 
     [HttpDelete("{stopId}")]
-    public IActionResult DeleteStop(int stopId)
-    {
-        throw new NotImplementedException();
+    public IActionResult DeleteStop(int stopId) {
+        Stop? stopToUpdate = null;
+        try {
+            stopToUpdate = StopFunctions.GetInstance().GetStopById(stopId);
+            StopFunctions.GetInstance().DeleteStopById(stopId);
+            return Ok();
+        }
+        catch (TadeoTDatabaseException) {
+            if (stopToUpdate == null) {
+                return StatusCode(404, "Stop not found");
+            }
+
+            return StatusCode(500, "Could not delete Stop");
+        }
+    }
+
+    [HttpGet("groups/{groupId}")]
+    public IActionResult GetStopsByGroupId(int groupId) {
+        StopGroup? stopGroup = null;
+        try {
+            stopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(groupId);
+            List<Stop> stops = StopGroupFunctions.GetInstance().GetStopsOfStopGroup(groupId);
+            return Ok(stops);
+        }
+        catch (TadeoTDatabaseException) {
+            if (stopGroup == null) {
+                return StatusCode(404, "Stopgroup not found");
+            }
+            return StatusCode(500, "Cannot get Stops");
+        }
     }
 }
