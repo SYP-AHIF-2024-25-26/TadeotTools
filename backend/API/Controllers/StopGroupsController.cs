@@ -38,7 +38,7 @@ public class StopGroupsController : ControllerBase {
         }
     }
 
-    [HttpPost]
+    [HttpPost("api")]
     public IActionResult CreateGroup([FromBody] StopGroup? group) {
         try {
             if (group == null) {
@@ -59,7 +59,7 @@ public class StopGroupsController : ControllerBase {
         }
     }
 
-    [HttpPut("{groupId}")]
+    [HttpPut("api/{groupId}")]
     public IActionResult UpdateGroup(int groupId, [FromBody] StopGroup? group) {
         try {
             if (group == null) {
@@ -76,7 +76,7 @@ public class StopGroupsController : ControllerBase {
         }
     }
 
-    [HttpDelete("{groupId}")]
+    [HttpDelete("api/{groupId}")]
     public IActionResult DeleteGroup(int groupId) {
         try {
             StopGroupFunctions.GetInstance().DeleteStopGroupById(groupId);
