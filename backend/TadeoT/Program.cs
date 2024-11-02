@@ -23,7 +23,6 @@ public class Program {
             Description = "Meeting room 101",
             RoomNr = "101",
             StopGroup = stopGroup,
-            StopStatistics = []
         };
 
         APIKey key = new() {

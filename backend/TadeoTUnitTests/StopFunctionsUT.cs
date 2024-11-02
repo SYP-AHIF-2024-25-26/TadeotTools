@@ -21,7 +21,6 @@ public class StopFunctionsUT {
             Description = "TestDescription",
             RoomNr = "E72",
             StopGroup = testGroup,
-            StopStatistics = []
         };
     }
 
@@ -32,15 +31,15 @@ public class StopFunctionsUT {
 
     [Test, Order(1)]
     public void AddStopTest() {
-        StopGroup group = new StopGroup() {
-            Name = "add group",
+        Stop stop = new Stop() {
+            Name = "add stop",
             Description = "TestDescription",
-            Color = "#ffffff"
+            RoomNr = "E72",
+            StopGroup = this.testGroup
         };
-        int id = StopGroupFunctions.GetInstance().AddStopGroup(group);
-        Console.WriteLine("Added StopGroup ID: " + id);
-        StopGroup resultG = StopGroupFunctions.GetInstance().GetStopGroupById(group.StopGroupID);
-        Assert.That(resultG, Is.Not.EqualTo(null));
+        StopFunctions.GetInstance().AddStop(stop);
+        Stop result = StopFunctions.GetInstance().GetStopById(stop.StopID);
+        Assert.That(result, Is.Not.EqualTo(null));
     }
 
     [Test, Order(2)]

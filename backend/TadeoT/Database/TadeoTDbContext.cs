@@ -18,9 +18,7 @@ public class TadeoTDbContext : DbContext {
             .HasOne(s => s.StopGroup);
 
         modelBuilder.Entity<StopStatistic>()
-            .HasOne(ss => ss.Stop)
-            .WithMany(s => s.StopStatistics)
-            .HasForeignKey(ss => ss.StopID);
+            .HasOne(ss => ss.Stop);
         
         modelBuilder.Entity<APIKey>()
             .HasKey(k => k.APIKeyValue);
