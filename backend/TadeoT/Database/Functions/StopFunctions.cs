@@ -14,10 +14,8 @@ public class StopFunctions {
     }
     
     public List<Stop> GetAllStops() {
-        return [
-            .. this.context.Stops
-                .Include(s => s.StopGroup)
-        ];
+        return [.. this.context.Stops
+            .Include(s => s.StopGroup)];
     }
 
     public Stop GetStopById(int id) {
@@ -68,13 +66,13 @@ public class StopFunctions {
             throw new TadeoTDatabaseException("Could not get StopGroup: " + e.Message);
         }
     }
-
+    /*
     public List<StopStatistic> GetStopStatisticsOfStop(int stopId) {
         try {
             Stop stop = this.GetStopById(stopId);
-            return StopFunctions.GetInstance().GetStopStatisticsOfStop(stopId);
+            return [.. stop.StopStatistics];
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get StopStatistics: " + e.Message);
         }
-    }
+    }*/
 }
