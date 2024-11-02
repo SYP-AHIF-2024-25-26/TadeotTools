@@ -17,7 +17,6 @@ public class StopStatisticFunctionsTests {
 
     public StopStatisticFunctionsTests() {
         testGroup = new StopGroup() {
-            StopGroupID = StopGroupFunctions.GetInstance().GetMaxId() + 1,
             Name = "TestGroup",
             Description = "TestDescription",
             Color = "#ffffff"
@@ -26,12 +25,10 @@ public class StopStatisticFunctionsTests {
             Name = "TestStop",
             Description = "TestDescription",
             RoomNr = "E72",
-            StopID = StopFunctions.GetInstance().GetMaxId() + 1,
             StopGroup = testGroup,
             StopStatistics = []
         };
         testStatistic = new StopStatistic() {
-            StopStatisticID = StopStatisticFunctions.GetInstance().GetMaxId() + 1,
             StopID = this.testStop.StopID,
             Stop = this.testStop,
             Time = DateTime.Now,
@@ -41,13 +38,12 @@ public class StopStatisticFunctionsTests {
 
     [OneTimeSetUp]
     public void Setup() {
-        // StopStatisticFunctions.GetInstance().AddStopStatistic(this.testStatistic);
+        StopStatisticFunctions.GetInstance().AddStopStatistic(this.testStatistic);
     }
 
     [Test, Order(1)]
     public void AddStopStatisticTest() {
-        StopStatistic stopStatistic = new StopStatistic() {
-            StopStatisticID = StopStatisticFunctions.GetInstance().GetMaxId() + 1,
+        StopStatistic stopStatistic = new() {
             StopID = this.testStop.StopID,
             Stop = this.testStop,
             Time = DateTime.Now,

@@ -5,14 +5,12 @@ namespace TadeoT.Database.Functions;
 public class StopStatisticFunctions {
     private readonly TadeoTDbContext context = new();
 
-    private static StopStatisticFunctions instance;
+    private static StopStatisticFunctions? instance;
     
     private StopStatisticFunctions() { }
 
     public static StopStatisticFunctions GetInstance() {
-        if (instance == null) {
-            instance = new StopStatisticFunctions();
-        }
+        instance ??= new StopStatisticFunctions();
         return instance;
     }
     
@@ -35,10 +33,11 @@ public class StopStatisticFunctions {
         }
     }
 
-    public void AddStopStatistic(StopStatistic statistic) {
+    public int AddStopStatistic(StopStatistic statistic) {
         try {
             this.context.StopStatistics.Add(statistic);
             this.context.SaveChanges();
+            return statistic.StopStatisticID;
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not add StopStatistic: " + e.Message);
         }

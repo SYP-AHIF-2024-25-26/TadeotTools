@@ -5,14 +5,12 @@ namespace TadeoT.Database.Functions;
 public class StopGroupFunctions {
     private readonly TadeoTDbContext context = new();
 
-    private static StopGroupFunctions instance;
+    private static StopGroupFunctions? instance;
     
     private StopGroupFunctions() { }
 
     public static StopGroupFunctions GetInstance() {
-        if (instance == null) {
-            instance = new StopGroupFunctions();
-        }
+        instance ??= new StopGroupFunctions();
         return instance;
     }
     
@@ -34,13 +32,14 @@ public class StopGroupFunctions {
         }
     }
 
-    public void AddStopGroup(StopGroup group) {
+    public int AddStopGroup(StopGroup group) {
         if (group == null) {
             throw new TadeoTDatabaseException("Could not add StopGroup because it was null");
         }
         try {
             this.context.StopGroups.Add(group);
             this.context.SaveChanges();
+            return group.StopGroupID;
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not add StopGroup: " + e.Message);
         }

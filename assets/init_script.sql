@@ -26,6 +26,10 @@ CREATE TABLE IF NOT EXISTS StopStatistics (
     FOREIGN KEY (stopID) REFERENCES Stops(stopID)
 );
 
+CREATE TABLE IF NOT EXISTS APIKeys(
+    apiKeyValue VARCHAR(255) NOT NULL PRIMARY KEY
+);
+
 INSERT INTO StopGroups (name, description, color) VALUES
 ('Informatik', 'Informatik beste Abteilung', '#0059a7'),
 ('Medientechnik', 'Medientechnik super Beschreibung', '#70b4d9'),

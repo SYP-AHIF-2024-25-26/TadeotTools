@@ -6,6 +6,7 @@ public class TadeoTDbContext : DbContext {
     public DbSet<StopGroup> StopGroups { get; set; }
     public DbSet<Stop> Stops { get; set; }
     public DbSet<StopStatistic> StopStatistics { get; set; }
+    public DbSet<APIKey> APIKeys { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         var connectionString = "Server=localhost;Port=4100;Database=tadeot;User=root;Password=test;";
@@ -20,5 +21,8 @@ public class TadeoTDbContext : DbContext {
             .HasOne(ss => ss.Stop)
             .WithMany(s => s.StopStatistics)
             .HasForeignKey(ss => ss.StopID);
+        
+        modelBuilder.Entity<APIKey>()
+            .HasKey(k => k.APIKeyValue);
     }
 }

@@ -4,14 +4,12 @@ namespace TadeoT.Database.Functions;
 
 public class StopFunctions {
     private readonly TadeoTDbContext context = new();
-    private static StopFunctions instance;
+    private static StopFunctions? instance;
     
     private StopFunctions() { }
 
     public static StopFunctions GetInstance() {
-        if (instance == null) {
-            instance = new StopFunctions();
-        }
+        instance ??= new StopFunctions();
         return instance;
     }
     
@@ -33,10 +31,11 @@ public class StopFunctions {
         return !this.context.Stops.Any() ? 0 : this.context.Stops.Max(s => s.StopID);
     }
 
-    public void AddStop(Stop stop) {
+    public int AddStop(Stop stop) {
         try {
             this.context.Stops.Add(stop);
             this.context.SaveChanges();
+            return stop.StopID;
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not add Stop: " + e.Message);
         }
