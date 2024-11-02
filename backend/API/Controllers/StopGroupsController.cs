@@ -1,4 +1,3 @@
-using API.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
@@ -21,18 +20,27 @@ public class StopGroupsController : ControllerBase {
     [HttpGet("{groupId}")]
     public IActionResult GetGroupById(int groupId) {
         try {
-            return Ok(StopGroupFunctions.GetInstance().GetStopsOfStopGroup(groupId));
+            List<Stop> stops = StopGroupFunctions.GetInstance().GetStopsOfStopGroup(groupId);
+
+            if (stops.Count == 0) {
+                return StatusCode(404, $"No Stops found for StopGroup: {groupId}");
+            }
+
+            return Ok();
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, $"Could not get stops with groupID {groupId}");
+            return StatusCode(500, "Internal server error");
         }
     }
 
     [HttpPost]
-    public IActionResult CreateGroup([FromBody] StopGroupDTO? group) {
+    public IActionResult CreateGroup([FromBody] StopGroup? group) {
         try {
+            if (group == null) {
+                return StatusCode(400, "Missing Request Body");
+            }
             StopGroup stopGroupToAdd = new StopGroup {
-                Name = group!.Name,
+                Name = group.Name,
                 Description = group.Description,
                 Color = group.Color
             };
@@ -67,7 +75,7 @@ public class StopGroupsController : ControllerBase {
             return Ok();
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, "No StopGroup with this id");
+            return StatusCode(404, "No StopGroup with this id");
         }
     }
 }
