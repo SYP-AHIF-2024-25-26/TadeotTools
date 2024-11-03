@@ -7,6 +7,16 @@ namespace API.Controllers;
 [ApiController]
 [Route("v1/stops")]
 public class StopsController : ControllerBase {
+    [HttpGet("api")]
+    public IActionResult GetAllStops() {
+        try {
+            return Ok(StopFunctions.GetInstance().GetAllStops());
+        }
+        catch (TadeoTDatabaseException) {
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
     [HttpGet("{stopId}")]
     public IActionResult GetStopById(int stopId) {
         try {
