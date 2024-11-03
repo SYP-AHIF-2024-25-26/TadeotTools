@@ -9,7 +9,7 @@ namespace API.Controllers;
 public class GroupStopsController : ControllerBase
 {
     [HttpPost]
-    [Route("/{stopId}")]
+    [Route("{stopId}")]
     public IActionResult CreateStopStats(int stopId) {
         try {
             StopStatisticFunctions.GetInstance().AddStopStatistic(new StopStatistic() {

@@ -66,7 +66,7 @@ public class StopsController : ControllerBase {
         }
         catch (TadeoTDatabaseException) {
             if (stopGroup == null) {
-                return StatusCode(404, "Stopgroup not found");
+                return StatusCode(404, "StopGroup not found");
             }
             return StatusCode(500, "Cannot get Stops");
         }
