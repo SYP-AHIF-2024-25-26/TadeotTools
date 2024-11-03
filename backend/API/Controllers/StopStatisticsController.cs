@@ -7,6 +7,19 @@ namespace API.Controllers;
 [ApiController]
 [Route("v1/stats")]
 public class GroupStopsController : ControllerBase {
+
+    [HttpGet]
+    [Route("api")]
+    public IActionResult GetAllStopStatistics() {
+        try {
+            return Ok(StopStatisticFunctions.GetInstance().GetAllStopStatistics());
+        }
+        catch (TadeoTDatabaseException) {
+            return StatusCode(500, "Internal server error");
+        }
+    }
+
+
     [HttpPost]
     [Route("{stopId}")]
     public IActionResult CreateStopStats(int stopId) {
