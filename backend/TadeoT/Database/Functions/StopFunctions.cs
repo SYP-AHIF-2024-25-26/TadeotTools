@@ -31,7 +31,15 @@ public class StopFunctions {
 
     public int AddStop(Stop stop) {
         try {
+            var existingStopGroup = this.context.StopGroups
+                .FirstOrDefault(sg => sg.StopGroupID == stop.StopGroup.StopGroupID);
+            if (existingStopGroup != null) {
+                stop.StopGroup = existingStopGroup;
+            } else {
+                this.context.StopGroups.Add(stop.StopGroup);
+            }
             this.context.Stops.Add(stop);
+
             this.context.SaveChanges();
             return stop.StopID;
         } catch (Exception e) {

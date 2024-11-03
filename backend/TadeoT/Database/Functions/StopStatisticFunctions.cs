@@ -35,6 +35,13 @@ public class StopStatisticFunctions {
 
     public int AddStopStatistic(StopStatistic statistic) {
         try {
+            var existingStop = this.context.Stops
+                .FirstOrDefault(s => s.StopID == statistic.Stop.StopID);    
+            if (existingStop != null) {
+                statistic.Stop = existingStop;
+            } else {
+                this.context.Stops.Add(statistic.Stop);
+            }
             this.context.StopStatistics.Add(statistic);
             this.context.SaveChanges();
             return statistic.StopStatisticID;
