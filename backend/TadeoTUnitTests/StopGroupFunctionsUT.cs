@@ -18,7 +18,7 @@ public class StopGroupFunctionsTests {
 
     public StopGroupFunctionsTests() {
         this.testGroup = new StopGroup() {
-            Name = "TestGroup",
+            Name = StopGroupName.Informatik,
             Description = "TestDescription",
             Color = "#ffffff"
         };
@@ -27,7 +27,7 @@ public class StopGroupFunctionsTests {
     [Test, Order(1)]
     public void AddStopGroupTest() {
         StopGroup group = new () {
-            Name = "add group",
+            Name = StopGroupName.Medizintechnik,
             Description = "TestDescription",
             Color = "#ffffff"
         };
@@ -45,10 +45,10 @@ public class StopGroupFunctionsTests {
     [Test, Order(3)]
     public void UpdateStopGroupTest() {
         StopGroup group = StopGroupFunctions.GetInstance().GetStopGroupById(this.testGroup.StopGroupID);
-        group.Name = "UpdatedName";
+        group.Name = StopGroupName.Elektronik;
         StopGroupFunctions.GetInstance().UpdateStopGroup(group);
         StopGroup result = StopGroupFunctions.GetInstance().GetStopGroupById(this.testGroup.StopGroupID);
-        Assert.That(result.Name, Is.EqualTo("UpdatedName"));
+        Assert.That(result.Name, Is.EqualTo(StopGroupName.Elektronik));
     }
 
     [Test, Order(4)]
