@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS Stops (
     description VARCHAR(50) NOT NULL,
     roomNr VARCHAR(5),
     stopGroupID INT,
-    FOREIGN KEY (stopGroupID) REFERENCES StopGroups(stopGroupID)
+    FOREIGN KEY (stopGroupID) REFERENCES StopGroups(stopGroupID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS StopStatistics (
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS StopStatistics (
     time DATETIME NOT NULL,
     isDone TINYINT NOT NULL,
     stopID INT NOT NULL,
-    FOREIGN KEY (stopID) REFERENCES Stops(stopID)
+    FOREIGN KEY (stopID) REFERENCES Stops(stopID) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS APIKeys(
