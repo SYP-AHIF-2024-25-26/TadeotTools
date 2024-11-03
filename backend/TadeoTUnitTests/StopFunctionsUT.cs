@@ -37,6 +37,7 @@ public class StopFunctionsUT {
             RoomNr = "E72",
             StopGroup = this.testGroup
         };
+
         StopFunctions.GetInstance().AddStop(stop);
         Stop result = StopFunctions.GetInstance().GetStopById(stop.StopID);
         Assert.That(result, Is.Not.EqualTo(null));

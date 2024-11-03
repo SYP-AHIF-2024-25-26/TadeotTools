@@ -25,7 +25,7 @@ public class GroupStopsController : ControllerBase
         }
     }
 
-    [HttpPut("stats/{stopId}")]
+    [HttpPut("{stopId}")]
     public IActionResult UpdateStopStats(int stopId, [FromBody] StopStatistic stats) {
         try {
             stats.StopID = stopId;
@@ -37,7 +37,7 @@ public class GroupStopsController : ControllerBase
         }
     }
 
-    [HttpDelete("stats/{stopId}")]
+    [HttpDelete("{stopId}")]
     public IActionResult DeleteStopStats(int stopId) {
         try {
             StopStatisticFunctions.GetInstance().DeleteStopStopStatisticById(stopId);

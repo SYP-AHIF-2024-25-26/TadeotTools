@@ -17,11 +17,23 @@ public class StopsController : ControllerBase {
         }
     }
 
-    [HttpPost]
-    public IActionResult CreateStop([FromBody] Stop stop) {
+    [HttpPost("api")]
+    public IActionResult CreateStop([FromBody] StopDto stop) {
         try {
-            StopFunctions.GetInstance().AddStop(stop);
-            return Ok();
+            try {
+                StopGroupFunctions.GetInstance().GetStopGroupById(stop.StopGroupID);
+            }
+            catch (TadeoTDatabaseException) {
+                return StatusCode(404, "Could not find StopGroup");
+            }
+
+            int stopId = StopFunctions.GetInstance().AddStop(new Stop() {
+                Name = stop.Name,
+                Description = stop.Description,
+                RoomNr = stop.RoomNr,
+                StopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(stop.StopGroupID),
+            });
+            return Ok(StopFunctions.GetInstance().GetStopById(stopId));
         }
         catch (TadeoTDatabaseException) {
             return StatusCode(500, "Could not add Stop");
@@ -66,7 +78,7 @@ public class StopsController : ControllerBase {
         }
         catch (TadeoTDatabaseException) {
             if (stopGroup == null) {
-                return StatusCode(404, "StopGroup not found");
+                return StatusCode(404, "Stopgroup not found");
             }
             return StatusCode(500, "Cannot get Stops");
         }
