@@ -15,12 +15,11 @@ public class StopStatisticFunctions {
     }
     
     public List<StopStatistic> GetAllStopStatistics() {
-        return [.. this.context.StopStatistics.Include(s => s.Stop)];
+        return [.. this.context.StopStatistics];
     }
 
     public StopStatistic GetStopStatisticById(int id) {
         StopStatistic? statistic = this.context.StopStatistics
-            .Include(s => s.Stop)
             .FirstOrDefault(s => s.StopStatisticID == id);
         return statistic ?? throw new TadeoTDatabaseException("StopStatistic not found");
     }
@@ -72,7 +71,7 @@ public class StopStatisticFunctions {
     public Stop? GetStopOfStopStatistic(int stopId) {
         try {
             StopStatistic statistic = this.GetStopStatisticById(stopId);
-            return statistic.Stop;
+            return StopFunctions.GetInstance().GetStopById(statistic.StopID);
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get Stop: " + e.Message);
         }

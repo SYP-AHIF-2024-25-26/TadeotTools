@@ -1,0 +1,8 @@
+<nav class="bg-white flex justify-evenly items-center w-full h-12 rounded-lg shadow-lg">
+  <div>
+    <button (click)="switchToStationMode()" [ngClass]="{'text-black': !viewModeService.viewMode(), 'text-orange-500': viewModeService.viewMode()}">Station</button>
+  </div>
+  <div>
+    <button (click)="switchToCardMode()" [ngClass]="{'text-black': viewModeService.viewMode(), 'text-orange-500': !viewModeService.viewMode()}">Karte</button>
+  </div>
+</nav>
