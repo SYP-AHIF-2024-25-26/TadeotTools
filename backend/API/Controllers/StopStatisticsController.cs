@@ -6,8 +6,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("v1/stats")]
-public class GroupStopsController : ControllerBase
-{
+public class GroupStopsController : ControllerBase {
     [HttpPost]
     [Route("{stopId}")]
     public IActionResult CreateStopStats(int stopId) {
