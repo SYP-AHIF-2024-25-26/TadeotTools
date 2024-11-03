@@ -47,6 +47,7 @@ public class StopGroupFunctions {
 
     public void UpdateStopGroup(StopGroup group) {
         try {
+            this.context.ChangeTracker.Clear();
             this.context.StopGroups.Update(group);
             this.context.SaveChanges();
         } catch (Exception e) {

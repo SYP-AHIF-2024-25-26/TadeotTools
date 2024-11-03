@@ -31,7 +31,7 @@ public class StopGroupsController : ControllerBase {
                 return StatusCode(404, $"No Stops found for StopGroup: {groupId}");
             }
 
-            return Ok();
+            return Ok(stops);
         }
         catch (TadeoTDatabaseException) {
             return StatusCode(500, "Internal server error");
@@ -39,14 +39,14 @@ public class StopGroupsController : ControllerBase {
     }
 
     [HttpPost("api")]
-    public IActionResult CreateGroup([FromBody] StopGroup? group) {
+    public IActionResult CreateGroup([FromBody] StopGroupDto? group) {
         try {
             if (group == null) {
                 return StatusCode(400, "Missing Request Body");
             }
 
             StopGroup stopGroupToAdd = new StopGroup {
-                Name = group.Name,
+                Name = Enum.Parse<StopGroupName>(group.Name),
                 Description = group.Description,
                 Color = group.Color
             };
@@ -60,15 +60,20 @@ public class StopGroupsController : ControllerBase {
     }
 
     [HttpPut("api/{groupId}")]
-    public IActionResult UpdateGroup(int groupId, [FromBody] StopGroup? group) {
+    public IActionResult UpdateGroup(int groupId, [FromBody] StopGroupDto? group) {
         try {
             if (group == null) {
                 return StatusCode(406, "Missing group data");
             }
 
-            group.StopGroupID = groupId;
+            StopGroup stopGroup = new StopGroup {
+                StopGroupID = groupId,
+                Name = Enum.Parse<StopGroupName>(group.Name),
+                Description = group.Description,
+                Color = group.Color
+            };
 
-            StopGroupFunctions.GetInstance().UpdateStopGroup(group);
+            StopGroupFunctions.GetInstance().UpdateStopGroup(stopGroup);
             return Ok();
         }
         catch (TadeoTDatabaseException) {

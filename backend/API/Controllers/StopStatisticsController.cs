@@ -21,19 +21,21 @@ public class GroupStopsController : ControllerBase
             return Ok();
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, "Internal server error");
+            return StatusCode(404, "Stop not found");
         }
     }
 
-    [HttpPut("{stopId}")]
-    public IActionResult UpdateStopStats(int stopId, [FromBody] StopStatistic stats) {
+    [HttpPut("{stopStatisticsId}")]
+    public IActionResult UpdateStopStats(int stopStatisticsId, [FromQuery] bool isDone) {
         try {
-            stats.StopID = stopId;
+            StopStatistic stats = StopStatisticFunctions.GetInstance().GetStopStatisticById(stopStatisticsId);
+            stats.Time = DateTime.Now;
+            stats.IsDone = isDone;
             StopStatisticFunctions.GetInstance().UpdateStopStatistic(stats);
             return Ok();
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, "Internal server error");
+            return StatusCode(404, "StopStatistic not found");
         }
     }
 
@@ -44,7 +46,7 @@ public class GroupStopsController : ControllerBase
             return Ok();
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, "Internal server error");
+            return StatusCode(404, "StopStatistic not found");
         }
     }
 }
