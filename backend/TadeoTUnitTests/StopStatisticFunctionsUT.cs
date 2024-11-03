@@ -17,7 +17,7 @@ public class StopStatisticFunctionsTests {
 
     public StopStatisticFunctionsTests() {
         testGroup = new StopGroup() {
-            Name = "TestGroup",
+            Name = StopGroupName.Informatik,
             Description = "TestDescription",
             Color = "#ffffff"
         };

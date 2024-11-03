@@ -13,7 +13,7 @@ public class Program {
 
         // example program
         StopGroup stopGroup = new() {
-            Name = "Main Building",
+            Name = StopGroupName.Neutral,
             Description = "Group for stops in the main building",
             Color = "#FF5733"
         };

@@ -12,7 +12,7 @@ public class StopFunctionsUT {
 
     public StopFunctionsUT() {
         testGroup = new StopGroup() {
-            Name = "TestGroup",
+            Name = StopGroupName.Informatik,
             Description = "TestDescription",
             Color = "#ffffff"
         };
@@ -31,7 +31,7 @@ public class StopFunctionsUT {
 
     [Test, Order(1)]
     public void AddStopTest() {
-        Stop stop = new Stop() {
+        Stop stop = new () {
             Name = "add stop",
             Description = "TestDescription",
             RoomNr = "E72",
