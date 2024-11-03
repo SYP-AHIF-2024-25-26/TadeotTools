@@ -15,11 +15,17 @@ public class TadeoTDbContext : DbContext {
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<Stop>()
-            .HasOne(s => s.StopGroup);
+            .HasOne(s => s.StopGroup)
+            .WithMany()
+            .HasForeignKey(s => s.StopGroupID)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<StopStatistic>()
-            .HasOne(ss => ss.Stop);
-        
+            .HasOne(stat => stat.Stop)
+            .WithMany()
+            .HasForeignKey(stat => stat.StopID)
+            .OnDelete(DeleteBehavior.Cascade);
+
         modelBuilder.Entity<APIKey>()
             .HasKey(k => k.APIKeyValue);
     }
