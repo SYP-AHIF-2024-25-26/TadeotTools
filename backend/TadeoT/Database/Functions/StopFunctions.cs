@@ -49,6 +49,7 @@ public class StopFunctions {
 
     public void UpdateStop(Stop stop) {
         try {
+            this.context.ChangeTracker.Clear();
             this.context.Stops.Update(stop);
             this.context.SaveChanges();
         } catch (Exception e) {
