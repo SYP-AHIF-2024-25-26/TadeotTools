@@ -1,0 +1,13 @@
+<div class="flex justify-center content-center w-full">
+  <div class="flex items-center justify-between w-full rounded-lg shadow-lg mx-4 duration-[250ms] ease-in-out cursor-auto" [ngClass]="[isChecked() ? 'h-12' : 'h-20']" [ngStyle]="{'background-color': stop.stopGroup.color }" (click)="modalViewService.openModal(stop.name, stop.description, false, [])">
+    <div class="px-6 py-4 flex flex-row space-x-4 justify-between content-center w-full">
+      <div class="flex-1">
+        <p class="text-white text-base justify-self-start ml-2 font-bold line-clamp-2 cursor-default self-center">{{ stop.name }}</p>
+      </div>
+      <div (click)="$event.stopPropagation()" class="self-center">
+        <app-checkbox [parent]="'stop-card'" [id]="id"></app-checkbox>
+      </div>
+    </div>
+  </div>
+</div>
+
