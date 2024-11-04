@@ -1,4 +1,4 @@
-import { Component, inject, Input, signal, WritableSignal } from '@angular/core';
+import { Component, inject, Input, Query, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgClass, NgIf } from '@angular/common';
 
@@ -15,16 +15,17 @@ import { NgClass, NgIf } from '@angular/common';
 })
 export class CheckboxComponent {
   @Input() id!: string;
+  @Input() parent!: string;
   isChecked: WritableSignal<boolean> = signal(false);
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.isChecked.update(old => old || sessionStorage.getItem(this.id) === 'true');
+      this.isChecked.update(old => old || sessionStorage.getItem(this.parent + this.id) === 'true');
     }, 0);
   }
 
   toggleCheckbox() {
     this.isChecked.update(old => !old);
-    sessionStorage.setItem(this.id, String(this.isChecked()));
+    sessionStorage.setItem(this.parent + this.id, String(this.isChecked()));
   }
 }
