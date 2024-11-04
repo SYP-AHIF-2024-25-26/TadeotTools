@@ -37,11 +37,18 @@ public class StopsController : ControllerBase {
                 return StatusCode(404, "Could not find StopGroup");
             }
 
-            int stopId = StopFunctions.GetInstance().AddStop(new Stop() {
+            if (stop.Name.Length > 50) return StatusCode(400, "Invalid Name");
+
+            if (stop.Description.Length > 255) return StatusCode(400, "Invalid Description");
+
+            if (stop.RoomNr.Length > 5) return StatusCode(400, "Invalid Room Number");
+
+
+            var stopId = StopFunctions.GetInstance().AddStop(new Stop {
                 Name = stop.Name,
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
-                StopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(stop.StopGroupID),
+                StopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(stop.StopGroupID)
             });
             return Ok(StopFunctions.GetInstance().GetStopById(stopId));
         }
@@ -51,9 +58,28 @@ public class StopsController : ControllerBase {
     }
 
     [HttpPut("{stopId}")]
-    public IActionResult UpdateStop(int stopId, [FromBody] Stop stop) {
+    public IActionResult UpdateStop(int stopId, [FromBody] StopDto stop) {
         try {
-            StopFunctions.GetInstance().UpdateStop(stop);
+            if (stop.Name.Length > 50) return StatusCode(400, "Invalid Name");
+
+            if (stop.Description.Length > 255) return StatusCode(400, "Invalid Description");
+
+            if (stop.RoomNr.Length > 5) return StatusCode(400, "Invalid Room Number");
+
+            try {
+                StopFunctions.GetInstance().GetStopById(stopId);
+            }
+            catch (TadeoTDatabaseException) {
+                return StatusCode(404, "Stop not found");
+            }
+
+            StopFunctions.GetInstance().UpdateStop(new Stop {
+                StopID = stopId,
+                Name = stop.Name,
+                Description = stop.Description,
+                RoomNr = stop.RoomNr,
+                StopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(stop.StopGroupID)
+            });
             return Ok();
         }
         catch (TadeoTDatabaseException) {
@@ -70,9 +96,7 @@ public class StopsController : ControllerBase {
             return Ok();
         }
         catch (TadeoTDatabaseException) {
-            if (stopToUpdate == null) {
-                return StatusCode(404, "Stop not found");
-            }
+            if (stopToUpdate == null) return StatusCode(404, "Stop not found");
 
             return StatusCode(500, "Could not delete Stop");
         }
@@ -83,13 +107,11 @@ public class StopsController : ControllerBase {
         StopGroup? stopGroup = null;
         try {
             stopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(groupId);
-            List<Stop> stops = StopGroupFunctions.GetInstance().GetStopsOfStopGroup(groupId);
+            var stops = StopGroupFunctions.GetInstance().GetStopsOfStopGroup(groupId);
             return Ok(stops);
         }
         catch (TadeoTDatabaseException) {
-            if (stopGroup == null) {
-                return StatusCode(404, "Stopgroup not found");
-            }
+            if (stopGroup == null) return StatusCode(404, "Stopgroup not found");
             return StatusCode(500, "Cannot get Stops");
         }
     }

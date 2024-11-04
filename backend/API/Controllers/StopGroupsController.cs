@@ -25,11 +25,9 @@ public class StopGroupsController : ControllerBase {
     [HttpGet("{groupId}")]
     public IActionResult GetGroupById(int groupId) {
         try {
-            List<Stop> stops = StopGroupFunctions.GetInstance().GetStopsOfStopGroup(groupId);
+            var stops = StopGroupFunctions.GetInstance().GetStopsOfStopGroup(groupId);
 
-            if (stops.Count == 0) {
-                return StatusCode(404, $"No Stops found for StopGroup: {groupId}");
-            }
+            if (stops.Count == 0) return StatusCode(404, $"No Stops found for StopGroup: {groupId}");
 
             return Ok(stops);
         }
@@ -41,16 +39,18 @@ public class StopGroupsController : ControllerBase {
     [HttpPost("api")]
     public IActionResult CreateGroup([FromBody] StopGroupDto? group) {
         try {
-            if (group == null) {
-                return StatusCode(400, "Missing Request Body");
-            }
+            if (group == null) return StatusCode(400, "Missing Request Body");
 
-            StopGroup stopGroupToAdd = new StopGroup {
+            if (group.Description.Length > 255) return StatusCode(400, "Invalid Description");
+
+            if (group.Color.Length > 7) return StatusCode(400, "Invalid Color");
+
+            var stopGroupToAdd = new StopGroup {
                 Name = Enum.Parse<StopGroupName>(group.Name),
                 Description = group.Description,
                 Color = group.Color
             };
-            int stopGroupId = StopGroupFunctions.GetInstance().AddStopGroup(stopGroupToAdd);
+            var stopGroupId = StopGroupFunctions.GetInstance().AddStopGroup(stopGroupToAdd);
             stopGroupToAdd.StopGroupID = stopGroupId;
             return Ok(stopGroupToAdd);
         }
@@ -62,11 +62,14 @@ public class StopGroupsController : ControllerBase {
     [HttpPut("api/{groupId}")]
     public IActionResult UpdateGroup(int groupId, [FromBody] StopGroupDto? group) {
         try {
-            if (group == null) {
-                return StatusCode(406, "Missing group data");
-            }
+            if (group == null) return StatusCode(406, "Missing group data");
 
-            StopGroup stopGroup = new StopGroup {
+
+            if (group.Description.Length > 255) return StatusCode(400, "Invalid Description");
+
+            if (group.Color.Length > 7) return StatusCode(400, "Invalid Color");
+
+            var stopGroup = new StopGroup {
                 StopGroupID = groupId,
                 Name = Enum.Parse<StopGroupName>(group.Name),
                 Description = group.Description,
