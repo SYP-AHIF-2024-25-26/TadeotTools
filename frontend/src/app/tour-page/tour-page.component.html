@@ -1,0 +1,15 @@
+<div class="flex flex-col w-full h-screen justify-star bg-gray-50 overflow-y-scroll space-y-reverse">
+    <div>
+      <app-header></app-header>
+    </div>
+    <app-breadcrumb [name]="name()"></app-breadcrumb>
+
+  <div class="flex flex-col justify-center">
+    @for (stop of tour; track stop.stopID) {
+      <app-stop-card [stop]="stop" class="mt-4" [id]="stop.stopID.toString()"></app-stop-card>
+    }
+  </div>
+  <div class="fixed bottom-8 left-0 right-0 mx-4 ">
+    <app-navbar></app-navbar>
+  </div>
+  </div>

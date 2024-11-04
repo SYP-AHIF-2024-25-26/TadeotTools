@@ -51,6 +51,7 @@ public class StopStatisticFunctions {
 
     public void UpdateStopStatistic(StopStatistic statistic) {
         try {
+            this.context.ChangeTracker.Clear();
             this.context.StopStatistics.Update(statistic);
             this.context.SaveChanges();
         } catch (Exception e) {
