@@ -17,7 +17,7 @@ export class ViewModeService {
     this.isStationMode.set(false);
   }
 
-  viewMode() {
+  stationMode() {
     return this.isStationMode();
   }
 }

@@ -1,19 +1,30 @@
-<div class="flex flex-col w-full h-screen justify-star bg-gray-50 overflow-y-scroll">
+<div class="flex flex-col w-full h-screen justify-start bg-gray-50 overflow-y-scroll">
   <div>
     <app-header></app-header>
   </div>
-  @if (viewModeService.viewMode()) {
+  @if (viewModeService.stationMode()) {
   <div class="flex flex-col justify-center">
     @for (card of cards(); track card.id) {
-      <app-card [card]="card"  class="mt-4" [id]="card.id.toString()"></app-card>
+      @if (card.id < cards().length) {
+        <app-guide-card [card]="card" class="mt-4" [id]="card.id.toString()" [stopGroupNames]="card.stopGroupNames ? card.stopGroupNames : []"></app-guide-card>
+      } @else {
+        <app-guide-card [card]="card" class="mt-4 mb-28" [id]="card.id.toString()" [stopGroupNames]="card.stopGroupNames ? card.stopGroupNames : []"></app-guide-card>
+      }
     }
   </div>
-  <div class="fixed bottom-8 left-0 right-0 mx-4 ">
+  }
+  <div class="fixed bottom-8 left-0 right-0 mx-4">
     <app-navbar></app-navbar>
   </div>
-  } @else {
-    <div class="fixed bottom-8 left-0 right-0 mx-4">
-      <app-navbar></app-navbar>
-    </div>
+
+  @if (modalViewService.modalState()) {
+  <app-description-modal
+  class="fixed self-center"
+  [title]="modalViewService.modalTitle"
+  [description]="modalViewService.modalDescription"
+  [isTour]="modalViewService.isTour"
+  [stopGroupNames]="modalViewService.stopGroupNames"
+  (closeModal)="modalViewService.closeModal()">
+  </app-description-modal>
   }
 </div>
