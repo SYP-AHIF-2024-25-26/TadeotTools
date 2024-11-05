@@ -9,7 +9,11 @@ var app = builder.Build();
 app.UseRouting();
 
 // Enable CORS (if needed)
-app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true)
+    .AllowCredentials());
 
 app.UseEndpoints(endpoints =>
 {
