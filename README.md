@@ -164,5 +164,5 @@ Backend:
 - (Große Teile übernehmen)
 
 
-## Datenmodel
+## Datenmodell
 <img src="./assets/datamodel.png" alt="Datenmodell">
