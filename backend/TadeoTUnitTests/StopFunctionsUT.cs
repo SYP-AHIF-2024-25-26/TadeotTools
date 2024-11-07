@@ -20,12 +20,13 @@ public class StopFunctionsUT {
             Name = "TestStop",
             Description = "TestDescription",
             RoomNr = "E72",
-            StopGroup = testGroup,
+            StopGroup = testGroup
         };
     }
 
     [OneTimeSetUp]
     public void Setup() {
+        StopGroupFunctions.GetInstance().AddStopGroup(this.testGroup);
         StopFunctions.GetInstance().AddStop(this.testStop);
     }
 
@@ -37,7 +38,6 @@ public class StopFunctionsUT {
             RoomNr = "E72",
             StopGroup = this.testGroup
         };
-
         StopFunctions.GetInstance().AddStop(stop);
         Stop result = StopFunctions.GetInstance().GetStopById(stop.StopID);
         Assert.That(result, Is.Not.EqualTo(null));
@@ -45,8 +45,8 @@ public class StopFunctionsUT {
 
     [Test, Order(2)]
     public void GetStopByIdTest() {
-        Stop result = StopFunctions.GetInstance().GetStopById(1);
-        Assert.That(result.StopID, Is.EqualTo(1));
+        Stop result = StopFunctions.GetInstance().GetStopById(testStop.StopID);
+        Assert.That(result.StopID, Is.EqualTo(testStop.StopID));
     }
 
     [Test, Order(3)]
@@ -62,6 +62,6 @@ public class StopFunctionsUT {
     public void DeleteStop() {
         Stop stop = StopFunctions.GetInstance().GetStopById(this.testStop.StopID);
         StopFunctions.GetInstance().DeleteStopById(stop.StopID);
-        Assert.Throws<TadeoTDatabaseException>(() => StopFunctions.GetInstance().GetStopById(stop.StopID));
+        Assert.Throws<TadeoTNotFoundException>(() => StopFunctions.GetInstance().GetStopById(stop.StopID));
     }
 }

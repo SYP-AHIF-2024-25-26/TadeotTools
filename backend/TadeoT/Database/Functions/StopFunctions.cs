@@ -22,7 +22,7 @@ public class StopFunctions {
         Stop? stop = this.context.Stops
             .Include(s => s.StopGroup)
             .FirstOrDefault(s => s.StopID == id);
-        return stop ?? throw new TadeoTDatabaseException("Stop not found");
+        return stop ?? throw new TadeoTNotFoundException("Stop not found");
     }
 
     public int GetMaxId() {
@@ -30,24 +30,29 @@ public class StopFunctions {
     }
 
     public int AddStop(Stop stop) {
+        if (stop == null) {
+            throw new TadeoTArgumentNullException("Stop is null");
+        }
         try {
-            var existingStopGroup = this.context.StopGroups
-                .FirstOrDefault(sg => sg.StopGroupID == stop.StopGroup.StopGroupID);
-            if (existingStopGroup != null) {
-                stop.StopGroup = existingStopGroup;
-            } else {
-                this.context.StopGroups.Add(stop.StopGroup);
+            if (stop.StopGroup != null) {
+                var existingStopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(stop.StopGroup.StopGroupID);
+                stop.StopGroupID = existingStopGroup.StopGroupID;
+                this.context.Entry(stop.StopGroup).State = EntityState.Unchanged;
             }
             this.context.Stops.Add(stop);
-
             this.context.SaveChanges();
             return stop.StopID;
-        } catch (Exception e) {
-            throw new TadeoTDatabaseException("Could not add Stop: " + e.Message);
+        } catch (TadeoTNotFoundException e) {
+            throw new TadeoTNotFoundException("Stopgroup of Stop not found, add it before" + e.Message);
+        } catch (Exception) {
+            throw new TadeoTDatabaseException("Could not add Stop");
         }
     }
 
     public void UpdateStop(Stop stop) {
+        if (stop == null) {
+            throw new TadeoTArgumentNullException("Stop is null");
+        }
         try {
             this.context.ChangeTracker.Clear();
             this.context.Stops.Update(stop);
@@ -62,6 +67,8 @@ public class StopFunctions {
             Stop stop = this.GetStopById(id);
             this.context.Stops.Remove(stop);
             this.context.SaveChanges();
+        } catch (TadeoTNotFoundException e) {
+            throw new TadeoTNotFoundException("Stop not found, add it before deleting" + e.Message);
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not delete Stop: " + e.Message);
         }

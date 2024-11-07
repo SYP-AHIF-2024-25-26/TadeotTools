@@ -21,7 +21,7 @@ public class StopGroupFunctions {
     public StopGroup GetStopGroupById(int id) {
         StopGroup? group = this.context.StopGroups
             .FirstOrDefault(sg => sg.StopGroupID == id);
-        return group ?? throw new TadeoTDatabaseException("StopGroup not found");
+        return group ?? throw new TadeoTNotFoundException("StopGroup not found");
     }
 
     public int GetMaxId() {
@@ -34,7 +34,7 @@ public class StopGroupFunctions {
 
     public int AddStopGroup(StopGroup group) {
         if (group == null) {
-            throw new TadeoTDatabaseException("Could not add StopGroup because it was null");
+            throw new TadeoTArgumentNullException("Could not add StopGroup because it was null");
         }
         try {
             this.context.StopGroups.Add(group);
@@ -46,6 +46,9 @@ public class StopGroupFunctions {
     }
 
     public void UpdateStopGroup(StopGroup group) {
+        if (group == null) {
+            throw new TadeoTArgumentNullException("Could not update StopGroup because it was null");
+        }
         try {
             this.context.ChangeTracker.Clear();
             this.context.StopGroups.Update(group);
@@ -67,7 +70,7 @@ public class StopGroupFunctions {
 
     public List<Stop> GetStopsOfStopGroup(int groupId) {
         try {
-            return context.Stops.Where(sg => sg.StopGroupID == groupId).ToList();
+            return [.. context.Stops.Where(sg => sg.StopGroupID == groupId)];
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get Stops: " + e.Message);
         }

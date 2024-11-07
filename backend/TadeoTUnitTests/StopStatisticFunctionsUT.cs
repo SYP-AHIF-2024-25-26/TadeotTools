@@ -37,6 +37,8 @@ public class StopStatisticFunctionsTests {
 
     [OneTimeSetUp]
     public void Setup() {
+        StopGroupFunctions.GetInstance().AddStopGroup(this.testGroup);
+        StopFunctions.GetInstance().AddStop(this.testStop);
         StopStatisticFunctions.GetInstance().AddStopStatistic(this.testStatistic);
     }
 
@@ -55,8 +57,8 @@ public class StopStatisticFunctionsTests {
 
     [Test, Order(2)]
     public void GetStopStatisticByIdTest() {
-        StopStatistic result = StopStatisticFunctions.GetInstance().GetStopStatisticById(1);
-        Assert.That(result.StopStatisticID, Is.EqualTo(1));
+        StopStatistic result = StopStatisticFunctions.GetInstance().GetStopStatisticById(testStatistic.StopStatisticID);
+        Assert.That(result.StopStatisticID, Is.EqualTo(testStatistic.StopStatisticID));
     }
 
     [Test, Order(3)]
@@ -72,7 +74,7 @@ public class StopStatisticFunctionsTests {
     public void DeleteStopStatistic() {
         StopStatistic stat = StopStatisticFunctions.GetInstance().GetStopStatisticById(this.testStatistic.StopStatisticID);
         StopStatisticFunctions.GetInstance().DeleteStopStopStatisticById(stat.StopStatisticID);
-        Assert.Throws<TadeoTDatabaseException>(() => StopStatisticFunctions.GetInstance().GetStopStatisticById(this.testStatistic.StopStatisticID));
+        Assert.Throws<TadeoTNotFoundException>(() => StopStatisticFunctions.GetInstance().GetStopStatisticById(this.testStatistic.StopStatisticID));
     }
 }
 

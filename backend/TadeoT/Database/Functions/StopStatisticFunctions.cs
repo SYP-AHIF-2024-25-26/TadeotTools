@@ -21,7 +21,7 @@ public class StopStatisticFunctions {
     public StopStatistic GetStopStatisticById(int id) {
         StopStatistic? statistic = this.context.StopStatistics
             .FirstOrDefault(s => s.StopStatisticID == id);
-        return statistic ?? throw new TadeoTDatabaseException("StopStatistic not found");
+        return statistic ?? throw new TadeoTNotFoundException("StopStatistic not found");
     }
 
     public int GetMaxId() {
@@ -33,23 +33,25 @@ public class StopStatisticFunctions {
     }
 
     public int AddStopStatistic(StopStatistic statistic) {
+        if (statistic == null) {
+            throw new TadeoTArgumentNullException("Statistic is null");
+        }
         try {
-            var existingStop = this.context.Stops
-                .FirstOrDefault(s => s.StopID == statistic.Stop.StopID);    
-            if (existingStop != null) {
-                statistic.Stop = existingStop;
-            } else {
-                this.context.Stops.Add(statistic.Stop);
-            }
+            this.context.Entry(statistic.Stop).State = EntityState.Unchanged;
             this.context.StopStatistics.Add(statistic);
             this.context.SaveChanges();
             return statistic.StopStatisticID;
+        } catch (TadeoTNotFoundException e) {
+            throw new TadeoTNotFoundException("Stopgroup of Stop not found, add it before" + e.Message);
         } catch (Exception e) {
-            throw new TadeoTDatabaseException("Could not add StopStatistic: " + e.Message);
+            throw new TadeoTDatabaseException("Could not add Stop" + e.Message);
         }
     }
 
     public void UpdateStopStatistic(StopStatistic statistic) {
+        if (statistic == null) {
+            throw new TadeoTArgumentNullException("Statistic is null");
+        }
         try {
             this.context.ChangeTracker.Clear();
             this.context.StopStatistics.Update(statistic);

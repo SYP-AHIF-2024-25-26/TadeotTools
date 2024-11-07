@@ -7,5 +7,5 @@ public class Stop {
     public required string RoomNr { get; set; }
     public int? StopGroupID { get; set; }
 
-    public required StopGroup StopGroup { get; set; }
+    public StopGroup? StopGroup { get; set; }
 }
