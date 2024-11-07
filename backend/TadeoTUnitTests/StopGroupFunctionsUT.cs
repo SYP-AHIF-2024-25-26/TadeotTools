@@ -38,8 +38,8 @@ public class StopGroupFunctionsTests {
     
     [Test, Order(2)]
     public void GetStopGroupByIdTest() {
-        StopGroup result = StopGroupFunctions.GetInstance().GetStopGroupById(1);
-        Assert.That(result.StopGroupID, Is.EqualTo(1));
+        StopGroup result = StopGroupFunctions.GetInstance().GetStopGroupById(testGroup.StopGroupID);
+        Assert.That(result.StopGroupID, Is.EqualTo(testGroup.StopGroupID));
     }
 
     [Test, Order(3)]
@@ -55,7 +55,7 @@ public class StopGroupFunctionsTests {
     public void DeleteStopGroup() {
         StopGroup group = StopGroupFunctions.GetInstance().GetStopGroupById(this.testGroup.StopGroupID);
         StopGroupFunctions.GetInstance().DeleteStopGroupById(group.StopGroupID);
-        Assert.Throws<TadeoTDatabaseException>(() => StopGroupFunctions.GetInstance().GetStopGroupById(this.testGroup.StopGroupID));
+        Assert.Throws<TadeoTNotFoundException>(() => StopGroupFunctions.GetInstance().GetStopGroupById(this.testGroup.StopGroupID));
     }
 }
 

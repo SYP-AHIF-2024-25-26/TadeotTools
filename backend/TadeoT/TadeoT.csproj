@@ -7,22 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="API\**" />
+    <Content Remove="API\**" />
+    <EmbeddedResource Remove="API\**" />
+    <None Remove="API\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
     <PackageReference Include="MySql.Data" Version="9.1.0" />
     <PackageReference Include="MySqlConnector" Version="2.3.7" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     <PackageReference Include="Xunit.Priority" Version="1.1.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="API\obj\API.csproj.nuget.dgspec.json" />
-    <_ContentIncludedByDefault Remove="API\obj\project.assets.json" />
-    <_ContentIncludedByDefault Remove="API\obj\project.packagespec.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="API\" />
   </ItemGroup>
 
 </Project>
