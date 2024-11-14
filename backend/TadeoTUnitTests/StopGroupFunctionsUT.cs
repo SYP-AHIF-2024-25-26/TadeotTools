@@ -56,4 +56,3 @@ public class StopGroupFunctionsTests {
         Assert.Throws<TadeoTNotFoundException>(() => StopGroupFunctions.GetInstance().GetStopGroupById(this.testGroup.StopGroupID));
     }
 }
-

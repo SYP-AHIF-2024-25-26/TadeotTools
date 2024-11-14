@@ -42,6 +42,7 @@ public class StopStatisticFunctionsTests {
 
     [OneTimeSetUp]
     public void Setup() {
+        DivisionFunctions.GetInstance().AddDivision(this.testDivision);
         StopGroupFunctions.GetInstance().AddStopGroup(this.testGroup);
         StopFunctions.GetInstance().AddStop(this.testStop);
         StopStatisticFunctions.GetInstance().AddStopStatistic(this.testStatistic);

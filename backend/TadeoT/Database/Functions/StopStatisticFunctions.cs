@@ -6,14 +6,14 @@ public class StopStatisticFunctions {
     private readonly TadeoTDbContext context = new();
 
     private static StopStatisticFunctions? instance;
-    
+
     private StopStatisticFunctions() { }
 
     public static StopStatisticFunctions GetInstance() {
         instance ??= new StopStatisticFunctions();
         return instance;
     }
-    
+
     public List<StopStatistic> GetAllStopStatistics() {
         return [.. this.context.StopStatistics];
     }
@@ -70,13 +70,20 @@ public class StopStatisticFunctions {
             throw new TadeoTDatabaseException("Could not delete StopStatistic: " + e.Message);
         }
     }
-    public Stop? GetStopOfStopStatistic(int stopId) {
+    public Stop? GetStopOfStopStatistic(int statId) {
         try {
-            StopStatistic statistic = this.GetStopStatisticById(stopId);
+            StopStatistic statistic = this.GetStopStatisticById(statId);
             return StopFunctions.GetInstance().GetStopById(statistic.StopID);
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get Stop: " + e.Message);
         }
     }
+    public List<StopStatistic> GetStopStatisticsOfStop(int stopId) {
+        try {
+            List<StopStatistic> statistics = [.. this.context.StopStatistics.Where(s => s.StopID == stopId)];
+            return statistics;
+        } catch (Exception e) {
+            throw new TadeoTDatabaseException("Could not get StopStatistics: " + e.Message);
+        }
+    }
 }
-
