@@ -1,3 +1,5 @@
+using API.Middleware;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,6 +17,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+app.UseMiddleware<ApiKeyMiddleware>();
 
 // Enable routing
 app.UseRouting();
