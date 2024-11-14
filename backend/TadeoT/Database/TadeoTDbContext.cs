@@ -40,7 +40,6 @@ public class TadeoTDbContext : DbContext {
             .HasForeignKey(s => s.DivisionID)
             .OnDelete(DeleteBehavior.Cascade);
 
-
         modelBuilder.Entity<StopStatistic>()
             .HasOne(stat => stat.Stop)
             .WithMany()

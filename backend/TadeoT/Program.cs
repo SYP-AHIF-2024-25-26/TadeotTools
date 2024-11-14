@@ -23,7 +23,7 @@ public class Program {
         foreach (StopGroup sg in stopGroups) {
             Console.WriteLine($"StopGroup: {sg.Name}");
             foreach (Stop s in StopGroupFunctions.GetInstance().GetStopsOfStopGroup(sg.StopGroupID)) {
-                Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
+                Console.WriteLine($"\tStop: {s.Name}, RoomNr: {s.RoomNr}");
             }
         }
         Console.WriteLine("Stops: ");
@@ -42,7 +42,7 @@ public class Program {
         foreach (Division d in divisions) {
             Console.WriteLine($"Division: {d.Name}, Color: {d.Color}");
             foreach (Stop s in DivisionFunctions.GetInstance().GetStopsOfDivisionId(d.DivisionID)) {
-                Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
+                Console.WriteLine($"\tStop: {s.Name}, RoomNr: {s.RoomNr}");
             }
         }
     }
