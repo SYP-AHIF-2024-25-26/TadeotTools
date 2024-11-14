@@ -16,6 +16,7 @@ public class StopFunctionsUT {
         testGroup = new StopGroup() {
             Name = "TestGroup",
             Description = "TestDescription",
+            IsPublic = true
         };
 
         testDivision = new Division() {

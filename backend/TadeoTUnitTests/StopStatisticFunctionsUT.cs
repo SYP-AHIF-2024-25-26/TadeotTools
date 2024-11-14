@@ -21,6 +21,7 @@ public class StopStatisticFunctionsTests {
         testGroup = new StopGroup() {
             Name = "Informatik",
             Description = "TestDescription",
+            IsPublic = true
         };
         testDivision = new Division() {
             Name = "TestDivision",

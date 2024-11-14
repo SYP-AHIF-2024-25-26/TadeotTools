@@ -21,6 +21,7 @@ public class StopGroupFunctionsTests {
         this.testGroup = new StopGroup() {
             Name = "TestName",
             Description = "TestDescription",
+            IsPublic = true
         };
     }
     
@@ -29,6 +30,7 @@ public class StopGroupFunctionsTests {
         StopGroup group = new () {
             Name = "TestName",
             Description = "TestDescription",
+            IsPublic = true
         };
         StopGroupFunctions.GetInstance().AddStopGroup(group);
         StopGroup result = StopGroupFunctions.GetInstance().GetStopGroupById(group.StopGroupID);
