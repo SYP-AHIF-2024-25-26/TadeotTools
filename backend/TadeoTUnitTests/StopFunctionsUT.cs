@@ -6,13 +6,19 @@ using TadeoT.Database.Model;
 namespace TadeoTUnitTests;
 
 public class StopFunctionsUT {
-    private readonly TadeoTDbContext context = new();
-
     private readonly StopGroup testGroup;
     private readonly Stop testStop;
     private readonly Division testDivision;
 
-    public StopFunctionsUT() {
+    private readonly DivisionFunctions divisionFunctions;
+    private readonly StopFunctions stopFunctions;
+    private readonly StopGroupFunctions stopGroupFunctions;
+
+    public StopFunctionsUT(DivisionFunctions divisionFunctions, StopFunctions stopFunctions, StopGroupFunctions stopGroupFunctions) {
+        this.stopFunctions = stopFunctions;
+        this.divisionFunctions = divisionFunctions;
+        this.stopGroupFunctions = stopGroupFunctions;
+
         testGroup = new StopGroup() {
             Name = "TestGroup",
             Description = "TestDescription",
@@ -35,13 +41,13 @@ public class StopFunctionsUT {
 
     [OneTimeSetUp]
     public void Setup() {
-        StopGroupFunctions.GetInstance().AddStopGroup(this.testGroup);
-        DivisionFunctions.GetInstance().AddDivision(this.testDivision);
-        StopFunctions.GetInstance().AddStop(this.testStop);
+        Task.Run(() => this.stopGroupFunctions.AddStopGroup(this.testGroup));
+        Task.Run(() => this.divisionFunctions.AddDivision(this.testDivision));
+        Task.Run(() => this.stopFunctions.AddStop(this.testStop));
     }
 
     [Test, Order(1)]
-    public void AddStopTest() {
+    public async Task AddStopTest() {
         Stop stop = new () {
             Name = "add stop",
             Description = "TestDescription",
@@ -49,30 +55,30 @@ public class StopFunctionsUT {
             StopGroup = this.testGroup,
             Division = this.testDivision
         };
-        StopFunctions.GetInstance().AddStop(stop);
-        Stop result = StopFunctions.GetInstance().GetStopById(stop.StopID);
+        await this.stopFunctions.AddStop(stop);
+        Stop result = await this.stopFunctions.GetStopById(stop.StopID);
         Assert.That(result, Is.Not.EqualTo(null));
     }
 
     [Test, Order(2)]
-    public void GetStopByIdTest() {
-        Stop result = StopFunctions.GetInstance().GetStopById(testStop.StopID);
+    public async Task GetStopByIdTest() {
+        Stop result = await this.stopFunctions.GetStopById(testStop.StopID);
         Assert.That(result.StopID, Is.EqualTo(testStop.StopID));
     }
 
     [Test, Order(3)]
-    public void UpdateStopTest() {
-        Stop stop = StopFunctions.GetInstance().GetStopById(this.testStop.StopID);
+    public async Task UpdateStopTest() {
+        Stop stop = await this.stopFunctions.GetStopById(this.testStop.StopID);
         stop.Name = "UpdatedName";
-        StopFunctions.GetInstance().UpdateStop(stop);
-        Stop result = StopFunctions.GetInstance().GetStopById(this.testStop.StopID);
+        this.stopFunctions.UpdateStop(stop);
+        Stop result = await this.stopFunctions.GetStopById(this.testStop.StopID);
         Assert.That(result.Name, Is.EqualTo("UpdatedName"));
     }
 
     [Test, Order(4)]
-    public void DeleteStop() {
-        Stop stop = StopFunctions.GetInstance().GetStopById(this.testStop.StopID);
-        StopFunctions.GetInstance().DeleteStopById(stop.StopID);
-        Assert.Throws<TadeoTNotFoundException>(() => StopFunctions.GetInstance().GetStopById(stop.StopID));
+    public async Task DeleteStop() {
+        Stop stop = await this.stopFunctions.GetStopById(this.testStop.StopID);
+        this.stopFunctions.DeleteStopById(stop.StopID);
+        Assert.Throws<TadeoTNotFoundException>(async () => await this.stopFunctions.GetStopById(stop.StopID));
     }
 }

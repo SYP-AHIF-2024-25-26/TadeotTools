@@ -11,13 +11,15 @@ namespace TadeoTUnitTests;
 
 public class StopGroupFunctionsTests {
     private readonly StopGroup testGroup;
+    private readonly StopGroupFunctions stopGroupFunctions;
 
     [OneTimeSetUp]
     public void Setup() {
-        StopGroupFunctions.GetInstance().AddStopGroup(this.testGroup);
+        Task.Run(() => this.stopGroupFunctions.AddStopGroup(this.testGroup));
     }
 
-    public StopGroupFunctionsTests() {
+    public StopGroupFunctionsTests(StopGroupFunctions stopGroupFunctions) {
+        this.stopGroupFunctions = stopGroupFunctions;
         this.testGroup = new StopGroup() {
             Name = "TestName",
             Description = "TestDescription",
@@ -26,36 +28,36 @@ public class StopGroupFunctionsTests {
     }
     
     [Test, Order(1)]
-    public void AddStopGroupTest() {
+    public async Task AddStopGroupTest() {
         StopGroup group = new () {
             Name = "TestName",
             Description = "TestDescription",
             IsPublic = true
         };
-        StopGroupFunctions.GetInstance().AddStopGroup(group);
-        StopGroup result = StopGroupFunctions.GetInstance().GetStopGroupById(group.StopGroupID);
+        await this.stopGroupFunctions.AddStopGroup(group);
+        StopGroup result = await this.stopGroupFunctions.GetStopGroupById(group.StopGroupID);
         Assert.That(result, Is.Not.EqualTo(null));
     }
     
     [Test, Order(2)]
-    public void GetStopGroupByIdTest() {
-        StopGroup result = StopGroupFunctions.GetInstance().GetStopGroupById(testGroup.StopGroupID);
+    public async Task GetStopGroupByIdTest() {
+        StopGroup result = await this.stopGroupFunctions.GetStopGroupById(testGroup.StopGroupID);
         Assert.That(result.StopGroupID, Is.EqualTo(testGroup.StopGroupID));
     }
 
     [Test, Order(3)]
-    public void UpdateStopGroupTest() {
-        StopGroup group = StopGroupFunctions.GetInstance().GetStopGroupById(this.testGroup.StopGroupID);
+    public async Task UpdateStopGroupTest() {
+        StopGroup group = await this.stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
         group.Name = "Elektronik";
-        StopGroupFunctions.GetInstance().UpdateStopGroup(group);
-        StopGroup result = StopGroupFunctions.GetInstance().GetStopGroupById(this.testGroup.StopGroupID);
+        this.stopGroupFunctions.UpdateStopGroup(group);
+        StopGroup result = await this.stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
         Assert.That(result.Name, Is.EqualTo("Elektronik"));
     }
 
     [Test, Order(4)]
-    public void DeleteStopGroup() {
-        StopGroup group = StopGroupFunctions.GetInstance().GetStopGroupById(this.testGroup.StopGroupID);
-        StopGroupFunctions.GetInstance().DeleteStopGroupById(group.StopGroupID);
-        Assert.Throws<TadeoTNotFoundException>(() => StopGroupFunctions.GetInstance().GetStopGroupById(this.testGroup.StopGroupID));
+    public async Task DeleteStopGroup() {
+        StopGroup group = await this.stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
+        this.stopGroupFunctions.DeleteStopGroupById(group.StopGroupID);
+        Assert.Throws<TadeoTNotFoundException>(async () => await this.stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID));
     }
 }

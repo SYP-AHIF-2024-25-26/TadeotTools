@@ -11,20 +11,17 @@ public class TadeoTDbContext : DbContext {
     public DbSet<APIKey> APIKeys { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        var serverName = Environment.GetEnvironmentVariable("SERVER_NAME");
-        var serverPort = Environment.GetEnvironmentVariable("SERVER_PORT");
-        var databaseName = Environment.GetEnvironmentVariable("DATABASE_NAME");
-        var username = Environment.GetEnvironmentVariable("DATABASE_USER");
-        var password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
+        if (!optionsBuilder.IsConfigured)  // only configure if not already set by DI
+        {
+            var serverName = Environment.GetEnvironmentVariable("SERVER_NAME");
+            var serverPort = Environment.GetEnvironmentVariable("SERVER_PORT");
+            var databaseName = Environment.GetEnvironmentVariable("DATABASE_NAME");
+            var username = Environment.GetEnvironmentVariable("DATABASE_USER");
+            var password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
 
-        Console.WriteLine($"Server: {serverName}");
-        Console.WriteLine($"Port: {serverPort}");
-        Console.WriteLine($"Database: {databaseName}");
-        Console.WriteLine($"Username: {username}");
-        Console.WriteLine($"Password: {password}");
-
-        var connectionString = $"Server={serverName};Port={serverPort};Database={databaseName};User={username};Password={password};";
-        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            var connectionString = $"Server={serverName};Port={serverPort};Database={databaseName};User={username};Password={password};";
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {

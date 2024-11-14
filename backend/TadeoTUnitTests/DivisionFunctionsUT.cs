@@ -11,13 +11,17 @@ namespace TadeoTUnitTests;
 
 public class DivisionFunctionsUT {
     private readonly Division testDivision;
+    private readonly DivisionFunctions divisionFunctions;
+
 
     [OneTimeSetUp]
     public void Setup() {
-        DivisionFunctions.GetInstance().AddDivision(this.testDivision);
+        Task.Run(() => divisionFunctions.AddDivision(this.testDivision));
     }
 
-    public DivisionFunctionsUT() {
+    public DivisionFunctionsUT(DivisionFunctions divisionFunctions) {
+        this.divisionFunctions = divisionFunctions;
+
         this.testDivision = new Division() {
             Name = "TestDivision",
             Color = "#FFFFFF"
@@ -25,36 +29,36 @@ public class DivisionFunctionsUT {
     }
 
     [Test, Order(1)]
-    public void AddDivisionTest() {
+    public async Task AddDivisionTest() {
         Division division = new() {
             Name = "TestDivision",
             Color = "#FFFFFF"
         };
-        DivisionFunctions.GetInstance().AddDivision(division);
-        Division result = DivisionFunctions.GetInstance().GetDivisionById(division.DivisionID);
+        await divisionFunctions.AddDivision(division);
+        Division result = await divisionFunctions.GetDivisionById(division.DivisionID);
         Assert.That(result, Is.Not.EqualTo(null));
     }
 
     [Test, Order(2)]
-    public void GetDivisionByIdTest() {
-        Division result = DivisionFunctions.GetInstance().GetDivisionById(testDivision.DivisionID);
+    public async Task GetDivisionByIdTest() {
+        Division result = await this.divisionFunctions.GetDivisionById(testDivision.DivisionID);
         Assert.That(result.DivisionID, Is.EqualTo(testDivision.DivisionID));
     }
 
     [Test, Order(3)]
-    public void UpdateDivisionTest() {
-        Division division = DivisionFunctions.GetInstance().GetDivisionById(this.testDivision.DivisionID);
+    public async Task UpdateDivisionTest() {
+        Division division = await this.divisionFunctions.GetDivisionById(this.testDivision.DivisionID);
         division.Name = "Elektronik";
-        DivisionFunctions.GetInstance().UpdateDivision(division);
-        Division result = DivisionFunctions.GetInstance().GetDivisionById(this.testDivision.DivisionID);
+        this.divisionFunctions.UpdateDivision(division);
+        Division result = await this.divisionFunctions.GetDivisionById(this.testDivision.DivisionID);
         Assert.That(result.Name, Is.EqualTo("Elektronik"));
     }
 
     [Test, Order(4)]
-    public void DeleteDivisionTest() {
-        Division division = DivisionFunctions.GetInstance().GetDivisionById(this.testDivision.DivisionID);
-        DivisionFunctions.GetInstance().DeleteDivisionById(division.DivisionID);
-        Assert.Throws<TadeoTNotFoundException>(() => DivisionFunctions.GetInstance().GetDivisionById(this.testDivision.DivisionID));
+    public async Task DeleteDivisionTest() {
+        Division division = await this.divisionFunctions.GetDivisionById(this.testDivision.DivisionID);
+        this.divisionFunctions.DeleteDivisionById(division.DivisionID);
+        Assert.Throws<TadeoTNotFoundException>(async () => await this.divisionFunctions.GetDivisionById(this.testDivision.DivisionID));
     }
 }
 

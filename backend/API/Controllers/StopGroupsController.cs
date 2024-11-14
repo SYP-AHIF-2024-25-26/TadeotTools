@@ -7,6 +7,7 @@ namespace API.Controllers;
 [ApiController]
 [Route("v1/groups")]
 public class StopGroupsController : ControllerBase {
+    /*
     [HttpGet]
     public IActionResult GetGroups() {
         try {
@@ -91,5 +92,5 @@ public class StopGroupsController : ControllerBase {
         catch (TadeoTDatabaseException) {
             return StatusCode(404, "No StopGroup with this id");
         }
-    }
+    }*/
 }

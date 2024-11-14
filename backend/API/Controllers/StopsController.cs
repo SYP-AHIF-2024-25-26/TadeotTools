@@ -7,7 +7,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("v1/stops")]
-public class StopsController : ControllerBase {
+public class StopsController : ControllerBase {/*
     [HttpGet("api")]
     public IActionResult GetAllStops() {
         try {
@@ -117,5 +117,5 @@ public class StopsController : ControllerBase {
             if (stopGroup == null) return StatusCode(404, "Stopgroup not found");
             return StatusCode(500, "Cannot get Stops");
         }
-    }
+    }*/
 }

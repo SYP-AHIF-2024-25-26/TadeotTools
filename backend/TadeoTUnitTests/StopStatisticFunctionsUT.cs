@@ -10,14 +10,17 @@ using TadeoT.Database.Model;
 namespace TadeoTUnitTests;
 
 public class StopStatisticFunctionsTests {
-    private readonly TadeoTDbContext context = new();
-
     private readonly StopStatistic testStatistic;
     private readonly StopGroup testGroup;
     private readonly Division testDivision;
     private readonly Stop testStop;
 
-    public StopStatisticFunctionsTests() {
+    private readonly StopStatisticFunctions stopStatisticFunctions;
+    private readonly StopGroupFunctions stopGroupFunctions;
+    private readonly DivisionFunctions divisionFunctions;
+    private readonly StopFunctions stopFunctions;
+
+    public StopStatisticFunctionsTests(StopStatisticFunctions stopStatisticFunctions, StopGroupFunctions stopGroupFunctions, DivisionFunctions divisionFunctions, StopFunctions stopFunctions) {
         testGroup = new StopGroup() {
             Name = "Informatik",
             Description = "TestDescription",
@@ -40,49 +43,53 @@ public class StopStatisticFunctionsTests {
             Time = DateTime.Now,
             IsDone = false
         };
+        this.stopStatisticFunctions = stopStatisticFunctions;
+        this.stopGroupFunctions = stopGroupFunctions;
+        this.divisionFunctions = divisionFunctions;
+        this.stopFunctions = stopFunctions;
     }
 
     [OneTimeSetUp]
     public void Setup() {
-        DivisionFunctions.GetInstance().AddDivision(this.testDivision);
-        StopGroupFunctions.GetInstance().AddStopGroup(this.testGroup);
-        StopFunctions.GetInstance().AddStop(this.testStop);
-        StopStatisticFunctions.GetInstance().AddStopStatistic(this.testStatistic);
+        Task.Run(() => this.divisionFunctions.AddDivision(this.testDivision));
+        Task.Run(() => this.stopGroupFunctions.AddStopGroup(this.testGroup));
+        Task.Run(() => this.stopFunctions.AddStop(this.testStop));
+        Task.Run(() => this.stopStatisticFunctions.AddStopStatistic(this.testStatistic));
     }
 
     [Test, Order(1)]
-    public void AddStopStatisticTest() {
+    public async Task AddStopStatisticTest() {
         StopStatistic stopStatistic = new() {
             StopID = this.testStop.StopID,
             Stop = this.testStop,
             Time = DateTime.Now,
             IsDone = false
         };
-        StopStatisticFunctions.GetInstance().AddStopStatistic(stopStatistic);
-        StopStatistic result = StopStatisticFunctions.GetInstance().GetStopStatisticById(stopStatistic.StopStatisticID);
+        await this.stopStatisticFunctions.AddStopStatistic(stopStatistic);
+        StopStatistic result = await this.stopStatisticFunctions.GetStopStatisticById(stopStatistic.StopStatisticID);
         Assert.That(result, Is.Not.EqualTo(null));
     }
 
     [Test, Order(2)]
-    public void GetStopStatisticByIdTest() {
-        StopStatistic result = StopStatisticFunctions.GetInstance().GetStopStatisticById(testStatistic.StopStatisticID);
+    public async Task GetStopStatisticByIdTest() {
+        StopStatistic result = await this.stopStatisticFunctions.GetStopStatisticById(testStatistic.StopStatisticID);
         Assert.That(result.StopStatisticID, Is.EqualTo(testStatistic.StopStatisticID));
     }
 
     [Test, Order(3)]
-    public void UpdateStopStatisticTest() {
-        StopStatistic stat = StopStatisticFunctions.GetInstance().GetStopStatisticById(this.testStatistic.StopStatisticID);
+    public async Task UpdateStopStatisticTest() {
+        StopStatistic stat = await this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
         stat.IsDone = true;
-        StopStatisticFunctions.GetInstance().UpdateStopStatistic(stat);
-        StopStatistic result = StopStatisticFunctions.GetInstance().GetStopStatisticById(this.testStatistic.StopStatisticID);
+        this.stopStatisticFunctions.UpdateStopStatistic(stat);
+        StopStatistic result = await this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
         Assert.That(result.IsDone, Is.EqualTo(true));
     }
 
     [Test, Order(4)]
-    public void DeleteStopStatistic() {
-        StopStatistic stat = StopStatisticFunctions.GetInstance().GetStopStatisticById(this.testStatistic.StopStatisticID);
-        StopStatisticFunctions.GetInstance().DeleteStopStopStatisticById(stat.StopStatisticID);
-        Assert.Throws<TadeoTNotFoundException>(() => StopStatisticFunctions.GetInstance().GetStopStatisticById(this.testStatistic.StopStatisticID));
+    public async Task DeleteStopStatistic() {
+        StopStatistic stat = await this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
+        this.stopStatisticFunctions.DeleteStopStopStatisticById(stat.StopStatisticID);
+        Assert.Throws<TadeoTNotFoundException>(async () => await this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID));
     }
 }
 

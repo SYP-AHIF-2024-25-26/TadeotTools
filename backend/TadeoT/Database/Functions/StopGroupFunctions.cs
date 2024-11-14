@@ -6,7 +6,7 @@ namespace TadeoT.Database.Functions;
 public class StopGroupFunctions(TadeoTDbContext context) {
     private readonly TadeoTDbContext context = context;
 
-    public async Task<List<StopGroup>> GetAllStopGroupsAsync() {
+    public async Task<List<StopGroup>> GetAllStopGroups() {
         try {
             return await this.context.StopGroups.ToListAsync();
         } catch (Exception e) {
