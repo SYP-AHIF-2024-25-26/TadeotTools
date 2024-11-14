@@ -37,11 +37,17 @@ public class StopsController : ControllerBase {
                 return StatusCode(404, "Could not find StopGroup");
             }
 
-            if (stop.Name.Length > 50) return StatusCode(400, "Invalid Name");
+            if (stop.Name.Length > 50) {
+                return StatusCode(400, "Invalid Name");
+            }
 
-            if (stop.Description.Length > 255) return StatusCode(400, "Invalid Description");
+            if (stop.Description.Length > 255) {
+                return StatusCode(400, "Invalid Description");
+            }
 
-            if (stop.RoomNr.Length > 5) return StatusCode(400, "Invalid Room Number");
+            if (stop.RoomNr.Length > 5) {
+                return StatusCode(400, "Invalid Room Number");
+            }
 
 
             var stopId = StopFunctions.GetInstance().AddStop(new Stop {
@@ -61,11 +67,17 @@ public class StopsController : ControllerBase {
     [HttpPut("{stopId}")]
     public IActionResult UpdateStop(int stopId, [FromBody] StopDto stop) {
         try {
-            if (stop.Name.Length > 50) return StatusCode(400, "Invalid Name");
+            if (stop.Name.Length > 50) {
+                return StatusCode(400, "Invalid Name");
+            }
 
-            if (stop.Description.Length > 255) return StatusCode(400, "Invalid Description");
+            if (stop.Description.Length > 255) {
+                return StatusCode(400, "Invalid Description");
+            }
 
-            if (stop.RoomNr.Length > 5) return StatusCode(400, "Invalid Room Number");
+            if (stop.RoomNr.Length > 5) {
+                return StatusCode(400, "Invalid Room Number");
+            }
 
             try {
                 StopFunctions.GetInstance().GetStopById(stopId);
@@ -113,7 +125,10 @@ public class StopsController : ControllerBase {
             return Ok(stops);
         }
         catch (TadeoTDatabaseException) {
-            if (stopGroup == null) return StatusCode(404, "Stopgroup not found");
+            if (stopGroup == null) {
+                return StatusCode(404, "Stopgroup not found");
+            }
+
             return StatusCode(500, "Cannot get Stops");
         }
     }
