@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TadeoT.Database.Model;
 
 namespace TadeoT.Database;
 
@@ -33,15 +34,8 @@ public class TadeoTDbContext : DbContext {
             .WithMany()
             .HasForeignKey(stat => stat.StopID)
             .OnDelete(DeleteBehavior.Cascade);
-        /*
-        modelBuilder.Entity<StopGroup>()
-            .Property(p => p.Name)
-            .HasConversion<string>();
-        */
+
         modelBuilder.Entity<APIKey>()
             .HasKey(k => k.APIKeyValue);
-        /*
-        modelBuilder.Entity<Division>()
-            .*/
     }
 }

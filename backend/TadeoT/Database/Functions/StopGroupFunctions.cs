@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TadeoT.Database.Model;
 
 namespace TadeoT.Database.Functions;
 

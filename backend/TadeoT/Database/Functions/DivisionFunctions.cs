@@ -1,4 +1,6 @@
 ﻿
+using TadeoT.Database.Model;
+
 namespace TadeoT.Database.Functions;
 public class DivisionFunctions {
     private readonly TadeoTDbContext context = new();

@@ -1,4 +1,6 @@
-﻿namespace TadeoT.Database.Functions;
+﻿using TadeoT.Database.Model;
+
+namespace TadeoT.Database.Functions;
 
 public class APIKeyFunctions {
     private readonly TadeoTDbContext context = new();

@@ -1,4 +1,4 @@
-﻿namespace TadeoT.Database;
+﻿namespace TadeoT.Database.Model;
 public class Division {
     public int DivisionID { get; set; }
     public required string Name { get; set; }

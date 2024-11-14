@@ -1,4 +1,4 @@
-﻿namespace TadeoT.Database;
+﻿namespace TadeoT.Database.Model;
 
 public class Stop {
     public int StopID { get; set; }
