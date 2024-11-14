@@ -7,7 +7,6 @@ namespace API.Controllers;
 [ApiController]
 [Route("v1/stats")]
 public class GroupStopsController : ControllerBase {
-
     [HttpGet]
     [Route("api")]
     public IActionResult GetAllStopStatistics() {
