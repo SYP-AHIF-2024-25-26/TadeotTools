@@ -61,7 +61,10 @@ public class DivisionFunctions {
             Division division = this.GetDivisionById(id);
             this.context.Divisions.Remove(division);
             this.context.SaveChanges();
-        } catch (Exception e) {
+        } catch(TadeoTNotFoundException) {
+            throw;
+        }
+        catch (Exception e) {
             throw new TadeoTDatabaseException("Could not delete Division: " + e.Message);
         }
     }
