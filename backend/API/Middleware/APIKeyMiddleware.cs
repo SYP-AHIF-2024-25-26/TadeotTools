@@ -7,17 +7,17 @@ namespace API.Middleware;
 
 public class ApiKeyMiddleware
 {
-    private readonly RequestDelegate _next;
+    private readonly RequestDelegate next;
     private const string ApiKeyHeaderName = "X-Api-Key";
 
     public ApiKeyMiddleware(RequestDelegate next)
     {
-        _next = next;
+        this.next = next;
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
-        // Only apply to specific routes, e.g., /api/products
+        // Only apply to api routes
         if (context.Request.Path.ToString().Contains("/api"))
         {
             if (!context.Request.Headers.TryGetValue(ApiKeyHeaderName, out var extractedApiKey))
@@ -27,7 +27,7 @@ public class ApiKeyMiddleware
                 return;
             }
 
-            if (!IsValidApiKey(extractedApiKey))
+            if (!IsValidApiKey(extractedApiKey!))
             {
                 context.Response.StatusCode = 403; // Forbidden
                 await context.Response.WriteAsync("Invalid API Key.");
@@ -35,10 +35,10 @@ public class ApiKeyMiddleware
             }
         }
 
-        await _next(context);
+        await this.next(context);
     }
 
-    private bool IsValidApiKey(string userApiKey)
+    private static bool IsValidApiKey(string userApiKey)
     {
         List<string> systemApiKeys = APIKeyFunctions.GetInstance().GetAllAPIKeys().Select(ak => ak.APIKeyValue).ToList();
         

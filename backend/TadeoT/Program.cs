@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
+using TadeoT.Database.Model;
 
 namespace TadeoT;
 
@@ -11,35 +13,10 @@ public class Program {
         TadeoTDbContext context = new();
         context.Database.EnsureCreated();
 
-        // example program
-        StopGroup stopGroup = new() {
-            Name = "Stop Group Name",
-            Description = "Group for stops in the main building",
-        };
-
-        Division division = new() {
-            Name = "Division Name",
-            Color = "#FFFFFF",
-        };
-
-        Stop stop = new() {
-            Name = "Room 101",
-            Description = "Meeting room 101",
-            RoomNr = "101",
-            StopGroup = stopGroup,
-            Division = division,
-        };
-
-        APIKey key = new() {
-            APIKeyValue = "test-T34est"
-        };
-
-        context.Divisions.Add(division);
-        context.StopGroups.Add(stopGroup);
-        context.Stops.Add(stop);
-        context.APIKeys.Add(key);
-
-        context.SaveChanges();
+        if (!context.APIKeys.Any()) {
+            context.APIKeys.Add(new APIKey { APIKeyValue = APIKeyGenerator.GenerateApiKey() });
+            context.SaveChanges();
+        }
 
         List<StopGroup> stopGroups = StopGroupFunctions.GetInstance().GetAllStopGroups();
         foreach (StopGroup sg in stopGroups) {
@@ -67,6 +44,5 @@ public class Program {
                 Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
             }
         }
-
     }
 }
