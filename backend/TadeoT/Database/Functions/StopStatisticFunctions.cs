@@ -4,43 +4,40 @@ using TadeoT.Database.Model;
 namespace TadeoT.Database.Functions;
 
 public class StopStatisticFunctions {
-    private readonly TadeoTDbContext context = new();
+    private readonly TadeoTDbContext context;
+    private readonly StopFunctions stopFunctions;
 
-    private static StopStatisticFunctions? instance;
-
-    private StopStatisticFunctions() { }
-
-    public static StopStatisticFunctions GetInstance() {
-        instance ??= new StopStatisticFunctions();
-        return instance;
+    public StopStatisticFunctions(StopFunctions stopFunctions, TadeoTDbContext context) {
+        this.stopFunctions = stopFunctions;
+        this.context = context;
     }
 
-    public List<StopStatistic> GetAllStopStatistics() {
-        return [.. this.context.StopStatistics];
+    public async Task<List<StopStatistic>> GetAllStopStatistics() {
+        return await this.context.StopStatistics.ToListAsync();
     }
 
-    public StopStatistic GetStopStatisticById(int id) {
-        StopStatistic? statistic = this.context.StopStatistics
-            .FirstOrDefault(s => s.StopStatisticID == id);
+    public async Task<StopStatistic> GetStopStatisticById(int id) {
+        StopStatistic? statistic = await this.context.StopStatistics
+            .FirstOrDefaultAsync(s => s.StopStatisticID == id);
         return statistic ?? throw new TadeoTNotFoundException("StopStatistic not found");
     }
 
-    public int GetMaxId() {
+    public async Task<int> GetMaxId() {
         try {
-            return !this.context.StopStatistics.Any() ? 0 : this.context.StopStatistics.Max(s => s.StopID);
+            return !(await this.context.StopStatistics.AnyAsync()) ? 0 : this.context.StopStatistics.Max(s => s.StopStatisticID);
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get MaxId: " + e.Message);
         }
     }
 
-    public int AddStopStatistic(StopStatistic statistic) {
+    public async Task<int> AddStopStatistic(StopStatistic statistic) {
         if (statistic == null) {
             throw new TadeoTArgumentNullException("Statistic is null");
         }
         try {
             this.context.Entry(statistic.Stop).State = EntityState.Unchanged;
             this.context.StopStatistics.Add(statistic);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return statistic.StopStatisticID;
         } catch (TadeoTNotFoundException e) {
             throw new TadeoTNotFoundException("Stopgroup of Stop not found, add it before" + e.Message);
@@ -49,40 +46,39 @@ public class StopStatisticFunctions {
         }
     }
 
-    public void UpdateStopStatistic(StopStatistic statistic) {
+    public async void UpdateStopStatistic(StopStatistic statistic) {
         if (statistic == null) {
             throw new TadeoTArgumentNullException("Statistic is null");
         }
         try {
             this.context.ChangeTracker.Clear();
             this.context.StopStatistics.Update(statistic);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not update StopStatistic: " + e.Message);
         }
     }
 
-    public void DeleteStopStopStatisticById(int id) {
+    public async void DeleteStopStopStatisticById(int id) {
         try {
-            StopStatistic statistic = this.GetStopStatisticById(id);
+            StopStatistic statistic = await this.GetStopStatisticById(id);
             this.context.StopStatistics.Remove(statistic);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not delete StopStatistic: " + e.Message);
         }
     }
-    public Stop? GetStopOfStopStatistic(int statId) {
+    public async Task<Stop?> GetStopOfStopStatistic(int statId) {
         try {
-            StopStatistic statistic = this.GetStopStatisticById(statId);
-            return StopFunctions.GetInstance().GetStopById(statistic.StopID);
+            StopStatistic statistic = await this.GetStopStatisticById(statId);
+            return await stopFunctions.GetStopById(statistic.StopID);
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get Stop: " + e.Message);
         }
     }
-    public List<StopStatistic> GetStopStatisticsOfStop(int stopId) {
+    public async Task<List<StopStatistic>> GetStopStatisticsOfStop(int stopId) {
         try {
-            List<StopStatistic> statistics = [.. this.context.StopStatistics.Where(s => s.StopID == stopId)];
-            return statistics;
+            return await this.context.StopStatistics.Where(s => s.StopID == stopId).ToListAsync();
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get StopStatistics: " + e.Message);
         }

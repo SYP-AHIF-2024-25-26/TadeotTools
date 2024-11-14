@@ -4,49 +4,58 @@ using TadeoT.Database.Model;
 namespace TadeoT.Database.Functions;
 
 public class StopFunctions {
-    private readonly TadeoTDbContext context = new();
-    private static StopFunctions? instance;
-    
-    private StopFunctions() { }
+    private readonly TadeoTDbContext context;
+    private readonly StopGroupFunctions stopGroupFunctions;
+    private readonly DivisionFunctions divisionFunctions;
 
-    public static StopFunctions GetInstance() {
-        instance ??= new StopFunctions();
-        return instance;
-    }
-    
-    public List<Stop> GetAllStops() {
-        return [.. this.context.Stops
-            .Include(s => s.StopGroup)];
+    public StopFunctions(
+        StopGroupFunctions stopGroupFunctions, 
+        DivisionFunctions divisionFunctions, 
+        TadeoTDbContext context
+        ) {
+        this.context = context;
+        this.stopGroupFunctions = stopGroupFunctions;
+        this.divisionFunctions = divisionFunctions;
     }
 
-    public Stop GetStopById(int id) {
-        Stop? stop = this.context.Stops
+    public async Task<List<Stop>> GetAllStops() {
+        return await this.context.Stops
             .Include(s => s.StopGroup)
-            .FirstOrDefault(s => s.StopID == id);
+            .ToListAsync();
+    }
+
+    public async Task<Stop> GetStopById(int id) {
+        Stop? stop = await this.context.Stops
+            .Include(s => s.StopGroup)
+            .FirstOrDefaultAsync(s => s.StopID == id);
         return stop ?? throw new TadeoTNotFoundException("Stop not found");
     }
 
-    public int GetMaxId() {
-        return !this.context.Stops.Any() ? 0 : this.context.Stops.Max(s => s.StopID);
+    public async Task<int> GetMaxId() {
+        try {
+            return !(await this.context.Stops.AnyAsync()) ? 0 : this.context.Stops.Max(s => s.StopID);
+        } catch (Exception e) {
+            throw new TadeoTDatabaseException("Could not get MaxId: " + e.Message);
+        }
     }
 
-    public int AddStop(Stop stop) {
+    public async Task<int> AddStop(Stop stop) {
         if (stop == null) {
             throw new TadeoTArgumentNullException("Stop is null");
         }
         try {
             if (stop.StopGroup != null) {
-                var existingStopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(stop.StopGroup.StopGroupID);
+                var existingStopGroup = await this.stopGroupFunctions.GetStopGroupById(stop.StopGroup.StopGroupID);
                 stop.StopGroupID = existingStopGroup.StopGroupID;
                 this.context.Entry(stop.StopGroup).State = EntityState.Unchanged;
             }
             if (stop.Division != null) {
-                var existingDivision = DivisionFunctions.GetInstance().GetDivisionById(stop.Division.DivisionID);
+                var existingDivision = await this.divisionFunctions.GetDivisionById(stop.Division.DivisionID);
                 stop.DivisionID = existingDivision.DivisionID;
                 this.context.Entry(stop.Division).State = EntityState.Unchanged;
             }
             this.context.Stops.Add(stop);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return stop.StopID;
         } catch (TadeoTNotFoundException e) {
             throw new TadeoTNotFoundException("Stopgroup of Stop not found, add it before" + e.Message);
@@ -55,24 +64,24 @@ public class StopFunctions {
         }
     }
 
-    public void UpdateStop(Stop stop) {
+    public async void UpdateStop(Stop stop) {
         if (stop == null) {
             throw new TadeoTArgumentNullException("Stop is null");
         }
         try {
             this.context.ChangeTracker.Clear();
             this.context.Stops.Update(stop);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not update Stop: " + e.Message);
         }
     }
 
-    public void DeleteStopById(int id) {
+    public async void DeleteStopById(int id) {
         try {
-            Stop stop = this.GetStopById(id);
+            Stop stop = await this.GetStopById(id);
             this.context.Stops.Remove(stop);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
         } catch (TadeoTNotFoundException e) {
             throw new TadeoTNotFoundException("Stop not found, add it before deleting" + e.Message);
         } catch (Exception e) {
@@ -80,9 +89,9 @@ public class StopFunctions {
         }
     }
 
-    public StopGroup? GetStopGroupOfStop(int stopId) {
+    public async Task<StopGroup?> GetStopGroupOfStop(int stopId) {
         try {
-            Stop stop = this.GetStopById(stopId);
+            Stop stop = await this.GetStopById(stopId);
             return stop.StopGroup;
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not get StopGroup: " + e.Message);

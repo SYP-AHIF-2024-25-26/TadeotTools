@@ -1,42 +1,43 @@
-﻿using TadeoT.Database.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using TadeoT.Database.Model;
 
 namespace TadeoT.Database.Functions;
 
 public class APIKeyFunctions {
-    private readonly TadeoTDbContext context = new();
-    private static APIKeyFunctions? instance;
+    private readonly TadeoTDbContext context;
 
-    private APIKeyFunctions() { }
-
-    public static APIKeyFunctions GetInstance() {
-        instance ??= new APIKeyFunctions();
-        return instance;
+    public APIKeyFunctions(TadeoTDbContext context) {
+        this.context = context;
     }
 
-    public List<APIKey> GetAllAPIKeys() {
-        return [.. this.context.APIKeys];
+    public async Task<List<APIKey>> GetAllAPIKeys() {
+        try {
+            return await this.context.APIKeys.ToListAsync();
+        } catch (Exception e) {
+            throw new TadeoTDatabaseException("Could not retrieve APIKeys: " + e.Message);
+        }
     }
 
-    public APIKey AddAPIKey(APIKey apiKey) {
+    public async Task<APIKey> AddAPIKey(APIKey apiKey) {
         try {
             this.context.APIKeys.Add(apiKey);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return apiKey;
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not add APIKey: " + e.Message);
         }
     }
 
-    public void DeleteAPIKey(APIKey apiKey) {
+    public async void DeleteAPIKey(APIKey apiKey) {
         try {
             this.context.APIKeys.Remove(apiKey);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
         } catch (Exception e) {
             throw new TadeoTDatabaseException("Could not delete APIKey: " + e.Message);
         }
     }
 
-    public APIKey GetLastAPIKey() {
-        return this.context.APIKeys.Last();
+    public async Task<APIKey> GetLastAPIKey() {
+        return await this.context.APIKeys.LastAsync();
     }
 }
