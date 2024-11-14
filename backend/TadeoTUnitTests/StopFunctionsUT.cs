@@ -9,17 +9,24 @@ public class StopFunctionsUT {
 
     private readonly StopGroup testGroup;
     private readonly Stop testStop;
+    private readonly Division testDivision;
 
     public StopFunctionsUT() {
         testGroup = new StopGroup() {
-            Name = StopGroupName.Informatik,
+            Name = "TestGroup",
             Description = "TestDescription",
-            Color = "#ffffff"
         };
+
+        testDivision = new Division() {
+            Name = "TestDivision",
+            Color = "#FFFFFF"
+        };
+
         testStop = new Stop() {
             Name = "TestStop",
             Description = "TestDescription",
             RoomNr = "E72",
+            Division = testDivision,
             StopGroup = testGroup
         };
     }
@@ -27,6 +34,7 @@ public class StopFunctionsUT {
     [OneTimeSetUp]
     public void Setup() {
         StopGroupFunctions.GetInstance().AddStopGroup(this.testGroup);
+        DivisionFunctions.GetInstance().AddDivision(this.testDivision);
         StopFunctions.GetInstance().AddStop(this.testStop);
     }
 
@@ -36,7 +44,8 @@ public class StopFunctionsUT {
             Name = "add stop",
             Description = "TestDescription",
             RoomNr = "E72",
-            StopGroup = this.testGroup
+            StopGroup = this.testGroup,
+            Division = this.testDivision
         };
         StopFunctions.GetInstance().AddStop(stop);
         Stop result = StopFunctions.GetInstance().GetStopById(stop.StopID);

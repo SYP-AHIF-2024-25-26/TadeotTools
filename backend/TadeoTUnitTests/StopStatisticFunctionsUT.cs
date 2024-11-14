@@ -13,19 +13,24 @@ public class StopStatisticFunctionsTests {
 
     private readonly StopStatistic testStatistic;
     private readonly StopGroup testGroup;
+    private readonly Division testDivision;
     private readonly Stop testStop;
 
     public StopStatisticFunctionsTests() {
         testGroup = new StopGroup() {
-            Name = StopGroupName.Informatik,
+            Name = "Informatik",
             Description = "TestDescription",
-            Color = "#ffffff"
+        };
+        testDivision = new Division() {
+            Name = "TestDivision",
+            Color = "#FFFFFF"
         };
         testStop = new Stop() {
             Name = "TestStop",
             Description = "TestDescription",
             RoomNr = "E72",
             StopGroup = testGroup,
+            Division = testDivision
         };
         testStatistic = new StopStatistic() {
             StopID = this.testStop.StopID,

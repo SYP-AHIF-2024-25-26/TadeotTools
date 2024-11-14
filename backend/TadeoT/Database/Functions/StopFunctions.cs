@@ -39,6 +39,11 @@ public class StopFunctions {
                 stop.StopGroupID = existingStopGroup.StopGroupID;
                 this.context.Entry(stop.StopGroup).State = EntityState.Unchanged;
             }
+            if (stop.Division != null) {
+                var existingDivision = DivisionFunctions.GetInstance().GetDivisionById(stop.Division.DivisionID);
+                stop.DivisionID = existingDivision.DivisionID;
+                this.context.Entry(stop.Division).State = EntityState.Unchanged;
+            }
             this.context.Stops.Add(stop);
             this.context.SaveChanges();
             return stop.StopID;
