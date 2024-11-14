@@ -11,7 +11,19 @@ public class TadeoTDbContext : DbContext {
     public DbSet<APIKey> APIKeys { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        var connectionString = "Server=localhost;Port=4100;Database=tadeot;User=root;Password=test;";
+        var serverName = Environment.GetEnvironmentVariable("SERVER_NAME");
+        var serverPort = Environment.GetEnvironmentVariable("SERVER_PORT");
+        var databaseName = Environment.GetEnvironmentVariable("DATABASE_NAME");
+        var username = Environment.GetEnvironmentVariable("DATABASE_USER");
+        var password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
+
+        Console.WriteLine($"Server: {serverName}");
+        Console.WriteLine($"Port: {serverPort}");
+        Console.WriteLine($"Database: {databaseName}");
+        Console.WriteLine($"Username: {username}");
+        Console.WriteLine($"Password: {password}");
+
+        var connectionString = $"Server={serverName};Port={serverPort};Database={databaseName};User={username};Password={password};";
         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     }
 

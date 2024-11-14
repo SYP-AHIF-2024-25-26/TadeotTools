@@ -10,6 +10,7 @@ namespace TadeoT;
 
 public class Program {
     static void Main(string[] args) {
+        DotNetEnv.Env.Load();
         TadeoTDbContext context = new();
         context.Database.EnsureCreated();
 
