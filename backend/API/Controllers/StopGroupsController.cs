@@ -46,9 +46,8 @@ public class StopGroupsController : ControllerBase {
             if (group.Color.Length > 7) return StatusCode(400, "Invalid Color");
 
             var stopGroupToAdd = new StopGroup {
-                Name = Enum.Parse<StopGroupName>(group.Name),
-                Description = group.Description,
-                Color = group.Color
+                Name = group.Name,
+                Description = group.Description
             };
             var stopGroupId = StopGroupFunctions.GetInstance().AddStopGroup(stopGroupToAdd);
             stopGroupToAdd.StopGroupID = stopGroupId;
@@ -71,9 +70,8 @@ public class StopGroupsController : ControllerBase {
 
             var stopGroup = new StopGroup {
                 StopGroupID = groupId,
-                Name = Enum.Parse<StopGroupName>(group.Name),
-                Description = group.Description,
-                Color = group.Color
+                Name = group.Name,
+                Description = group.Description
             };
 
             StopGroupFunctions.GetInstance().UpdateStopGroup(stopGroup);

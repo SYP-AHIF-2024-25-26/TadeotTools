@@ -48,6 +48,7 @@ public class StopsController : ControllerBase {
                 Name = stop.Name,
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
+                Division = DivisionFunctions.GetInstance().GetDivisionById(stop.DivisionID),
                 StopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(stop.StopGroupID)
             });
             return Ok(StopFunctions.GetInstance().GetStopById(stopId));
@@ -78,6 +79,7 @@ public class StopsController : ControllerBase {
                 Name = stop.Name,
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
+                Division = DivisionFunctions.GetInstance().GetDivisionById(stop.DivisionID),
                 StopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(stop.StopGroupID)
             });
             return Ok();
