@@ -13,9 +13,13 @@ public class Program {
 
         // example program
         StopGroup stopGroup = new() {
-            Name = StopGroupName.Neutral,
+            Name = "Stop Group Name",
             Description = "Group for stops in the main building",
-            Color = "#FF5733"
+        };
+
+        Division division = new() {
+            Name = "Division Name",
+            Color = "#FFFFFF",
         };
 
         Stop stop = new() {
@@ -23,12 +27,14 @@ public class Program {
             Description = "Meeting room 101",
             RoomNr = "101",
             StopGroup = stopGroup,
+            Division = division,
         };
 
         APIKey key = new() {
             APIKeyValue = "test-T34est"
         };
 
+        context.Divisions.Add(division);
         context.StopGroups.Add(stopGroup);
         context.Stops.Add(stop);
         context.APIKeys.Add(key);
@@ -37,7 +43,7 @@ public class Program {
 
         List<StopGroup> stopGroups = StopGroupFunctions.GetInstance().GetAllStopGroups();
         foreach (StopGroup sg in stopGroups) {
-            Console.WriteLine($"StopGroup: {sg.Name}, Color: {sg.Color}");
+            Console.WriteLine($"StopGroup: {sg.Name}");
             foreach (Stop s in StopGroupFunctions.GetInstance().GetStopsOfStopGroup(sg.StopGroupID)) {
                 Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
             }
@@ -52,5 +58,15 @@ public class Program {
         foreach (APIKey k in keys) {
             Console.WriteLine($"APIKey: {k.APIKeyValue}");
         }
+
+        Console.WriteLine("Divisions");
+        List<Division> divisions = DivisionFunctions.GetInstance().GetAllDivisions();
+        foreach (Division d in divisions) {
+            Console.WriteLine($"Division: {d.Name}, Color: {d.Color}");
+            foreach (Stop s in DivisionFunctions.GetInstance().GetStopsOfDivisionId(d.DivisionID)) {
+                Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
+            }
+        }
+
     }
 }
