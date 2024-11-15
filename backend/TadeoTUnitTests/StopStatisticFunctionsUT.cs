@@ -25,7 +25,7 @@ public class StopStatisticFunctionsTests
         var services = new ServiceCollection();
         services.AddDbContext<TadeoTDbContext>(options =>
             options.UseMySql(TadeoTDbContextFactory.GetConnectionString(), ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString())));
-        
+
         services.AddScoped<DivisionFunctions>();
         services.AddScoped<StopGroupFunctions>();
         services.AddScoped<StopFunctions>();
@@ -65,7 +65,7 @@ public class StopStatisticFunctionsTests
         };
     }
 
-    [OneTimeSetUp]
+    [SetUp]
     public void Setup()
     {
         ServiceProvider = BuildServiceProvider();
@@ -79,12 +79,17 @@ public class StopStatisticFunctionsTests
         var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
         context.Database.EnsureCreatedAsync().Wait();
         context.Divisions.ExecuteDeleteAsync().Wait();
+        context.StopGroups.ExecuteDeleteAsync().Wait();
+        context.Stops.ExecuteDeleteAsync().Wait();
+        context.StopStatistics.ExecuteDeleteAsync().Wait();
 
         divisionFunctions.AddDivision(this.testDivision).Wait();
-
+        stopGroupFunctions.AddStopGroup(this.testGroup).Wait();
+        stopFunctions.AddStop(this.testStop).Wait();
+        stopStatisticFunction.AddStopStatistic(this.testStatistic).Wait();
     }
 
-    [OneTimeTearDown]
+    [TearDown]
     public void TearDown()
     {
         ServiceProvider?.Dispose();
@@ -127,7 +132,7 @@ public class StopStatisticFunctionsTests
 
         StopStatistic stat = await stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
         stat.IsDone = true;
-        stopStatisticFunctions.UpdateStopStatistic(stat);
+        await stopStatisticFunctions.UpdateStopStatistic(stat);
         StopStatistic result = await stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
         Assert.That(result.IsDone, Is.EqualTo(true));
     }
@@ -139,8 +144,8 @@ public class StopStatisticFunctionsTests
         var stopStatisticFunctions = scope.ServiceProvider.GetRequiredService<StopStatisticFunctions>();
 
         StopStatistic stat = await stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
-        stopStatisticFunctions.DeleteStopStopStatisticById(stat.StopStatisticID);
-        Assert.Throws<TadeoTNotFoundException>(async () => await stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID));
+        await stopStatisticFunctions.DeleteStopStopStatisticById(stat.StopStatisticID);
+        Assert.ThrowsAsync<TadeoTNotFoundException>(async Task () => await stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID));
     }
 }
 

@@ -22,14 +22,14 @@ public class StopGroupFunctionsTests
         var services = new ServiceCollection();
         services.AddDbContext<TadeoTDbContext>(options =>
             options.UseMySql(TadeoTDbContextFactory.GetConnectionString(), ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString())));
-        services.AddScoped<DivisionFunctions>();
+        services.AddScoped<StopGroupFunctions>();
 
         return services.BuildServiceProvider();
     }
 
 
 
-    [OneTimeSetUp]
+    [SetUp]
     public void Setup()
     {
         ServiceProvider = BuildServiceProvider();
@@ -39,13 +39,12 @@ public class StopGroupFunctionsTests
 
         var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
         context.Database.EnsureCreatedAsync().Wait();
-        context.Divisions.ExecuteDeleteAsync().Wait();
+        context.StopGroups.ExecuteDeleteAsync().Wait();
 
         stopGroupFunctions.AddStopGroup(this.testGroup).Wait();
-
     }
 
-    [OneTimeTearDown]
+    [TearDown]
     public void TearDown()
     {
         ServiceProvider?.Dispose();
@@ -98,7 +97,7 @@ public class StopGroupFunctionsTests
 
         StopGroup group = await stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
         group.Name = "Elektronik";
-        stopGroupFunctions.UpdateStopGroup(group);
+        await stopGroupFunctions.UpdateStopGroup(group);
         StopGroup result = await stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
         Assert.That(result.Name, Is.EqualTo("Elektronik"));
     }
@@ -110,7 +109,7 @@ public class StopGroupFunctionsTests
         var stopGroupFunctions = scope.ServiceProvider.GetRequiredService<StopGroupFunctions>();
 
         StopGroup group = await stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
-        stopGroupFunctions.DeleteStopGroupById(group.StopGroupID);
-        Assert.Throws<TadeoTNotFoundException>(async () => await stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID));
+        await stopGroupFunctions.DeleteStopGroupById(group.StopGroupID);
+        Assert.ThrowsAsync<TadeoTNotFoundException>(async Task () => await stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID));
     }
 }

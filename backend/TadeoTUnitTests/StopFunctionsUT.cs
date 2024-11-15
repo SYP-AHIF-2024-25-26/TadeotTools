@@ -38,32 +38,6 @@ public class StopFunctionsUT
         };
     }
 
-    [OneTimeSetUp]
-    public void Setup()
-    {
-        ServiceProvider = BuildServiceProvider();
-
-        using var scope = ServiceProvider!.CreateScope();
-        var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
-        var stopGroupFunctions = scope.ServiceProvider.GetRequiredService<StopGroupFunctions>();
-        var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
-
-        var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
-        context.Database.EnsureCreatedAsync().Wait();
-        context.Divisions.ExecuteDeleteAsync().Wait();
-
-        stopGroupFunctions.AddStopGroup(this.testGroup).Wait();
-        divisionFunctions.AddDivision(this.testDivision).Wait();
-        stopFunctions.AddStop(this.testStop).Wait();
-    }
-
-    [OneTimeTearDown]
-    public void TearDown()
-    {
-        ServiceProvider?.Dispose();
-    }
-
-
     private ServiceProvider? ServiceProvider = null;
 
     private static ServiceProvider BuildServiceProvider()
@@ -78,6 +52,32 @@ public class StopFunctionsUT
         return services.BuildServiceProvider();
     }
 
+    [SetUp]
+    public void Setup()
+    {
+        ServiceProvider = BuildServiceProvider();
+
+        using var scope = ServiceProvider!.CreateScope();
+        var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
+        var stopGroupFunctions = scope.ServiceProvider.GetRequiredService<StopGroupFunctions>();
+        var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
+
+        var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
+        context.Database.EnsureCreatedAsync().Wait();
+        context.Divisions.ExecuteDeleteAsync().Wait();
+        context.StopGroups.ExecuteDeleteAsync().Wait();
+        context.Stops.ExecuteDeleteAsync().Wait();
+
+        stopGroupFunctions.AddStopGroup(this.testGroup).Wait();
+        divisionFunctions.AddDivision(this.testDivision).Wait();
+        stopFunctions.AddStop(this.testStop).Wait();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        ServiceProvider?.Dispose();
+    }
 
     [Test, Order(1)]
     public async Task AddStopTest()
@@ -116,7 +116,7 @@ public class StopFunctionsUT
 
         Stop stop = await stopFunctions.GetStopById(this.testStop.StopID);
         stop.Name = "UpdatedName";
-        stopFunctions.UpdateStop(stop);
+        await stopFunctions.UpdateStop(stop);
         Stop result = await stopFunctions.GetStopById(this.testStop.StopID);
         Assert.That(result.Name, Is.EqualTo("UpdatedName"));
     }
@@ -128,7 +128,7 @@ public class StopFunctionsUT
         var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
 
         Stop stop = await stopFunctions.GetStopById(this.testStop.StopID);
-        stopFunctions.DeleteStopById(stop.StopID);
-        Assert.Throws<TadeoTNotFoundException>(async () => await stopFunctions.GetStopById(stop.StopID));
+        await stopFunctions.DeleteStopById(stop.StopID);
+        Assert.ThrowsAsync<TadeoTNotFoundException>(async Task () => await stopFunctions.GetStopById(stop.StopID));
     }
 }

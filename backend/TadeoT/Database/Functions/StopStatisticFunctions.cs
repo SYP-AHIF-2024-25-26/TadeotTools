@@ -51,14 +51,14 @@ public class StopStatisticFunctions
             return statistic.StopStatisticID;
         } catch (TadeoTNotFoundException e)
         {
-            throw new TadeoTNotFoundException("Stopgroup of Stop not found, add it before" + e.Message);
+            throw new TadeoTNotFoundException("Stopgroup of Stop not found, add it before: " + e.Message);
         } catch (Exception e)
         {
-            throw new TadeoTDatabaseException("Could not add Stop" + e.Message);
+            throw new TadeoTDatabaseException("Could not add Stop: " + e.Message);
         }
     }
 
-    public async void UpdateStopStatistic(StopStatistic statistic)
+    public async Task UpdateStopStatistic(StopStatistic statistic)
     {
         if (statistic == null)
         {
@@ -75,7 +75,7 @@ public class StopStatisticFunctions
         }
     }
 
-    public async void DeleteStopStopStatisticById(int id)
+    public async Task DeleteStopStopStatisticById(int id)
     {
         try
         {

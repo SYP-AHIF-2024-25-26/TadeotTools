@@ -53,7 +53,7 @@ public class DivisionFunctions(TadeoTDbContext context)
         }
     }
 
-    public async void UpdateDivision(Division division)
+    public async Task UpdateDivision(Division division)
     {
         if (division == null)
         {
@@ -70,10 +70,11 @@ public class DivisionFunctions(TadeoTDbContext context)
         }
     }
 
-    public async void DeleteDivisionById(int id)
+    public async Task DeleteDivisionById(int id)
     {
         try
         {
+            this.context.ChangeTracker.Clear();
             Division division = await this.GetDivisionById(id);
             this.context.Divisions.Remove(division);
             await this.context.SaveChangesAsync();

@@ -53,7 +53,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
         }
     }
 
-    public async void UpdateStopGroup(StopGroup group)
+    public async Task UpdateStopGroup(StopGroup group)
     {
         if (group == null)
         {
@@ -70,7 +70,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
         }
     }
 
-    public async void DeleteStopGroupById(int id)
+    public async Task DeleteStopGroupById(int id)
     {
         try
         {

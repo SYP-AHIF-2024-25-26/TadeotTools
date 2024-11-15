@@ -32,7 +32,7 @@ public class DivisionFunctionsUT
         return services.BuildServiceProvider();
     }
 
-    [OneTimeSetUp]
+    [SetUp]
     public void Setup()
     {
         ServiceProvider = BuildServiceProvider();
@@ -47,7 +47,7 @@ public class DivisionFunctionsUT
         divisionFunctions.AddDivision(this.testDivision).Wait();
     }
 
-    [OneTimeTearDown]
+    [TearDown]
     public void TearDown()
     {
         ServiceProvider?.Dispose();
@@ -62,12 +62,12 @@ public class DivisionFunctionsUT
         };
     }
 
-    [Test, Order(1)]
+    [Test]
     public async Task AddDivisionTest()
     {
         using var scope = ServiceProvider!.CreateScope();
         var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
-        
+
         Division division = new()
         {
             Name = "TestDivision",
@@ -79,7 +79,7 @@ public class DivisionFunctionsUT
         Assert.That(result, Is.Not.EqualTo(null));
     }
 
-    [Test, Order(2)]
+    [Test]
     public async Task GetDivisionByIdTest()
     {
         using var scope = ServiceProvider!.CreateScope();
@@ -88,26 +88,27 @@ public class DivisionFunctionsUT
         Assert.That(result.DivisionID, Is.EqualTo(testDivision.DivisionID));
     }
 
-    [Test, Order(3)]
+    [Test]
     public async Task UpdateDivisionTest()
     {
         using var scope = ServiceProvider!.CreateScope();
         var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
         Division division = await divisionFunctions.GetDivisionById(this.testDivision.DivisionID);
         division.Name = "Elektronik";
-        divisionFunctions.UpdateDivision(division);
+        await divisionFunctions.UpdateDivision(division);
         Division result = await divisionFunctions.GetDivisionById(this.testDivision.DivisionID);
         Assert.That(result.Name, Is.EqualTo("Elektronik"));
     }
 
-    [Test, Order(4)]
+    [Test]
     public async Task DeleteDivisionTest()
     {
         using var scope = ServiceProvider!.CreateScope();
         var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
         Division division = await divisionFunctions.GetDivisionById(this.testDivision.DivisionID);
-        divisionFunctions.DeleteDivisionById(division.DivisionID);
-        Assert.Throws<TadeoTNotFoundException>(async () => await divisionFunctions.GetDivisionById(this.testDivision.DivisionID));
+        await divisionFunctions.DeleteDivisionById(division.DivisionID);
+        Assert.ThrowsAsync<TadeoTNotFoundException>(async Task () =>
+            await divisionFunctions.GetDivisionById(this.testDivision.DivisionID));
     }
 }
 

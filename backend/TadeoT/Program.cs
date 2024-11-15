@@ -22,7 +22,7 @@ public class Program
 
         services.AddDbContext<TadeoTDbContext>(options =>
             options.UseMySql(
-                TadeoTDbContextFactory.GetConnectionString(), 
+                TadeoTDbContextFactory.GetConnectionString(),
                 ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString())
             ));
         services.AddScoped<APIKeyFunctions>();

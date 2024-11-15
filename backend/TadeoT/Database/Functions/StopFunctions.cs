@@ -58,13 +58,15 @@ public class StopFunctions
             {
                 var existingStopGroup = await this.stopGroupFunctions.GetStopGroupById(stop.StopGroup.StopGroupID);
                 stop.StopGroupID = existingStopGroup.StopGroupID;
-                this.context.Entry(stop.StopGroup).State = EntityState.Unchanged;
+                stop.StopGroup = null; // detach to avoid double tracking
+                //this.context.Entry(stop.StopGroup).State = EntityState.Unchanged;
             }
             if (stop.Division != null)
             {
                 var existingDivision = await this.divisionFunctions.GetDivisionById(stop.Division.DivisionID);
                 stop.DivisionID = existingDivision.DivisionID;
-                this.context.Entry(stop.Division).State = EntityState.Unchanged;
+                stop.Division = null;
+                //this.context.Entry(stop.Division).State = EntityState.Unchanged;
             }
             this.context.Stops.Add(stop);
             await this.context.SaveChangesAsync();
@@ -78,7 +80,7 @@ public class StopFunctions
         }
     }
 
-    public async void UpdateStop(Stop stop)
+    public async Task UpdateStop(Stop stop)
     {
         if (stop == null)
         {
@@ -95,7 +97,7 @@ public class StopFunctions
         }
     }
 
-    public async void DeleteStopById(int id)
+    public async Task DeleteStopById(int id)
     {
         try
         {
