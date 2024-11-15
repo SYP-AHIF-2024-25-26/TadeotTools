@@ -9,27 +9,33 @@ using TadeoT.Database.Model;
 
 namespace TadeoTUnitTests;
 
-public class StopGroupFunctionsTests {
+public class StopGroupFunctionsTests
+{
     private readonly StopGroup testGroup;
     private readonly StopGroupFunctions stopGroupFunctions;
 
     [OneTimeSetUp]
-    public void Setup() {
+    public void Setup()
+    {
         Task.Run(() => this.stopGroupFunctions.AddStopGroup(this.testGroup));
     }
 
-    public StopGroupFunctionsTests(StopGroupFunctions stopGroupFunctions) {
+    public StopGroupFunctionsTests(StopGroupFunctions stopGroupFunctions)
+    {
         this.stopGroupFunctions = stopGroupFunctions;
-        this.testGroup = new StopGroup() {
+        this.testGroup = new StopGroup()
+        {
             Name = "TestName",
             Description = "TestDescription",
             IsPublic = true
         };
     }
-    
+
     [Test, Order(1)]
-    public async Task AddStopGroupTest() {
-        StopGroup group = new () {
+    public async Task AddStopGroupTest()
+    {
+        StopGroup group = new()
+        {
             Name = "TestName",
             Description = "TestDescription",
             IsPublic = true
@@ -38,15 +44,17 @@ public class StopGroupFunctionsTests {
         StopGroup result = await this.stopGroupFunctions.GetStopGroupById(group.StopGroupID);
         Assert.That(result, Is.Not.EqualTo(null));
     }
-    
+
     [Test, Order(2)]
-    public async Task GetStopGroupByIdTest() {
+    public async Task GetStopGroupByIdTest()
+    {
         StopGroup result = await this.stopGroupFunctions.GetStopGroupById(testGroup.StopGroupID);
         Assert.That(result.StopGroupID, Is.EqualTo(testGroup.StopGroupID));
     }
 
     [Test, Order(3)]
-    public async Task UpdateStopGroupTest() {
+    public async Task UpdateStopGroupTest()
+    {
         StopGroup group = await this.stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
         group.Name = "Elektronik";
         this.stopGroupFunctions.UpdateStopGroup(group);
@@ -55,7 +63,8 @@ public class StopGroupFunctionsTests {
     }
 
     [Test, Order(4)]
-    public async Task DeleteStopGroup() {
+    public async Task DeleteStopGroup()
+    {
         StopGroup group = await this.stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
         this.stopGroupFunctions.DeleteStopGroupById(group.StopGroupID);
         Assert.Throws<TadeoTNotFoundException>(async () => await this.stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID));

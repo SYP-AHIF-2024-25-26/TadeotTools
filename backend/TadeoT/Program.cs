@@ -8,28 +8,35 @@ using TadeoT.Database.Model;
 
 namespace TadeoT;
 
-public class Program {
+public class Program
+{
     public IConfiguration Configuration { get; }
 
-    public Program(IConfiguration configuration) {
+    public Program(IConfiguration configuration)
+    {
         Configuration = configuration;
     }
 
-    public static void InitializeDatabase() {
+    public static void InitializeDatabase()
+    {
         DotNetEnv.Env.Load();
 
-        using (var context = new TadeoTDbContext()) {
+        using (var context = new TadeoTDbContext())
+        {
             context.Database.EnsureCreated();
 
-            if (!context.APIKeys.Any()) {
+            if (!context.APIKeys.Any())
+            {
                 context.APIKeys.Add(new APIKey { APIKeyValue = APIKeyGenerator.GenerateApiKey() });
                 context.SaveChanges();
             }
         }
     }
 
-    public void ConfigureServices(IServiceCollection services) {
-        services.AddDbContext<TadeoTDbContext>((serviceProvider, optionsBuilder) => {
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddDbContext<TadeoTDbContext>((serviceProvider, optionsBuilder) =>
+        {
             var serverName = Configuration["Database:ServerName"];
             var serverPort = Configuration["Database:ServerPort"];
             var databaseName = Configuration["Database:DatabaseName"];
@@ -48,12 +55,14 @@ public class Program {
     }
     public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
-            .ConfigureServices((context, services) => {
+            .ConfigureServices((context, services) =>
+            {
                 var program = new Program(context.Configuration);
                 program.ConfigureServices(services);
             });
 
-    static void Main(string[] args) {
+    static void Main(string[] args)
+    {
         InitializeDatabase();
         /*
         var host = CreateHostBuilder(args).Build();

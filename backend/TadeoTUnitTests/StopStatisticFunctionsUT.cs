@@ -9,7 +9,8 @@ using TadeoT.Database.Model;
 
 namespace TadeoTUnitTests;
 
-public class StopStatisticFunctionsTests {
+public class StopStatisticFunctionsTests
+{
     private readonly StopStatistic testStatistic;
     private readonly StopGroup testGroup;
     private readonly Division testDivision;
@@ -20,24 +21,29 @@ public class StopStatisticFunctionsTests {
     private readonly DivisionFunctions divisionFunctions;
     private readonly StopFunctions stopFunctions;
 
-    public StopStatisticFunctionsTests(StopStatisticFunctions stopStatisticFunctions, StopGroupFunctions stopGroupFunctions, DivisionFunctions divisionFunctions, StopFunctions stopFunctions) {
-        testGroup = new StopGroup() {
+    public StopStatisticFunctionsTests(StopStatisticFunctions stopStatisticFunctions, StopGroupFunctions stopGroupFunctions, DivisionFunctions divisionFunctions, StopFunctions stopFunctions)
+    {
+        testGroup = new StopGroup()
+        {
             Name = "Informatik",
             Description = "TestDescription",
             IsPublic = true
         };
-        testDivision = new Division() {
+        testDivision = new Division()
+        {
             Name = "TestDivision",
             Color = "#FFFFFF"
         };
-        testStop = new Stop() {
+        testStop = new Stop()
+        {
             Name = "TestStop",
             Description = "TestDescription",
             RoomNr = "E72",
             StopGroup = testGroup,
             Division = testDivision
         };
-        testStatistic = new StopStatistic() {
+        testStatistic = new StopStatistic()
+        {
             StopID = this.testStop.StopID,
             Stop = this.testStop,
             Time = DateTime.Now,
@@ -50,7 +56,8 @@ public class StopStatisticFunctionsTests {
     }
 
     [OneTimeSetUp]
-    public void Setup() {
+    public void Setup()
+    {
         Task.Run(() => this.divisionFunctions.AddDivision(this.testDivision));
         Task.Run(() => this.stopGroupFunctions.AddStopGroup(this.testGroup));
         Task.Run(() => this.stopFunctions.AddStop(this.testStop));
@@ -58,8 +65,10 @@ public class StopStatisticFunctionsTests {
     }
 
     [Test, Order(1)]
-    public async Task AddStopStatisticTest() {
-        StopStatistic stopStatistic = new() {
+    public async Task AddStopStatisticTest()
+    {
+        StopStatistic stopStatistic = new()
+        {
             StopID = this.testStop.StopID,
             Stop = this.testStop,
             Time = DateTime.Now,
@@ -71,13 +80,15 @@ public class StopStatisticFunctionsTests {
     }
 
     [Test, Order(2)]
-    public async Task GetStopStatisticByIdTest() {
+    public async Task GetStopStatisticByIdTest()
+    {
         StopStatistic result = await this.stopStatisticFunctions.GetStopStatisticById(testStatistic.StopStatisticID);
         Assert.That(result.StopStatisticID, Is.EqualTo(testStatistic.StopStatisticID));
     }
 
     [Test, Order(3)]
-    public async Task UpdateStopStatisticTest() {
+    public async Task UpdateStopStatisticTest()
+    {
         StopStatistic stat = await this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
         stat.IsDone = true;
         this.stopStatisticFunctions.UpdateStopStatistic(stat);
@@ -86,7 +97,8 @@ public class StopStatisticFunctionsTests {
     }
 
     [Test, Order(4)]
-    public async Task DeleteStopStatistic() {
+    public async Task DeleteStopStatistic()
+    {
         StopStatistic stat = await this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
         this.stopStatisticFunctions.DeleteStopStopStatisticById(stat.StopStatisticID);
         Assert.Throws<TadeoTNotFoundException>(async () => await this.stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID));

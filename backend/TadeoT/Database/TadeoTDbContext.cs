@@ -3,14 +3,16 @@ using TadeoT.Database.Model;
 
 namespace TadeoT.Database;
 
-public class TadeoTDbContext : DbContext {
+public class TadeoTDbContext : DbContext
+{
     public DbSet<StopGroup> StopGroups { get; set; }
     public DbSet<Stop> Stops { get; set; }
     public DbSet<Division> Divisions { get; set; }
     public DbSet<StopStatistic> StopStatistics { get; set; }
     public DbSet<APIKey> APIKeys { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
         if (!optionsBuilder.IsConfigured)  // only configure if not already set by DI
         {
             var serverName = Environment.GetEnvironmentVariable("SERVER_NAME");
@@ -24,7 +26,8 @@ public class TadeoTDbContext : DbContext {
         }
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<Stop>()
             .HasOne(s => s.StopGroup)
             .WithMany()
