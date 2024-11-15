@@ -68,13 +68,13 @@ public class StopStatisticFunctionsTests
     [OneTimeSetUp]
     public void Setup()
     {
+        ServiceProvider = BuildServiceProvider();
+
         using var scope = ServiceProvider!.CreateScope();
         var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
         var stopGroupFunctions = scope.ServiceProvider.GetRequiredService<StopGroupFunctions>();
         var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
         var stopStatisticFunction = scope.ServiceProvider.GetRequiredService<StopStatisticFunctions>();
-
-        ServiceProvider = BuildServiceProvider();
 
         var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
         context.Database.EnsureCreatedAsync().Wait();

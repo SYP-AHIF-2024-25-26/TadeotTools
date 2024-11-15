@@ -15,7 +15,6 @@ public class StopFunctionsUT
 
     public StopFunctionsUT()
     {
-
         testGroup = new StopGroup()
         {
             Name = "TestGroup",
@@ -42,13 +41,12 @@ public class StopFunctionsUT
     [OneTimeSetUp]
     public void Setup()
     {
+        ServiceProvider = BuildServiceProvider();
 
         using var scope = ServiceProvider!.CreateScope();
         var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
         var stopGroupFunctions = scope.ServiceProvider.GetRequiredService<StopGroupFunctions>();
         var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
-
-        ServiceProvider = BuildServiceProvider();
 
         var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
         context.Database.EnsureCreatedAsync().Wait();

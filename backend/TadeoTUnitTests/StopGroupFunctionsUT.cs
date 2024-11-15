@@ -32,10 +32,10 @@ public class StopGroupFunctionsTests
     [OneTimeSetUp]
     public void Setup()
     {
+        ServiceProvider = BuildServiceProvider();
+
         using var scope = ServiceProvider!.CreateScope();
         var stopGroupFunctions = scope.ServiceProvider.GetRequiredService<StopGroupFunctions>();
-
-        ServiceProvider = BuildServiceProvider();
 
         var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
         context.Database.EnsureCreatedAsync().Wait();

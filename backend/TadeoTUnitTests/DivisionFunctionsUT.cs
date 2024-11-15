@@ -35,10 +35,10 @@ public class DivisionFunctionsUT
     [OneTimeSetUp]
     public void Setup()
     {
+        ServiceProvider = BuildServiceProvider();
+
         using var scope = ServiceProvider!.CreateScope();
         var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
-
-        ServiceProvider = BuildServiceProvider();
 
         var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
         context.Database.EnsureCreatedAsync().Wait();

@@ -10,62 +10,47 @@ namespace TadeoT;
 
 public class Program
 {
-    public IConfiguration Configuration { get; }
+    private static ServiceProvider? ServiceProvider = null;
 
-    public Program(IConfiguration configuration)
+    private static ServiceProvider BuildServiceProvider()
     {
-        Configuration = configuration;
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        var services = new ServiceCollection();
+
+        services.AddDbContext<TadeoTDbContext>(options =>
+            options.UseMySql(
+                TadeoTDbContextFactory.GetConnectionString(), 
+                ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString())
+            ));
+        services.AddScoped<APIKeyFunctions>();
+
+        return services.BuildServiceProvider();
     }
 
-    public static void InitializeDatabase()
+
+    public static async void InitializeDatabase()
     {
         DotNetEnv.Env.Load();
 
-        using (var context = new TadeoTDbContext())
-        {
-            context.Database.EnsureCreated();
+        ServiceProvider ??= BuildServiceProvider();
 
-            if (!context.APIKeys.Any())
-            {
-                context.APIKeys.Add(new APIKey { APIKeyValue = APIKeyGenerator.GenerateApiKey() });
-                context.SaveChanges();
-            }
+        using var scope = ServiceProvider!.CreateScope();
+        var apiKeyFunctions = scope.ServiceProvider.GetRequiredService<APIKeyFunctions>();
+
+
+        if ((await apiKeyFunctions.GetAllAPIKeys()).Count <= 0)
+        {
+            await apiKeyFunctions.AddAPIKey(new APIKey { APIKeyValue = APIKeyGenerator.GenerateApiKey() });
         }
     }
-
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddDbContext<TadeoTDbContext>((serviceProvider, optionsBuilder) =>
-        {
-            var serverName = Configuration["Database:ServerName"];
-            var serverPort = Configuration["Database:ServerPort"];
-            var databaseName = Configuration["Database:DatabaseName"];
-            var username = Configuration["Database:Username"];
-            var password = Configuration["Database:Password"];
-
-            var connectionString = $"Server={serverName};Port={serverPort};Database={databaseName};User={username};Password={password};";
-            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-        }, ServiceLifetime.Scoped);
-
-        services.AddScoped<StopGroupFunctions>();
-        services.AddScoped<StopFunctions>();
-        services.AddScoped<DivisionFunctions>();
-        services.AddScoped<APIKeyFunctions>();
-        services.AddScoped<StopStatisticFunctions>();
-    }
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureServices((context, services) =>
-            {
-                var program = new Program(context.Configuration);
-                program.ConfigureServices(services);
-            });
 
     static void Main(string[] args)
     {
         InitializeDatabase();
         /*
-        var host = CreateHostBuilder(args).Build();
 
         var stopGroupFunctions = host.Services.GetRequiredService<StopGroupFunctions>();
         var stopFunctions = host.Services.GetRequiredService<StopFunctions>();
