@@ -8,10 +8,10 @@ public static class APIKeyGenerator {
         using var cryptoProvider = new RNGCryptoServiceProvider();
         byte[] apiKeyBytes = new byte[length];
         cryptoProvider.GetBytes(apiKeyBytes);
-
+        
         StringBuilder apiKey = new StringBuilder(length * 2);
         foreach (byte b in apiKeyBytes) {
-            apiKey.Append(b.ToString("x2"));
+            apiKey.Append(b.ToString("x2")); // Converts to hexadecimal string
         }
 
         Console.WriteLine(apiKey.ToString());

@@ -1,72 +1,87 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
+using TadeoT.Database.Model;
 
 namespace TadeoT;
 
-public class Program {
-    static void Main(string[] args) {
-        TadeoTDbContext context = new();
-        context.Database.EnsureCreated();
+public class Program
+{
+    private static ServiceProvider? ServiceProvider = null;
 
-        // example program
-        StopGroup stopGroup = new() {
-            Name = "Stop Group Name",
-            Description = "Group for stops in the main building",
-        };
+    private static ServiceProvider BuildServiceProvider()
+    {
+        var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .Build();
 
-        Division division = new() {
-            Name = "Division Name",
-            Color = "#FFFFFF",
-        };
+        var services = new ServiceCollection();
 
-        Stop stop = new() {
-            Name = "Room 101",
-            Description = "Meeting room 101",
-            RoomNr = "101",
-            StopGroup = stopGroup,
-            Division = division,
-        };
+        services.AddDbContext<TadeoTDbContext>(options =>
+            options.UseMySql(
+                TadeoTDbContextFactory.GetConnectionString(),
+                ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString())
+            ));
+        services.AddScoped<APIKeyFunctions>();
 
-        APIKey key = new() {
-            APIKeyValue = "test-T34est"
-        };
+        return services.BuildServiceProvider();
+    }
 
-        context.Divisions.Add(division);
-        context.StopGroups.Add(stopGroup);
-        context.Stops.Add(stop);
-        context.APIKeys.Add(key);
 
-        context.SaveChanges();
+    public static async void InitializeDatabase()
+    {
+        DotNetEnv.Env.Load();
 
-        List<StopGroup> stopGroups = StopGroupFunctions.GetInstance().GetAllStopGroups();
+        ServiceProvider ??= BuildServiceProvider();
+
+        using var scope = ServiceProvider!.CreateScope();
+        var apiKeyFunctions = scope.ServiceProvider.GetRequiredService<APIKeyFunctions>();
+
+
+        if ((await apiKeyFunctions.GetAllAPIKeys()).Count <= 0)
+        {
+            await apiKeyFunctions.AddAPIKey(new APIKey { APIKeyValue = APIKeyGenerator.GenerateApiKey() });
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        InitializeDatabase();
+        /*
+
+        var stopGroupFunctions = host.Services.GetRequiredService<StopGroupFunctions>();
+        var stopFunctions = host.Services.GetRequiredService<StopFunctions>();
+        var divisionFunctions = host.Services.GetRequiredService<DivisionFunctions>();
+        var apiKeyFunctions = host.Services.GetRequiredService<APIKeyFunctions>();
+
+        List<StopGroup> stopGroups = await stopGroupFunctions.GetAllStopGroups();
         foreach (StopGroup sg in stopGroups) {
             Console.WriteLine($"StopGroup: {sg.Name}");
-            foreach (Stop s in StopGroupFunctions.GetInstance().GetStopsOfStopGroup(sg.StopGroupID)) {
-                Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
+            foreach (Stop s in await stopGroupFunctions.GetStopsOfStopGroup(sg.StopGroupID)) {
+                Console.WriteLine($"\tStop: {s.Name}, RoomNr: {s.RoomNr}");
             }
         }
         Console.WriteLine("Stops: ");
-        List<Stop> stops = StopFunctions.GetInstance().GetAllStops();
+        List<Stop> stops = await stopFunctions.GetAllStops();
         foreach (Stop s in stops) {
             Console.WriteLine($"Stop: {s.Name}, RoomNr: {s.RoomNr}");
         }
 
-        List<APIKey> keys = APIKeyFunctions.GetInstance().GetAllAPIKeys();
+        List<APIKey> keys = await apiKeyFunctions.GetAllAPIKeys();
         foreach (APIKey k in keys) {
             Console.WriteLine($"APIKey: {k.APIKeyValue}");
         }
 
         Console.WriteLine("Divisions");
-        List<Division> divisions = DivisionFunctions.GetInstance().GetAllDivisions();
+        List<Division> divisions = await divisionFunctions.GetAllDivisions();
         foreach (Division d in divisions) {
             Console.WriteLine($"Division: {d.Name}, Color: {d.Color}");
-            foreach (Stop s in DivisionFunctions.GetInstance().GetStopsOfDivisionId(d.DivisionID)) {
-                Console.WriteLine($"    Stop: {s.Name}, RoomNr: {s.RoomNr}");
+            foreach (Stop s in await divisionFunctions.GetStopsOfDivisionId(d.DivisionID)) {
+                Console.WriteLine($"\tStop: {s.Name}, RoomNr: {s.RoomNr}");
             }
-        }
-
+        }*/
     }
 }

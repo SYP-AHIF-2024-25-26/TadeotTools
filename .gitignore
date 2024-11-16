@@ -1,3 +1,6 @@
-
 /.idea
 .DS_Store
+bin
+obj
+.vs
+backend/TadeoT/appsettings.json

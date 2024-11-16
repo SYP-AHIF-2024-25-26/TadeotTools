@@ -5,55 +5,110 @@ using System.Text;
 using System.Threading.Tasks;
 using TadeoT.Database.Functions;
 using TadeoT.Database;
+using TadeoT.Database.Model;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
+[assembly: NonParallelizable]
 
 namespace TadeoTUnitTests;
 
-public class DivisionFunctionsUT {
+[TestFixture]
+public class DivisionFunctionsUT
+{
     private readonly Division testDivision;
 
-    [OneTimeSetUp]
-    public void Setup() {
-        DivisionFunctions.GetInstance().AddDivision(this.testDivision);
+    private ServiceProvider? ServiceProvider = null;
+
+    private static ServiceProvider BuildServiceProvider()
+    {
+        var services = new ServiceCollection();
+        services.AddDbContext<TadeoTDbContext>(options =>
+            options.UseMySql(TadeoTDbContextFactory.GetConnectionString(), ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString())));
+        services.AddScoped<DivisionFunctions>();
+
+        return services.BuildServiceProvider();
     }
 
-    public DivisionFunctionsUT() {
-        this.testDivision = new Division() {
+    [SetUp]
+    public void Setup()
+    {
+        ServiceProvider = BuildServiceProvider();
+
+        using var scope = ServiceProvider!.CreateScope();
+        var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
+
+        var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
+        context.Database.EnsureCreatedAsync().Wait();
+        context.Divisions.ExecuteDeleteAsync().Wait();
+
+        divisionFunctions.AddDivision(this.testDivision).Wait();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        ServiceProvider?.Dispose();
+    }
+
+    public DivisionFunctionsUT()
+    {
+        this.testDivision = new Division()
+        {
             Name = "TestDivision",
             Color = "#FFFFFF"
         };
     }
 
-    [Test, Order(1)]
-    public void AddDivisionTest() {
-        Division division = new() {
+    [Test]
+    public async Task AddDivisionTest()
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
+
+        Division division = new()
+        {
             Name = "TestDivision",
             Color = "#FFFFFF"
         };
-        DivisionFunctions.GetInstance().AddDivision(division);
-        Division result = DivisionFunctions.GetInstance().GetDivisionById(division.DivisionID);
+
+        await divisionFunctions.AddDivision(division);
+        Division result = await divisionFunctions.GetDivisionById(division.DivisionID);
         Assert.That(result, Is.Not.EqualTo(null));
     }
 
-    [Test, Order(2)]
-    public void GetDivisionByIdTest() {
-        Division result = DivisionFunctions.GetInstance().GetDivisionById(testDivision.DivisionID);
+    [Test]
+    public async Task GetDivisionByIdTest()
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
+        Division result = await divisionFunctions.GetDivisionById(testDivision.DivisionID);
         Assert.That(result.DivisionID, Is.EqualTo(testDivision.DivisionID));
     }
 
-    [Test, Order(3)]
-    public void UpdateDivisionTest() {
-        Division division = DivisionFunctions.GetInstance().GetDivisionById(this.testDivision.DivisionID);
+    [Test]
+    public async Task UpdateDivisionTest()
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
+        Division division = await divisionFunctions.GetDivisionById(this.testDivision.DivisionID);
         division.Name = "Elektronik";
-        DivisionFunctions.GetInstance().UpdateDivision(division);
-        Division result = DivisionFunctions.GetInstance().GetDivisionById(this.testDivision.DivisionID);
+        await divisionFunctions.UpdateDivision(division);
+        Division result = await divisionFunctions.GetDivisionById(this.testDivision.DivisionID);
         Assert.That(result.Name, Is.EqualTo("Elektronik"));
     }
 
-    [Test, Order(4)]
-    public void DeleteDivisionTest() {
-        Division division = DivisionFunctions.GetInstance().GetDivisionById(this.testDivision.DivisionID);
-        DivisionFunctions.GetInstance().DeleteDivisionById(division.DivisionID);
-        Assert.Throws<TadeoTNotFoundException>(() => DivisionFunctions.GetInstance().GetDivisionById(this.testDivision.DivisionID));
+    [Test]
+    public async Task DeleteDivisionTest()
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
+        Division division = await divisionFunctions.GetDivisionById(this.testDivision.DivisionID);
+        await divisionFunctions.DeleteDivisionById(division.DivisionID);
+        Assert.ThrowsAsync<TadeoTNotFoundException>(async Task () =>
+            await divisionFunctions.GetDivisionById(this.testDivision.DivisionID));
     }
 }
 

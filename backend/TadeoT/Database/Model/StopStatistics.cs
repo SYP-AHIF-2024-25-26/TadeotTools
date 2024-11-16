@@ -1,6 +1,7 @@
-﻿namespace TadeoT.Database;
+﻿namespace TadeoT.Database.Model;
 
-public class StopStatistic {
+public class StopStatistic
+{
     public int StopStatisticID { get; set; }
     public required DateTime Time { get; set; }
     public required bool IsDone { get; set; }

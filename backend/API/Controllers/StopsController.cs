@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
+using TadeoT.Database.Model;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("v1/stops")]
-public class StopsController : ControllerBase {
+public class StopsController : ControllerBase {/*
     [HttpGet("api")]
     public IActionResult GetAllStops() {
         try {
@@ -131,5 +132,5 @@ public class StopsController : ControllerBase {
 
             return StatusCode(500, "Cannot get Stops");
         }
-    }
+    }*/
 }

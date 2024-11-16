@@ -1,28 +1,35 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
+using TadeoT.Database.Model;
 
 
 namespace TadeoTUnitTests;
 
-public class StopFunctionsUT {
-    private readonly TadeoTDbContext context = new();
-
+public class StopFunctionsUT
+{
     private readonly StopGroup testGroup;
     private readonly Stop testStop;
     private readonly Division testDivision;
 
-    public StopFunctionsUT() {
-        testGroup = new StopGroup() {
+    public StopFunctionsUT()
+    {
+        testGroup = new StopGroup()
+        {
             Name = "TestGroup",
             Description = "TestDescription",
+            IsPublic = true
         };
 
-        testDivision = new Division() {
+        testDivision = new Division()
+        {
             Name = "TestDivision",
             Color = "#FFFFFF"
         };
 
-        testStop = new Stop() {
+        testStop = new Stop()
+        {
             Name = "TestStop",
             Description = "TestDescription",
             RoomNr = "E72",
@@ -31,46 +38,97 @@ public class StopFunctionsUT {
         };
     }
 
-    [OneTimeSetUp]
-    public void Setup() {
-        StopGroupFunctions.GetInstance().AddStopGroup(this.testGroup);
-        DivisionFunctions.GetInstance().AddDivision(this.testDivision);
-        StopFunctions.GetInstance().AddStop(this.testStop);
+    private ServiceProvider? ServiceProvider = null;
+
+    private static ServiceProvider BuildServiceProvider()
+    {
+        var services = new ServiceCollection();
+        services.AddDbContext<TadeoTDbContext>(options =>
+            options.UseMySql(TadeoTDbContextFactory.GetConnectionString(), ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString())));
+        services.AddScoped<DivisionFunctions>();
+        services.AddScoped<StopGroupFunctions>();
+        services.AddScoped<StopFunctions>();
+
+        return services.BuildServiceProvider();
+    }
+
+    [SetUp]
+    public void Setup()
+    {
+        ServiceProvider = BuildServiceProvider();
+
+        using var scope = ServiceProvider!.CreateScope();
+        var divisionFunctions = scope.ServiceProvider.GetRequiredService<DivisionFunctions>();
+        var stopGroupFunctions = scope.ServiceProvider.GetRequiredService<StopGroupFunctions>();
+        var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
+
+        var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
+        context.Database.EnsureCreatedAsync().Wait();
+        context.Divisions.ExecuteDeleteAsync().Wait();
+        context.StopGroups.ExecuteDeleteAsync().Wait();
+        context.Stops.ExecuteDeleteAsync().Wait();
+
+        stopGroupFunctions.AddStopGroup(this.testGroup).Wait();
+        divisionFunctions.AddDivision(this.testDivision).Wait();
+        stopFunctions.AddStop(this.testStop).Wait();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        ServiceProvider?.Dispose();
     }
 
     [Test, Order(1)]
-    public void AddStopTest() {
-        Stop stop = new () {
+    public async Task AddStopTest()
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
+
+        Stop stop = new()
+        {
             Name = "add stop",
             Description = "TestDescription",
             RoomNr = "E72",
             StopGroup = this.testGroup,
             Division = this.testDivision
         };
-        StopFunctions.GetInstance().AddStop(stop);
-        Stop result = StopFunctions.GetInstance().GetStopById(stop.StopID);
+
+        await stopFunctions.AddStop(stop);
+        Stop result = await stopFunctions.GetStopById(stop.StopID);
         Assert.That(result, Is.Not.EqualTo(null));
     }
 
     [Test, Order(2)]
-    public void GetStopByIdTest() {
-        Stop result = StopFunctions.GetInstance().GetStopById(testStop.StopID);
+    public async Task GetStopByIdTest()
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
+        Stop result = await stopFunctions.GetStopById(testStop.StopID);
         Assert.That(result.StopID, Is.EqualTo(testStop.StopID));
     }
 
     [Test, Order(3)]
-    public void UpdateStopTest() {
-        Stop stop = StopFunctions.GetInstance().GetStopById(this.testStop.StopID);
+    public async Task UpdateStopTest()
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
+
+        Stop stop = await stopFunctions.GetStopById(this.testStop.StopID);
         stop.Name = "UpdatedName";
-        StopFunctions.GetInstance().UpdateStop(stop);
-        Stop result = StopFunctions.GetInstance().GetStopById(this.testStop.StopID);
+        await stopFunctions.UpdateStop(stop);
+        Stop result = await stopFunctions.GetStopById(this.testStop.StopID);
         Assert.That(result.Name, Is.EqualTo("UpdatedName"));
     }
 
     [Test, Order(4)]
-    public void DeleteStop() {
-        Stop stop = StopFunctions.GetInstance().GetStopById(this.testStop.StopID);
-        StopFunctions.GetInstance().DeleteStopById(stop.StopID);
-        Assert.Throws<TadeoTNotFoundException>(() => StopFunctions.GetInstance().GetStopById(stop.StopID));
+    public async Task DeleteStop()
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
+
+        Stop stop = await stopFunctions.GetStopById(this.testStop.StopID);
+        await stopFunctions.DeleteStopById(stop.StopID);
+        Assert.ThrowsAsync<TadeoTNotFoundException>(async Task () => await stopFunctions.GetStopById(stop.StopID));
     }
 }
