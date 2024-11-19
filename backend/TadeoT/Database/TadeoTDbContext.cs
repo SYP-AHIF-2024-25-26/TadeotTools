@@ -1,23 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TadeoT.Database.Model;
 
 namespace TadeoT.Database;
 
-public class TadeoTDbContext : DbContext {
+public class TadeoTDbContext(DbContextOptions<TadeoTDbContext> options) : DbContext(options)
+{
     public DbSet<StopGroup> StopGroups { get; set; }
     public DbSet<Stop> Stops { get; set; }
+    public DbSet<Division> Divisions { get; set; }
     public DbSet<StopStatistic> StopStatistics { get; set; }
     public DbSet<APIKey> APIKeys { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        var connectionString = "Server=localhost;Port=4100;Database=tadeot;User=root;Password=test;";
-        optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
         modelBuilder.Entity<Stop>()
             .HasOne(s => s.StopGroup)
             .WithMany()
             .HasForeignKey(s => s.StopGroupID)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Stop>()
+            .HasOne(s => s.Division)
+            .WithMany()
+            .HasForeignKey(s => s.DivisionID)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<StopStatistic>()
@@ -25,10 +30,6 @@ public class TadeoTDbContext : DbContext {
             .WithMany()
             .HasForeignKey(stat => stat.StopID)
             .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder.Entity<StopGroup>()
-            .Property(p => p.Name)
-            .HasConversion<string>();
 
         modelBuilder.Entity<APIKey>()
             .HasKey(k => k.APIKeyValue);
