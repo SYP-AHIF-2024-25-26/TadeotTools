@@ -19,5 +19,4 @@ export class NavbarComponent {
   switchToStationMode() {
     this.viewModeService.switchToStationMode();
   }
-
 }
