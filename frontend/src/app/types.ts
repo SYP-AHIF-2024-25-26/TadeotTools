@@ -1,11 +1,7 @@
-import { StopGroupName } from './stop-group-name.enum';
-
 export type GuideCard = {
     id: number;
     title: string;
     description: string;
-    isTour: boolean;
-    stopGroupNames?: StopGroupName[];
   }
 
   export type Stop = {
@@ -21,5 +17,10 @@ export type GuideCard = {
     stopGroupID: number;
     name: number;
     description: string;
+  }
+
+  export type Division = {
+    divisionID: number;
+    name: string;
     color: string;
   }
