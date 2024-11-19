@@ -1,15 +1,12 @@
 import {
-  Component, computed,
-  inject,
-  Input, signal,
-  ViewChild,
+  Component, inject,
+  Input, ViewChild,
 } from '@angular/core';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { CommonModule } from '@angular/common';
-import { ModalViewService } from '../modal-view.service';
 import { GuideCard } from '../types';
-import { StopGroupName } from '../stop-group-name.enum';
-import { ApiFetchService } from '../api-fetch.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-guide-card',
   standalone: true,
@@ -23,36 +20,36 @@ import { ApiFetchService } from '../api-fetch.service';
 export class GuideCardComponent {
   @Input() card!: GuideCard;
   @Input() id!: string;
-  @Input() stopGroupNames!: StopGroupName[];
-  @ViewChild (CheckboxComponent) checkbox!: CheckboxComponent;
-  protected modalViewService = inject(ModalViewService);
-  protected apiFetchService = inject(ApiFetchService);
+  @ViewChild(CheckboxComponent) checkbox!: CheckboxComponent;
 
-  progress = computed(() => {
+  protected router = inject(Router);
+
+  //progress = computed(() => this.calculateProgress());
+  // max = computed(() => this.calculateMax());
+
+  /*private calculateProgress(): number | null {
     const IDs = sessionStorage.getItem(this.stopGroupNames.join(','));
     if (IDs === null) {
       return null;
     }
     const stopIDs = JSON.parse(IDs) as string[];
-    let completed = 0;
-    stopIDs.forEach((id) => {
-      if (sessionStorage.getItem(id) === 'true') {
-        completed++;
-      }
-    });
-    return completed;
-  });
-  max = computed(() => {
+    return stopIDs.filter(id => sessionStorage.getItem(id) === 'true').length;
+  }
+
+  private calculateMax(): number | null {
     const IDs = sessionStorage.getItem(this.stopGroupNames.join(','));
     if (IDs === null) {
       return null;
     }
     return JSON.parse(IDs).length;
-  });
-  isChecked() {
+  }
+  */
+
+  isChecked(): boolean {
     return this.checkbox?.isChecked() ?? false;
   }
 
-
-  protected readonly String = String;
+  openStopPage() {
+    this.router.navigate([`tour/${this.card.id}`], )
+  }
 }
