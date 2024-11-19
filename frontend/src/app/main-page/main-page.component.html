@@ -6,9 +6,9 @@
   <div class="flex flex-col justify-center">
     @for (card of cards(); track card.id) {
       @if (card.id < cards().length) {
-        <app-guide-card [card]="card" class="mt-4" [id]="card.id.toString()" [stopGroupNames]="card.stopGroupNames ? card.stopGroupNames : []"></app-guide-card>
+        <app-guide-card [card]="card" class="mt-6" [id]="card.id.toString()"></app-guide-card>
       } @else {
-        <app-guide-card [card]="card" class="mt-4 mb-28" [id]="card.id.toString()" [stopGroupNames]="card.stopGroupNames ? card.stopGroupNames : []"></app-guide-card>
+        <app-guide-card [card]="card" class="mt-6 mb-28" [id]="card.id.toString()"></app-guide-card>
       }
     }
   </div>
@@ -16,15 +16,4 @@
   <div class="fixed bottom-8 left-0 right-0 mx-4">
     <app-navbar></app-navbar>
   </div>
-
-  @if (modalViewService.modalState()) {
-  <app-description-modal
-  class="fixed self-center"
-  [title]="modalViewService.modalTitle"
-  [description]="modalViewService.modalDescription"
-  [isTour]="modalViewService.isTour"
-  [stopGroupNames]="modalViewService.stopGroupNames"
-  (closeModal)="modalViewService.closeModal()">
-  </app-description-modal>
-  }
 </div>
