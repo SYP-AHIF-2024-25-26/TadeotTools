@@ -1,15 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
+using TadeoT.Database.Model;
 
 namespace API.Controllers;
 
 [ApiController]
-[Route("v1/divisions")]
+[Route("v1")]
 public class DivisionsController(
     DivisionFunctions divisions
 ) : ControllerBase {
-    [HttpGet]
+    [HttpGet("divisions")]
     public async Task<IResult> GetDivisions() {  
         try {
             return Results.Ok(await divisions.GetAllDivisions());
@@ -17,68 +18,67 @@ public class DivisionsController(
         catch (Exception) {
             return Results.StatusCode(500);
         }
-    }/*
+    }
 
-    [HttpDelete("{divisionId}")]
-    public ActionResult DeleteDivisionById(int divisionId) {
-        try {
-            DivisionFunctions.GetInstance().DeleteDivisionById(divisionId);
-            return Ok();
+    [HttpDelete("api/divisions/{divisionId}")]
+    public async Task<IResult> DeleteDivisionById(int divisionId) {
+        try
+        {
+            await divisions.GetDivisionById(divisionId);
+            await divisions.DeleteDivisionById(divisionId);
+            return Results.Ok();
         }
         catch (TadeoTNotFoundException) {
-            return StatusCode(404, "Could not find Division");
+            return Results.NotFound("Could not find Division");
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, "Internal server error");
+            return Results.StatusCode(500);
         }
     }
     
-
-    
-    [HttpPost]
-    public ActionResult CreateDivision([FromBody] DivisionDto division) {
+    [HttpPost("api/divisions")]
+    public async Task<IResult> CreateDivision([FromBody] DivisionDto division) {
         try {
             if (division.Name.Length > 50) {
-                return StatusCode(400, "Invalid Name");
+                return Results.BadRequest("Invalid Name");
             }
             if (division.Color.Length > 7) {
-                return StatusCode(400, "Invalid Color");
+                return Results.BadRequest("Invalid Color");
             }
-            var divisionId = DivisionFunctions.GetInstance().AddDivision(new Division {
+            var divisionId = await divisions.AddDivision(new Division {
                 Name = division.Name,
                 Color = division.Color
             });
-            return Ok(DivisionFunctions.GetInstance().GetDivisionById(divisionId));
+            return Results.Ok(await divisions.GetDivisionById(divisionId));
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, "Internal server error");
+            return Results.StatusCode(500);
         }
     }
     
-    [HttpPut("{divisionId}")]
-    public ActionResult UpdateDivision(int divisionId, [FromBody] DivisionDto division) {
+    [HttpPut("api/divisions/{divisionId}")] 
+    public async Task<IResult> UpdateDivision(int divisionId, [FromBody] DivisionDto division) {
         try {
             if (division.Name.Length > 50) {
-                return StatusCode(400, "Invalid Name");
+                return Results.BadRequest("Invalid Name");
             }
             if (division.Color.Length > 7) {
-                return StatusCode(400, "Invalid Color");
+                return Results.BadRequest("Invalid Color");
             }
 
-            DivisionFunctions.GetInstance().GetDivisionById(divisionId);
-            
-            DivisionFunctions.GetInstance().UpdateDivision(new Division {
+            await divisions.GetDivisionById(divisionId);
+            await divisions.UpdateDivision(new Division {
                 DivisionID = divisionId,
                 Name = division.Name,
                 Color = division.Color
             });
-            return Ok(DivisionFunctions.GetInstance().GetDivisionById(divisionId));
+            return Results.Ok();
         }
         catch (TadeoTNotFoundException) {
-            return StatusCode(404, "Could not find Division");
+            return Results.NotFound("Could not find Division");
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, "Internal server error");
+            return Results.StatusCode(500);
         }
-    }*/
+    }
 }
