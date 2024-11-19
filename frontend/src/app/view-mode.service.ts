@@ -5,8 +5,6 @@ import { Injectable, signal } from '@angular/core';
 })
 export class ViewModeService {
 
-  constructor() { }
-
   private isStationMode = signal(true);
 
   switchToStationMode() {
