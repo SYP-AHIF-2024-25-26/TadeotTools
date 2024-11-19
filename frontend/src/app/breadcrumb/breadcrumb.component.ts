@@ -1,5 +1,6 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject, computed } from '@angular/core';
 import { Router, RouterLinkActive } from '@angular/router';
+import { ApiFetchService } from '../api-fetch.service';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -11,7 +12,11 @@ import { Router, RouterLinkActive } from '@angular/router';
   styleUrl: './breadcrumb.component.css'
 })
 export class BreadcrumbComponent {
-  @Input() name: string = '';
-
   protected router = inject(Router);
+  protected apiFetchService = inject(ApiFetchService);
+
+  name = computed(() => {
+    return this.apiFetchService.getStopGroupName();
+  });
+
 }
