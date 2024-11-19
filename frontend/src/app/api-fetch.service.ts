@@ -1,16 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import { Stop, StopGroup } from './types';
-import { StopGroupName } from './stop-group-name.enum';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiFetchService {
-  tour: StopGroupName[] = [];
-  http = inject(HttpClient);
-
+  /*http = inject(HttpClient);
   private async getStopGroupIDs(): Promise<string[]> {
     let result: string[] = [];
     let response = (await (await fetch(`http://localhost:5000/v1/groups`)).json()) as StopGroup[];
@@ -50,5 +47,10 @@ export class ApiFetchService {
     });
 
     return result;
+  }
+  */
+
+  getStopGroupName() {
+    return '';
   }
 }
