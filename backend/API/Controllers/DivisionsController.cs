@@ -5,17 +5,19 @@ using TadeoT.Database.Functions;
 namespace API.Controllers;
 
 [ApiController]
-[Route("v1/api/divisions")]
-public class DivisionsController : ControllerBase {
+[Route("v1/divisions")]
+public class DivisionsController(
+    DivisionFunctions divisions
+) : ControllerBase {
     [HttpGet]
-    public ActionResult GetDivisions() {
+    public async Task<IResult> GetDivisions() {  
         try {
-            return Ok(DivisionFunctions.GetInstance().GetAllDivisions());
+            return Results.Ok(await divisions.GetAllDivisions());
         }
         catch (Exception) {
-            return StatusCode(500, "Internal server error");
+            return Results.StatusCode(500);
         }
-    }
+    }/*
 
     [HttpDelete("{divisionId}")]
     public ActionResult DeleteDivisionById(int divisionId) {
@@ -53,16 +55,6 @@ public class DivisionsController : ControllerBase {
         }
     }
     
-    /*
- PUT {{BASE_URL}}/v1/api/divisions/${divisionID}
-   {
-    divisionID
-       name
-       color
-   }
-
-   */
-    
     [HttpPut("{divisionId}")]
     public ActionResult UpdateDivision(int divisionId, [FromBody] DivisionDto division) {
         try {
@@ -88,5 +80,5 @@ public class DivisionsController : ControllerBase {
         catch (TadeoTDatabaseException) {
             return StatusCode(500, "Internal server error");
         }
-    }
+    }*/
 }

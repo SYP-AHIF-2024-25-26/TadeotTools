@@ -1,3 +1,4 @@
+using API.Dtos.ResponseDtos;
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
@@ -6,18 +7,32 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("v1/groups")]
-public class StopGroupsController : ControllerBase {
-    /*
+public class StopGroupsController(
+    StopFunctions stops,
+    StopGroupFunctions stopGroups,
+    DivisionFunctions divisions
+) : ControllerBase {
+    
     [HttpGet]
-    public IActionResult GetGroups() {
-        try {
-            return Ok(StopGroupFunctions.GetInstance().GetAllStopGroups());
+    public async Task<IResult> GetGroups() {
+        try
+        {
+            var allStopGroups = await stopGroups.GetAllStopGroups();
+            return Results.Ok(allStopGroups
+                .Where(stopGroup => stopGroup.IsPublic)
+                .Select(stopGroup => new ResponseStopGroupDto()
+                {
+                    StopGroupID = stopGroup.StopGroupID,
+                    Name = stopGroup.Name,
+                    Description = stopGroup.Description,
+                })
+                .ToList());
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, "internal server error");
+            return Results.StatusCode(500);
         }
     }
-
+    /*
     [HttpGet("api")]
     public IActionResult GetGroupsApi() {
         return GetGroups();

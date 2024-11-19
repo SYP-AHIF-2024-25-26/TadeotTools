@@ -1,4 +1,4 @@
-using API.Middleware;
+/*using API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +28,33 @@ app.UseCors("AllowSpecificOrigins");
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();  // This maps the controller routes
+});
+
+app.Run();*/
+
+using Microsoft.EntityFrameworkCore;
+using TadeoT.Database;
+using TadeoT.Database.Functions;
+using TadeoT.Database.Model;
+
+var builder = WebApplication.CreateBuilder(args);
+{
+    builder.Services.AddDbContext<TadeoTDbContext>(options =>
+        options.UseMySql(TadeoTDbContextFactory.GetConnectionString(),
+            new MySqlServerVersion(new Version(8, 0, 32))));
+    builder.Services.AddScoped<StopFunctions>();
+    builder.Services.AddScoped<StopGroupFunctions>();
+    builder.Services.AddScoped<DivisionFunctions>();
+    builder.Services.AddControllers();
+}
+
+var app = builder.Build();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
 });
 
 app.Run();

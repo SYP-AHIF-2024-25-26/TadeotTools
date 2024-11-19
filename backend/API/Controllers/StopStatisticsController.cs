@@ -7,6 +7,7 @@ namespace API.Controllers;
 [ApiController]
 [Route("v1/stats")]
 public class GroupStopsController : ControllerBase {
+    /*
     [HttpGet]
     [Route("api")]
     public IActionResult GetAllStopStatistics() {
@@ -59,5 +60,5 @@ public class GroupStopsController : ControllerBase {
         catch (TadeoTDatabaseException) {
             return StatusCode(404, "StopStatistic not found");
         }
-    }
+    }*/
 }
