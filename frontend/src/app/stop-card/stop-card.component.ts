@@ -1,6 +1,5 @@
 import { Component, inject, Input, ViewChild } from '@angular/core';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
-import { ModalViewService } from '../modal-view.service';
 import { NgClass, NgStyle } from '@angular/common';
 import { Stop } from '../types';
 
@@ -19,7 +18,6 @@ export class StopCardComponent {
   @Input() stop!: Stop;
   @Input() id!: string;
   @ViewChild (CheckboxComponent) checkbox!: CheckboxComponent;
-  protected modalViewService = inject(ModalViewService);
 
   isChecked() {
     return this.checkbox?.isChecked() ?? false;
