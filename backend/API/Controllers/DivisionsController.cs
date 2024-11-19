@@ -1,3 +1,4 @@
+using API.RequestDtos;
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
@@ -37,7 +38,7 @@ public class DivisionsController(
     }
     
     [HttpPost("api/divisions")]
-    public async Task<IResult> CreateDivision([FromBody] DivisionDto division) {
+    public async Task<IResult> CreateDivision([FromBody] RequestDivsionDto division) {
         try {
             if (division.Name.Length > 50) {
                 return Results.BadRequest("Invalid Name");
@@ -57,7 +58,7 @@ public class DivisionsController(
     }
     
     [HttpPut("api/divisions/{divisionId}")] 
-    public async Task<IResult> UpdateDivision(int divisionId, [FromBody] DivisionDto division) {
+    public async Task<IResult> UpdateDivision(int divisionId, [FromBody] RequestDivsionDto division) {
         try {
             if (division.Name.Length > 50) {
                 return Results.BadRequest("Invalid Name");

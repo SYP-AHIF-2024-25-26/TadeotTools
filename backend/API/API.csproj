@@ -15,8 +15,4 @@
     <ProjectReference Include="..\TadeoT\TadeoT.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\RequestDtos\" />
-  </ItemGroup>
-
 </Project>
