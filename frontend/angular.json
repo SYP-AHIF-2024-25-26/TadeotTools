@@ -88,9 +88,6 @@
             },
             "development": {
               "buildTarget": "TadeoT:build:development"
-            },
-            "options": {
-              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
