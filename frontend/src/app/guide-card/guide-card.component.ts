@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { CommonModule } from '@angular/common';
-import { GuideCard } from '../types';
+import { StopGroup } from '../types';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
   styleUrl: './guide-card.component.css'
 })
 export class GuideCardComponent {
-  @Input() card!: GuideCard;
+  @Input() stopGroup!: StopGroup;
   @Input() id!: string;
   @ViewChild(CheckboxComponent) checkbox!: CheckboxComponent;
 
@@ -50,6 +50,6 @@ export class GuideCardComponent {
   }
 
   openStopPage() {
-    this.router.navigate([`tour/${this.card.id}`], )
+    this.router.navigate([`tour/${this.stopGroup.stopGroupID}`], )
   }
 }

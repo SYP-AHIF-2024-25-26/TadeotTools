@@ -4,12 +4,13 @@
   </div>
   @if (viewModeService.stationMode()) {
   <div class="flex flex-col justify-center">
-    @for (card of cards(); track card.id) {
-      @if (card.id < cards().length) {
-        <app-guide-card [card]="card" class="mt-6" [id]="card.id.toString()"></app-guide-card>
-      } @else {
-        <app-guide-card [card]="card" class="mt-6 mb-28" [id]="card.id.toString()"></app-guide-card>
-      }
+    @for (group of groups(); track group.stopGroupID) {
+        <app-guide-card
+          class="mt-6"
+          [stopGroup]="group"
+          [id]="group.stopGroupID.toString()"
+          [ngClass]="{'mb-28': group.stopGroupID > groups().length}">">
+        </app-guide-card>
     }
   </div>
   }

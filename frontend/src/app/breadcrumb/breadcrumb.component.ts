@@ -1,4 +1,4 @@
-import { Component, Input, inject, computed } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { Router, RouterLinkActive } from '@angular/router';
 import { ApiFetchService } from '../api-fetch.service';
 

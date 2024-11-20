@@ -10,7 +10,7 @@ export type GuideCard = {
     description: string;
     roomNr: string;
     stopGroupID: number;
-    stopGroup: StopGroup;
+    divisionID: number;
   }
 
   export type StopGroup = {
