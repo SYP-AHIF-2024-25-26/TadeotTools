@@ -110,15 +110,21 @@ public class StopGroupsController(
             return Results.StatusCode(500);
         }
     }
-/*
-    [HttpDelete("api/{groupId}")]
-    public IActionResult DeleteGroup(int groupId) {
-        try {
-            StopGroupFunctions.GetInstance().DeleteStopGroupById(groupId);
-            return Ok();
+
+    [HttpDelete("api/groups/{groupId}")]
+    public async Task<IResult> DeleteGroup(int groupId) {
+        try
+        {
+            await stopGroups.GetStopGroupById(groupId);
+            await stopGroups.DeleteStopGroupById(groupId);
+            return Results.Ok();
+        }
+        catch (TadeoTNotFoundException)
+        {
+            return Results.NotFound("StopGroup not found!");
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(404, "No StopGroup with this id");
+            return Results.StatusCode(500);
         }
-    }*/
+    }
 }
