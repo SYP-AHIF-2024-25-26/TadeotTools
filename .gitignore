@@ -2,3 +2,4 @@
 .DS_Store
 /frontend/.vscode
 /backend/TadeoT/.idea
+/backend/TadeoT/appsettings.json
