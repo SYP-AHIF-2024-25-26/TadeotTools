@@ -32,6 +32,7 @@ app.UseEndpoints(endpoints =>
 
 app.Run();*/
 
+using API.Middleware;
 using Microsoft.EntityFrameworkCore;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
@@ -45,6 +46,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<StopFunctions>();
     builder.Services.AddScoped<StopGroupFunctions>();
     builder.Services.AddScoped<DivisionFunctions>();
+    builder.Services.AddScoped<APIKeyFunctions>();
     builder.Services.AddControllers();
 }
 
@@ -54,6 +56,7 @@ app.UseRouting();
 
 app.UseEndpoints(endpoints =>
 {
+    app.UseMiddleware<ApiKeyMiddleware>();
     endpoints.MapControllers();
 });
 
