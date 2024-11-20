@@ -1,13 +1,29 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { Division, Stop, StopGroup } from './types';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiFetchService {
-  /*http = inject(HttpClient);
+  private http = inject(HttpClient);
+
+  public async getDivisions(): Promise<Division[]> {
+    return firstValueFrom(this.http.get<Division[]>('http://localhost:5000/v1/divisions'));
+  }
+
+  public async getStopGroups(): Promise<StopGroup[]> {
+    return firstValueFrom(this.http.get<StopGroup[]>('http://localhost:5000/v1/groups'));
+  }
+
+  public async getStopsOfGroup(groupID: number): Promise<Stop[]> {
+    return firstValueFrom(this.http.get<Stop[]>(`http://localhost:5000/v1/stops/groups/${groupID}`));
+  }
+  
+  /*
+
   private async getStopGroupIDs(): Promise<string[]> {
     let result: string[] = [];
     let response = (await (await fetch(`http://localhost:5000/v1/groups`)).json()) as StopGroup[];
@@ -48,8 +64,7 @@ export class ApiFetchService {
 
     return result;
   }
-  */
-
+*/
   getStopGroupName() {
     return '';
   }
