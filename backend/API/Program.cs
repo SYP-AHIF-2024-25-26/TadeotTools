@@ -48,11 +48,22 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddScoped<DivisionFunctions>();
     builder.Services.AddScoped<APIKeyFunctions>();
     builder.Services.AddControllers();
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAll", policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    });
 }
 
 var app = builder.Build();
 
 app.UseRouting();
+
+app.UseCors("AllowAll");
 
 app.UseEndpoints(endpoints =>
 {

@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7879175-5414-4d4a-acd2-4e36ffe57193" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../API/APIKeyGenerator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../API/Controllers/DivisionsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../API/Controllers/DivisionsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../API/Controllers/StopStatisticsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../API/Controllers/StopStatisticsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../API/Controllers/StopsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../API/Controllers/StopsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../assets/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../assets/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../API/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../API/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.TadeoT/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.TadeoT/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TadeoT.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/TadeoT.sln.DotSettings.user" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +47,7 @@
       <updated>1731788351363</updated>
       <workItem from="1731788352782" duration="5000" />
       <workItem from="1732007348565" duration="27000" />
+      <workItem from="1732117867412" duration="23000" />
     </task>
     <servers />
   </component>
