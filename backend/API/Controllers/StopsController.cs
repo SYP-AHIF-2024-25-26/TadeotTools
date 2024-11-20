@@ -1,6 +1,6 @@
 using API.Dtos.ResponseDtos;
+using API.RequestDto;
 using Microsoft.AspNetCore.Mvc;
-using Sprache;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
 using TadeoT.Database.Model;
@@ -8,40 +8,38 @@ using TadeoT.Database.Model;
 namespace API.Controllers;
 
 [ApiController]
-[Route("v1/stops")]
+[Route("v1")]
 public class StopsController(
     StopFunctions stops,
     StopGroupFunctions stopGroups,
     DivisionFunctions divisions
 ) : ControllerBase
 {
-    [HttpGet("api")]
+    [HttpGet("api/stops")]
     public async Task<IResult> GetAllStops()
     {
         var allStops = await stops.GetAllStops();
         List<ResponseStopDto> responseStops = new();
-        allStops.ForEach(stop =>
-        {
-            responseStops.Add(ResponseStopDto.FromStop(stop));
-        });
+        allStops.ForEach(stop => { responseStops.Add(ResponseStopDto.FromStop(stop)); });
         return Results.Ok(responseStops);
     }
 
-    [HttpGet("{stopId}")]
+    [HttpGet("api/stops/{stopId}")]
     public async Task<IResult> GetStopById(int stopId)
     {
         try
         {
-            return Results.Ok(await stops.GetStopById(stopId));
+            var stop = await stops.GetStopById(stopId);
+            return Results.Ok(ResponseStopDto.FromStop(stop));
         }
-        catch (TadeoTDatabaseException)
+        catch (TadeoTNotFoundException)
         {
-            return Results.StatusCode(404);
+            return Results.NotFound("Stop not found");
         }
     }
 
-    [HttpPost("api")]
-    public async Task<IResult> CreateStop([FromBody] StopDto stop)
+    [HttpPost("api/stops")]
+    public async Task<IResult> CreateStop([FromBody] RequestStopDto stop)
     {
         try
         {
@@ -49,7 +47,7 @@ public class StopsController(
             {
                 await stopGroups.GetStopGroupById(stop.StopGroupID);
             }
-            catch (TadeoTDatabaseException)
+            catch (TadeoTNotFoundException)
             {
                 return Results.NotFound("StopGroup not found");
             }
@@ -69,94 +67,126 @@ public class StopsController(
                 return Results.BadRequest("Invalid Room Number");
             }
 
-
-            var stopId = await stops.AddStop(new Stop
+            var stopToAdd = new Stop
             {
                 Name = stop.Name,
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
                 Division = await divisions.GetDivisionById(stop.DivisionID),
                 StopGroup = await stopGroups.GetStopGroupById(stop.StopGroupID)
-            });
-            return Results.Problem(detail: "Could not add Stop", statusCode: 500);
-            return Results.Ok(stops.GetStopById(stopId));
+            };
+
+            stopToAdd.StopID = await stops.AddStop(stopToAdd);
+
+            return Results.Ok(ResponseStopDto.FromStop(stopToAdd));
+        }
+        catch (TadeoTNotFoundException)
+        {
+            return Results.NotFound("Division not found");
         }
         catch (TadeoTDatabaseException)
         {
-            return Results.Problem(detail: "Could not add Stop", statusCode: 500);
+            return Results.StatusCode(500);
         }
     }
-/*
-    [HttpPut("{stopId}")]
-    public IActionResult UpdateStop(int stopId, [FromBody] StopDto stop) {
-        try {
-            if (stop.Name.Length > 50) {
-                return StatusCode(400, "Invalid Name");
+
+    [HttpPut("api/stops/{stopId}")]
+    public async Task<IResult> UpdateStop(int stopId, [FromBody] RequestStopDto stop)
+    {
+        try
+        {
+            try
+            {
+                await stopGroups.GetStopGroupById(stop.StopGroupID);
+            }
+            catch (TadeoTNotFoundException)
+            {
+                return Results.NotFound("StopGroup not found");
             }
 
-            if (stop.Description.Length > 255) {
-                return StatusCode(400, "Invalid Description");
+            try
+            {
+                await divisions.GetDivisionById(stop.DivisionID);
+            }
+            catch (TadeoTNotFoundException)
+            {
+                return Results.NotFound("Division not found");
             }
 
-            if (stop.RoomNr.Length > 5) {
-                return StatusCode(400, "Invalid Room Number");
+            if (stop.Name.Length > 50)
+            {
+                return Results.NotFound("Invalid Name");
             }
 
-            try {
-                StopFunctions.GetInstance().GetStopById(stopId);
-            }
-            catch (TadeoTDatabaseException) {
-                return StatusCode(404, "Stop not found");
+            if (stop.Description.Length > 255)
+            {
+                return Results.NotFound("Invalid Description");
             }
 
-            StopFunctions.GetInstance().UpdateStop(new Stop {
+            if (stop.RoomNr.Length > 5)
+            {
+                return Results.NotFound("Invalid RoomNr");
+            }
+
+            await stops.GetStopById(stopId);
+
+            await stops.UpdateStop(new Stop
+            {
                 StopID = stopId,
                 Name = stop.Name,
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
-                Division = DivisionFunctions.GetInstance().GetDivisionById(stop.DivisionID),
-                StopGroup = StopGroupFunctions.GetInstance().GetStopGroupById(stop.StopGroupID)
+                Division = await divisions.GetDivisionById(stop.DivisionID),
+                StopGroup = await stopGroups.GetStopGroupById(stop.StopGroupID)
             });
-            return Ok();
+            return Results.Ok();
         }
-        catch (TadeoTDatabaseException) {
-            return StatusCode(500, "Could not update Stop");
+        catch (TadeoTNotFoundException)
+        {
+            return Results.NotFound("Stop not found");
+        }
+        catch (TadeoTDatabaseException)
+        {
+            return Results.StatusCode(500);
         }
     }
 
-    [HttpDelete("{stopId}")]
-    public IActionResult DeleteStop(int stopId) {
-        Stop? stopToUpdate = null;
-        try {
-            stopToUpdate = StopFunctions.GetInstance().GetStopById(stopId);
-            StopFunctions.GetInstance().DeleteStopById(stopId);
-            return Ok();
+    [HttpDelete("api/stops/{stopId}")]
+    public async Task<IResult> DeleteStop(int stopId)
+    {
+        try
+        {
+            await stops.GetStopById(stopId);
+            await stops.DeleteStopById(stopId);
+            return Results.Ok();
         }
-        catch (TadeoTDatabaseException) {
-            if (stopToUpdate == null) return StatusCode(404, "Stop not found");
-
-            return StatusCode(500, "Could not delete Stop");
+        catch (TadeoTNotFoundException)
+        {
+            return Results.NotFound("Stop not found");
         }
-    }*/
+        catch (TadeoTDatabaseException)
+        {
+            return Results.StatusCode(500);
+        }
+    }
 
-    [HttpGet("groups/{groupId}")]
-    public async Task<IResult> GetStopsByGroupId(int groupId) {
+    [HttpGet("stops/groups/{groupId}")]
+    public async Task<IResult> GetStopsByGroupId(int groupId)
+    {
         try
         {
             await stopGroups.GetStopGroupById(groupId);
             List<ResponseStopDto> responseStops = new();
             var stopsByGroup = await stopGroups.GetStopsOfStopGroup(groupId);
-            stopsByGroup.ForEach(stop =>
-            {
-                responseStops.Add(ResponseStopDto.FromStop(stop));
-            });
+            stopsByGroup.ForEach(stop => { responseStops.Add(ResponseStopDto.FromStop(stop)); });
             return Results.Ok(responseStops);
         }
         catch (TadeoTNotFoundException)
         {
             return Results.NotFound("StopGroup not found");
         }
-        catch (TadeoTDatabaseException) {
+        catch (TadeoTDatabaseException)
+        {
             return Results.StatusCode(500);
         }
     }

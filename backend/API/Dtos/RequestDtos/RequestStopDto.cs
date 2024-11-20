@@ -1,7 +1,7 @@
-namespace API;
+namespace API.RequestDto;
 
-public class StopDto {
-    public int StopID { get; set; }
+public class RequestStopDto
+{
     public required string Name { get; set; }
     public required string Description { get; set; }
     public required string RoomNr { get; set; }

@@ -1,20 +1,23 @@
+using API.Dtos.RequestDtos;
 using API.Dtos.ResponseDtos;
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
+using TadeoT.Database.Model;
 
 namespace API.Controllers;
 
 [ApiController]
-[Route("v1/groups")]
+[Route("v1")]
 public class StopGroupsController(
     StopFunctions stops,
     StopGroupFunctions stopGroups,
     DivisionFunctions divisions
-) : ControllerBase {
-    
-    [HttpGet]
-    public async Task<IResult> GetGroups() {
+) : ControllerBase
+{
+    [HttpGet("groups")]
+    public async Task<IResult> GetGroups()
+    {
         try
         {
             var allStopGroups = await stopGroups.GetAllStopGroups();
@@ -28,98 +31,100 @@ public class StopGroupsController(
                 })
                 .ToList());
         }
-        catch (TadeoTDatabaseException) {
+        catch (TadeoTDatabaseException)
+        {
             return Results.StatusCode(500);
         }
     }
-    /*
-    [HttpGet("api")]
-    public IActionResult GetGroupsApi() {
-        return GetGroups();
-    }
 
-    [HttpGet("{groupId}")]
-    public IActionResult GetGroupById(int groupId) {
-        try {
-            var stops = StopGroupFunctions.GetInstance().GetStopsOfStopGroup(groupId);
-
-            if (stops.Count == 0) {
-                return StatusCode(404, $"No Stops found for StopGroup: {groupId}");
-            }
-
-            return Ok(stops);
+    [HttpGet("api/groups")]
+    public async Task<IResult> GetGroupsApi()
+    {
+        try
+        {
+            return Results.Ok(await stopGroups.GetAllStopGroups());
         }
-        catch (TadeoTDatabaseException) {
-            return StatusCode(500, "Internal server error");
+        catch (TadeoTDatabaseException)
+        {
+            return Results.StatusCode(500);
         }
     }
+    
 
-    [HttpPost("api")]
-    public IActionResult CreateGroup([FromBody] StopGroupDto? group) {
+    [HttpPost("api/groups")]
+    public async Task<IResult> CreateGroup([FromBody] RequestStopGroupDto group) {
         try {
-            if (group == null) {
-                return StatusCode(400, "Missing Request Body");
+            if (group.Name.Length > 50) {
+                return Results.BadRequest("Invalid Name");
             }
-
+            
             if (group.Description.Length > 255) {
-                return StatusCode(400, "Invalid Description");
-            }
-
-            if (group.Color.Length > 7) {
-                return StatusCode(400, "Invalid Color");
+                return Results.BadRequest("Invalid Description");
             }
 
             var stopGroupToAdd = new StopGroup {
                 Name = group.Name,
-                Description = group.Description
+                Description = group.Description,
+                IsPublic = group.IsPublic
             };
-            var stopGroupId = StopGroupFunctions.GetInstance().AddStopGroup(stopGroupToAdd);
+            var stopGroupId = await stopGroups.AddStopGroup(stopGroupToAdd);
             stopGroupToAdd.StopGroupID = stopGroupId;
-            return Ok(stopGroupToAdd);
+            return Results.Ok(stopGroupToAdd);
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, $"Could not create group {group!.Name}");
+            return Results.StatusCode(500);
         }
     }
 
-    [HttpPut("api/{groupId}")]
-    public IActionResult UpdateGroup(int groupId, [FromBody] StopGroupDto? group) {
-        try {
-            if (group == null) {
-                return StatusCode(406, "Missing group data");
+    [HttpPut("api/groups/{groupId}")]
+    public async Task<IResult> UpdateGroup(int groupId, [FromBody] RequestStopGroupDto group) {
+        try
+        {
+            await stopGroups.GetStopGroupById(groupId);
+            if (group.Name.Length > 50)
+            {
+                return Results.BadRequest("Invalid Name");
             }
 
-
-            if (group.Description.Length > 255) {
-                return StatusCode(400, "Invalid Description");
+            if (group.Description.Length > 255)
+            {
+                return Results.BadRequest("Invalid Description");
             }
 
-            if (group.Color.Length > 7) {
-                return StatusCode(400, "Invalid Color");
-            }
-
-            var stopGroup = new StopGroup {
+            var stopGroup = new StopGroup
+            {
                 StopGroupID = groupId,
                 Name = group.Name,
-                Description = group.Description
+                Description = group.Description,
+                IsPublic = group.IsPublic
             };
 
-            StopGroupFunctions.GetInstance().UpdateStopGroup(stopGroup);
-            return Ok();
+            await stopGroups.UpdateStopGroup(stopGroup);
+            return Results.Ok();
+        }
+        catch (TadeoTNotFoundException)
+        {
+            return Results.NotFound("StopGroup not found!");
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(500, $"Could not update group {group!.Name}");
+            return Results.StatusCode(500);
         }
     }
 
-    [HttpDelete("api/{groupId}")]
-    public IActionResult DeleteGroup(int groupId) {
-        try {
-            StopGroupFunctions.GetInstance().DeleteStopGroupById(groupId);
-            return Ok();
+    [HttpDelete("api/groups/{groupId}")]
+    public async Task<IResult> DeleteGroup(int groupId) {
+        try
+        {
+            await stopGroups.GetStopGroupById(groupId);
+            await stopGroups.DeleteStopGroupById(groupId);
+            return Results.Ok();
+        }
+        catch (TadeoTNotFoundException)
+        {
+            return Results.NotFound("StopGroup not found!");
         }
         catch (TadeoTDatabaseException) {
-            return StatusCode(404, "No StopGroup with this id");
+            return Results.StatusCode(500);
         }
-    }*/
+    }
 }

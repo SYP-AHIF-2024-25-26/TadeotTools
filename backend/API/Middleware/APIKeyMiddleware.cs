@@ -7,18 +7,20 @@ namespace API.Middleware;
 
 public class ApiKeyMiddleware
 {
-    private readonly RequestDelegate next;
     private const string ApiKeyHeaderName = "X-Api-Key";
+    private readonly RequestDelegate _next;
+    private APIKeyFunctions _apiKeyRepository;
 
     public ApiKeyMiddleware(RequestDelegate next)
     {
-        this.next = next;
+        _next = next;
     }
 
     public async Task InvokeAsync(HttpContext context)
     {
+        this._apiKeyRepository = context.RequestServices.GetRequiredService<APIKeyFunctions>();
         // Only apply to api routes
-        if (context.Request.Path.ToString().Contains("/api"))
+        if (context.Request.Path.ToString().Contains("api"))
         {
             if (!context.Request.Headers.TryGetValue(ApiKeyHeaderName, out var extractedApiKey))
             {
@@ -27,7 +29,7 @@ public class ApiKeyMiddleware
                 return;
             }
 
-            if (!IsValidApiKey(extractedApiKey!))
+            if (! await IsValidApiKey(extractedApiKey!))
             {
                 context.Response.StatusCode = 403; // Forbidden
                 await context.Response.WriteAsync("Invalid API Key.");
@@ -35,18 +37,19 @@ public class ApiKeyMiddleware
             }
         }
 
-        await this.next(context);
+        await _next(context);
     }
 
-    private static bool IsValidApiKey(string userApiKey)
-    {/*
-        List<string> systemApiKeys = APIKeyFunctions.GetInstance().GetAllAPIKeys().Select(ak => ak.APIKeyValue).ToList();
-        
+    private async Task<bool> IsValidApiKey(string userApiKey)
+    {
+        List<string> systemApiKeys = (await _apiKeyRepository.GetAllAPIKeys()).Select(ak => ak.APIKeyValue).ToList();
+
         byte[] userApiKeyBytes = Encoding.UTF8.GetBytes(userApiKey);
-        
+
         bool result = false;
-        
-        systemApiKeys.ForEach(systemApiKey => {
+
+        systemApiKeys.ForEach(systemApiKey =>
+        {
             byte[] systemApiKeyBytes = Encoding.UTF8.GetBytes(systemApiKey);
 
             if (CryptographicOperations.FixedTimeEquals(userApiKeyBytes, systemApiKeyBytes))
@@ -54,7 +57,6 @@ public class ApiKeyMiddleware
                 result = true;
             }
         });
-        return result;*/
-        return true;
+        return result;
     }
 }
