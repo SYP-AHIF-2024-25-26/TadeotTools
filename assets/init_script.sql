@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS StopGroups (
     name VARCHAR(50) NOT NULL,
     description VARCHAR(255) NOT NULL,
     isPublic BOOLEAN NOT NULL DEFAULT TRUE,
-    stopGroupOrder INT DEFAULT 0
+    stopGroupOrder INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS Divisions (
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS Stops (
     name VARCHAR(50) NOT NULL,
     description VARCHAR(255) NOT NULL,
     roomNr VARCHAR(5),
-    stopOrder INT DEFAULT 0,
+    stopOrder INT NOT NULL DEFAULT 0,
     stopGroupID INT,
     divisionID INT NOT NULL,
     FOREIGN KEY (stopGroupID) REFERENCES StopGroups(stopGroupID) ON DELETE CASCADE,
