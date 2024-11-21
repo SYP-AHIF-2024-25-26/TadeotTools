@@ -112,4 +112,28 @@ public class StopGroupFunctionsTests
         await stopGroupFunctions.DeleteStopGroupById(group.StopGroupID);
         Assert.ThrowsAsync<TadeoTNotFoundException>(async Task () => await stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID));
     }
+
+    [Test, Order(5)]
+    public async Task MoveStopGroupUp() // only works if next item isn't higher than 1
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var stopGroupFunctions = scope.ServiceProvider.GetRequiredService<StopGroupFunctions>();
+
+        StopGroup group = await stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
+        await stopGroupFunctions.MoveStopGroupUp(group.StopGroupID);
+        StopGroup result = await stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
+        Assert.That(result.StopGroupOrder, Is.EqualTo(1));
+    }
+
+    [Test, Order(6)]
+    public async Task MoveStopGroupDown() // only works if previous item isn't lower than 0
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var stopGroupFunctions = scope.ServiceProvider.GetRequiredService<StopGroupFunctions>();
+
+        StopGroup group = await stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
+        await stopGroupFunctions.MoveStopGroupDown(group.StopGroupID);
+        StopGroup result = await stopGroupFunctions.GetStopGroupById(this.testGroup.StopGroupID);
+        Assert.That(result.StopGroupOrder, Is.EqualTo(-1));
+    }
 }

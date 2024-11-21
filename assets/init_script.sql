@@ -12,13 +12,15 @@ CREATE TABLE IF NOT EXISTS StopGroups (
     stopGroupID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(255) NOT NULL,
-    isPublic BOOLEAN NOT NULL DEFAULT TRUE
+    isPublic BOOLEAN NOT NULL DEFAULT TRUE,
+    stopGroupOrder INT DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS Divisions (
     divisionID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
-    color VARCHAR(7) NOT NULL
+    color VARCHAR(7) NOT NULL,
+    image BLOB
 );
 
 CREATE TABLE IF NOT EXISTS Stops (
@@ -26,6 +28,7 @@ CREATE TABLE IF NOT EXISTS Stops (
     name VARCHAR(50) NOT NULL,
     description VARCHAR(255) NOT NULL,
     roomNr VARCHAR(5),
+    stopOrder INT DEFAULT 0,
     stopGroupID INT,
     divisionID INT NOT NULL,
     FOREIGN KEY (stopGroupID) REFERENCES StopGroups(stopGroupID) ON DELETE CASCADE,
