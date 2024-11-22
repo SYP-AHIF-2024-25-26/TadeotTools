@@ -90,22 +90,6 @@ public class DivisionsController(
     {
         try
         {
-            var imagePath = "./../../assets/datamodel.png";
-
-            if (!System.IO.File.Exists(imagePath))
-            {
-                throw new FileNotFoundException("Image file not found.", imagePath);
-            }
-
-
-            await divisions.AddDivision(new Division()
-            {
-                Name = "Test",
-                Color = "#333333",
-                Image = System.IO.File.ReadAllBytes(imagePath)
-            });
-            
-            Console.WriteLine(divisionId);
             var division = await divisions.GetDivisionById(divisionId);
             if (division.Image == null)
             {
