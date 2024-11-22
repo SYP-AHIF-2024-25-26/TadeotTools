@@ -1,10 +1,4 @@
-export type GuideCard = {
-    id: number;
-    title: string;
-    description: string;
-  }
-
-  export type Stop = {
+ export type Stop = {
     stopID: number;
     name: string;
     description: string;
@@ -15,7 +9,7 @@ export type GuideCard = {
 
   export type StopGroup = {
     stopGroupID: number;
-    name: number;
+    name: string;
     description: string;
   }
 
