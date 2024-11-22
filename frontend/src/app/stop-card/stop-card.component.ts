@@ -1,4 +1,4 @@
-import { Component, inject, Input, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { NgClass, NgStyle } from '@angular/common';
 import { Stop } from '../types';
@@ -18,8 +18,11 @@ export class StopCardComponent {
   @Input() stop!: Stop;
   @Input() id!: string;
   @ViewChild (CheckboxComponent) checkbox!: CheckboxComponent;
+  @Input() color!: string | undefined;
+  @Output() openStopDescriptionPage = new EventEmitter<void>();
+  @Output() onChange = new EventEmitter<void>();
 
-  isChecked() {
+  public isChecked() {
     return this.checkbox?.isChecked() ?? false;
   }
 }
