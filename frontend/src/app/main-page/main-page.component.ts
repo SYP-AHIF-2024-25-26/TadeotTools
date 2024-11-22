@@ -6,6 +6,8 @@ import { ViewModeService } from '../view-mode.service';
 import { StopGroup } from '../types';
 import { NgClass } from '@angular/common';
 import { ApiFetchService } from '../api-fetch.service';
+import { Router } from '@angular/router';
+import { CURRENT_STOP_GROUP_PREFIX } from '../constants';
 
 @Component({
   selector: 'app-main-page',
@@ -22,7 +24,8 @@ import { ApiFetchService } from '../api-fetch.service';
 export class MainPageComponent {
   protected viewModeService = inject(ViewModeService);
   private apiFetchService = inject(ApiFetchService);
-  groups: WritableSignal<StopGroup[]> = signal([])
+  private router = inject(Router);
+  groups: WritableSignal<StopGroup[]> = signal([]);
 
   ngOnInit() {
     this.onLoad();
@@ -32,6 +35,10 @@ export class MainPageComponent {
     this.groups.set(await this.apiFetchService.getStopGroups())
   }
 
+  openStopPage(stopGroup: StopGroup) {
+    sessionStorage.setItem(CURRENT_STOP_GROUP_PREFIX, JSON.stringify(stopGroup));
+    this.router.navigate(['/tour', stopGroup.stopGroupID]);
+  }
 
 }
 
