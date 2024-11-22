@@ -7,10 +7,10 @@
       <a
         (click)="router.navigate(['/main'])"
         routerLinkActive="router-link-active"
-        class="inline-flex items-center text-base font-semibold text-gray-700 hover:text-blue-600 cursor-pointer"
+        class="inline-flex items-center text-base font-semibold text-gray-700 hover:text-blue-600 cursor-pointer w-auto h-auto"
       >
         <svg
-          class="w-5 h-5 me-3"
+          class="w-4 h-4 me-3"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"
@@ -40,11 +40,12 @@
             d="m1 9 4-4-4-4"
           />
         </svg>
-        <p
-          class="ms-2 text-lg font-semibold text-gray-700 hover:text-blue-600 md:ms-3 cursor-pointer"
+        <a
+          class="ms-2 text-lg font-semibold text-gray-700 hover:text-blue-600 md:ms-3 cursor-pointer line-clamp-1"
+          (click)="router.navigate(['/tour', stopGroupId])"
         >
-          {{name()}}
-        </p>
+          {{name}}
+        </a>
       </div>
     </li>
   </ol>
