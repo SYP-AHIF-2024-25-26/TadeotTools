@@ -1,4 +1,4 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, Input } from '@angular/core';
 import { Router, RouterLinkActive } from '@angular/router';
 import { ApiFetchService } from '../api-fetch.service';
 
@@ -13,10 +13,6 @@ import { ApiFetchService } from '../api-fetch.service';
 })
 export class BreadcrumbComponent {
   protected router = inject(Router);
-  protected apiFetchService = inject(ApiFetchService);
-
-  name = computed(() => {
-    return this.apiFetchService.getStopGroupName();
-  });
-
+  @Input() name!: string;
+  @Input({required: true}) stopGroupId!: number;
 }
