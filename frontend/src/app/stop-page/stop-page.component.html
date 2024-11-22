@@ -1,16 +1,18 @@
 <div class="flex flex-col w-full h-screen justify-star bg-gray-50 overflow-y-scroll space-y-reverse">
     <div>
-      <app-header></app-header>
+      <app-header [showWelcomeText]="false"></app-header>
     </div>
-    <app-breadcrumb />
+    <app-breadcrumb [name]="parentStopGroup().name" [stopGroupId]="parentStopGroup().stopGroupID" />
+
+  <app-description-container [title]="parentStopGroup().name" [description]="parentStopGroup().description"/>
 
 
   <div class="flex flex-col justify-center">
-    @for (stop of tour; track stop.stopID) {
-      <app-stop-card [stop]="stop" class="mt-4" [id]="stop.stopID.toString()"></app-stop-card>
+    @for (stop of stops(); track stop.stopID) {
+      <app-stop-card (onChange)="setProgress()" (openStopDescriptionPage)="openStopDescriptionPage(stop)" [stop]="stop" class="mt-4" [id]="stop.stopID.toString()" [color]="getColorOfStop(stop)" [ngClass]="{'mb-28': stops().indexOf(stop) === stops().length - 1}"></app-stop-card>
     }
   </div>
   <div class="fixed bottom-8 left-0 right-0 mx-4 ">
-    <app-navbar></app-navbar>
+    <app-navbar />
   </div>
   </div>
