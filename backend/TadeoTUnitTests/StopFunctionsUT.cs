@@ -131,4 +131,28 @@ public class StopFunctionsUT
         await stopFunctions.DeleteStopById(stop.StopID);
         Assert.ThrowsAsync<TadeoTNotFoundException>(async Task () => await stopFunctions.GetStopById(stop.StopID));
     }
+
+    [Test, Order(5)]
+    public async Task MoveStopUp() // only works if next one isn't higher than 1
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
+
+        Stop stop = await stopFunctions.GetStopById(this.testStop.StopID);
+        await stopFunctions.MoveStopUp(stop.StopID);
+        Stop result = await stopFunctions.GetStopById(this.testStop.StopID);
+        Assert.That(result.StopOrder, Is.EqualTo(1));
+    }
+
+    [Test, Order(6)]
+    public async Task MoveStopDown() // only works if last one isn't lower than 0
+    {
+        using var scope = ServiceProvider!.CreateScope();
+        var stopFunctions = scope.ServiceProvider.GetRequiredService<StopFunctions>();
+
+        Stop stop = await stopFunctions.GetStopById(this.testStop.StopID);
+        await stopFunctions.MoveStopDown(stop.StopID);
+        Stop result = await stopFunctions.GetStopById(this.testStop.StopID);
+        Assert.That(result.StopOrder, Is.EqualTo(-1));
+    }
 }

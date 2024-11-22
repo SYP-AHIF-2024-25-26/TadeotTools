@@ -3,16 +3,10 @@ using TadeoT.Database.Model;
 
 namespace TadeoT.Database.Functions;
 
-public class StopStatisticFunctions
+public class StopStatisticFunctions(StopFunctions stopFunctions, TadeoTDbContext context)
 {
-    private readonly TadeoTDbContext context;
-    private readonly StopFunctions stopFunctions;
-
-    public StopStatisticFunctions(StopFunctions stopFunctions, TadeoTDbContext context)
-    {
-        this.stopFunctions = stopFunctions;
-        this.context = context;
-    }
+    private readonly TadeoTDbContext context = context;
+    private readonly StopFunctions stopFunctions = stopFunctions;
 
     public async Task<List<StopStatistic>> GetAllStopStatistics()
     {

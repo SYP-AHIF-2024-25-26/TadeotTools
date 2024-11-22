@@ -11,7 +11,9 @@ public class StopGroupFunctions(TadeoTDbContext context)
     {
         try
         {
-            return await this.context.StopGroups.ToListAsync();
+            return await this.context.StopGroups
+                .OrderBy(s => s.StopGroupOrder)
+                .ToListAsync();
         } catch (Exception e)
         {
             throw new TadeoTDatabaseException("Could not retrieve StopGroups: " + e.Message);
@@ -94,6 +96,46 @@ public class StopGroupFunctions(TadeoTDbContext context)
         {
             throw new TadeoTDatabaseException("Could not get Stops: " + e.Message);
         }
+    }
+
+    public async Task MoveStopGroupUp(int groupId)
+    {
+        StopGroup group = await this.GetStopGroupById(groupId);
+        if (group == null) return;
+
+        var aboveItem = await context.StopGroups
+            .Where(i => i.StopGroupOrder < group.StopGroupOrder)
+            .OrderByDescending(i => i.StopGroupOrder)
+            .FirstOrDefaultAsync();
+
+        if (aboveItem != null)
+        {
+            (aboveItem.StopGroupOrder, group.StopGroupOrder) = (group.StopGroupOrder, aboveItem.StopGroupOrder);
+        } else
+        {
+            group.StopGroupOrder++;
+        }
+        await context.SaveChangesAsync();
+    }
+
+    public async Task MoveStopGroupDown(int stopId)
+    {
+        StopGroup group = await this.GetStopGroupById(stopId);
+        if (group == null) return;
+
+        var aboveItem = await context.StopGroups
+            .Where(i => i.StopGroupOrder > group.StopGroupOrder)
+            .OrderByDescending(i => i.StopGroupOrder)
+            .FirstOrDefaultAsync();
+
+        if (aboveItem != null)
+        {
+            (aboveItem.StopGroupOrder, group.StopGroupOrder) = (group.StopGroupOrder, aboveItem.StopGroupOrder);
+        } else
+        {
+            group.StopGroupOrder--;
+        }
+        await context.SaveChangesAsync();
     }
 }
 
