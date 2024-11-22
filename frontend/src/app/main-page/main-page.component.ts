@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, WritableSignal } from '@angular/core';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { GuideCardComponent } from '../guide-card/guide-card.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { HeaderComponent } from '../header/header.component';
@@ -27,17 +27,17 @@ export class MainPageComponent {
   private router = inject(Router);
   groups: WritableSignal<StopGroup[]> = signal([]);
 
-  ngOnInit() {
-    this.onLoad();
+  async ngOnInit() {
+    await this.onLoad();
   }
 
   async onLoad() {
     this.groups.set(await this.apiFetchService.getStopGroups())
   }
 
-  openStopPage(stopGroup: StopGroup) {
+  async openStopPage(stopGroup: StopGroup) {
     sessionStorage.setItem(CURRENT_STOP_GROUP_PREFIX, JSON.stringify(stopGroup));
-    this.router.navigate(['/tour', stopGroup.stopGroupID]);
+    await this.router.navigate(['/tour', stopGroup.stopGroupID]);
   }
 
 }
