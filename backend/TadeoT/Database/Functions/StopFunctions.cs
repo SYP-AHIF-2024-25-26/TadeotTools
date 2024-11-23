@@ -1,29 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using TadeoT.Database.Model;
 
 namespace TadeoT.Database.Functions;
 
-public class StopFunctions
-{
-    private readonly TadeoTDbContext context;
-    private readonly StopGroupFunctions stopGroupFunctions;
-    private readonly DivisionFunctions divisionFunctions;
-
-    public StopFunctions(
-        StopGroupFunctions stopGroupFunctions,
-        DivisionFunctions divisionFunctions,
-        TadeoTDbContext context
+public class StopFunctions(
+    StopGroupFunctions stopGroupFunctions,
+    DivisionFunctions divisionFunctions,
+    TadeoTDbContext context
         )
-    {
-        this.context = context;
-        this.stopGroupFunctions = stopGroupFunctions;
-        this.divisionFunctions = divisionFunctions;
-    }
+{
+    private readonly TadeoTDbContext context = context;
+    private readonly StopGroupFunctions stopGroupFunctions = stopGroupFunctions;
+    private readonly DivisionFunctions divisionFunctions = divisionFunctions;
 
     public async Task<List<Stop>> GetAllStops()
     {
         return await this.context.Stops
             .Include(s => s.StopGroup)
+            .OrderBy(s => s.StopOrder)
             .ToListAsync();
     }
 
@@ -123,5 +118,45 @@ public class StopFunctions
         {
             throw new TadeoTDatabaseException("Could not get StopGroup: " + e.Message);
         }
+    }
+
+    public async Task MoveStopUp(int stopId)
+    {
+        Stop stop = await this.GetStopById(stopId);
+        if (stop == null) return;
+
+        var aboveItem = await context.Stops
+            .Where(i => i.StopOrder < stop.StopOrder)
+            .OrderByDescending(i => i.StopOrder)
+            .FirstOrDefaultAsync();
+
+        if (aboveItem != null)
+        {
+            (aboveItem.StopOrder, stop.StopOrder) = (stop.StopOrder, aboveItem.StopOrder);
+        } else
+        {
+            stop.StopOrder++;
+        }
+        await context.SaveChangesAsync();
+    }
+
+    public async Task MoveStopDown(int stopId)
+    {
+        Stop stop = await this.GetStopById(stopId);
+        if (stop == null) return;
+
+        var aboveItem = await context.Stops
+            .Where(i => i.StopOrder > stop.StopOrder)
+            .OrderByDescending(i => i.StopOrder)
+            .FirstOrDefaultAsync();
+
+        if (aboveItem != null)
+        {
+            (aboveItem.StopOrder, stop.StopOrder) = (stop.StopOrder, aboveItem.StopOrder);
+        } else
+        {
+            stop.StopOrder--;
+        }
+        await context.SaveChangesAsync();
     }
 }

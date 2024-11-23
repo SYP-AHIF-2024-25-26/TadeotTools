@@ -33,5 +33,8 @@ public class TadeoTDbContext(DbContextOptions<TadeoTDbContext> options) : DbCont
 
         modelBuilder.Entity<APIKey>()
             .HasKey(k => k.APIKeyValue);
+
+        modelBuilder.Entity<Division>().Property(d => d.Image)
+                  .HasColumnType("varbinary(max)");
     }
 }

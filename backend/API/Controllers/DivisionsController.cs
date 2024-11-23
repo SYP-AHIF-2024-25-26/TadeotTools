@@ -12,74 +12,110 @@ public class DivisionsController(
     DivisionFunctions divisions
 ) : ControllerBase {
     [HttpGet("divisions")]
-    public async Task<IResult> GetDivisions() {  
+    public async Task<IActionResult> GetDivisions() {  
         try {
-            return Results.Ok(await divisions.GetAllDivisions());
+            return Ok(await divisions.GetAllDivisions());
         }
         catch (Exception) {
-            return Results.StatusCode(500);
+            return StatusCode(500, "Internal server error!");
         }
     }
 
     [HttpDelete("api/divisions/{divisionId}")]
-    public async Task<IResult> DeleteDivisionById(int divisionId) {
+    public async Task<IActionResult> DeleteDivisionById(int divisionId) {
         try
         {
             await divisions.GetDivisionById(divisionId);
             await divisions.DeleteDivisionById(divisionId);
-            return Results.Ok();
+            return Ok();
         }
         catch (TadeoTNotFoundException) {
-            return Results.NotFound("Could not find Division");
+            return NotFound("Could not find Division");
         }
         catch (TadeoTDatabaseException) {
-            return Results.StatusCode(500);
+            return StatusCode(500, "internal server error!");
         }
     }
     
     [HttpPost("api/divisions")]
-    public async Task<IResult> CreateDivision([FromBody] RequestDivsionDto division) {
+    public async Task<IActionResult> CreateDivision([FromBody] RequestDivsionDto division) {
         try {
             if (division.Name.Length > 50) {
-                return Results.BadRequest("Invalid Name");
+                return BadRequest("Invalid Name");
             }
             if (division.Color.Length > 7) {
-                return Results.BadRequest("Invalid Color");
+                return BadRequest("Invalid Color");
             }
             var divisionId = await divisions.AddDivision(new Division {
                 Name = division.Name,
-                Color = division.Color
+                Color = division.Color,
+                Image = division.Image
             });
-            return Results.Ok(await divisions.GetDivisionById(divisionId));
+            return Ok(await divisions.GetDivisionById(divisionId));
         }
         catch (TadeoTDatabaseException) {
-            return Results.StatusCode(500);
+            return StatusCode(500, "internal server error!");
         }
     }
     
     [HttpPut("api/divisions/{divisionId}")] 
-    public async Task<IResult> UpdateDivision(int divisionId, [FromBody] RequestDivsionDto division) {
+    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivsionDto division) {
         try {
             if (division.Name.Length > 50) {
-                return Results.BadRequest("Invalid Name");
+                return BadRequest("Invalid Name");
             }
             if (division.Color.Length > 7) {
-                return Results.BadRequest("Invalid Color");
+                return BadRequest("Invalid Color");
             }
 
             await divisions.GetDivisionById(divisionId);
             await divisions.UpdateDivision(new Division {
                 DivisionID = divisionId,
                 Name = division.Name,
-                Color = division.Color
+                Color = division.Color,
+                Image = division.Image
             });
-            return Results.Ok();
+            return Ok();
         }
         catch (TadeoTNotFoundException) {
-            return Results.NotFound("Could not find Division");
+            return NotFound("Could not find Division");
         }
         catch (TadeoTDatabaseException) {
-            return Results.StatusCode(500);
+            return StatusCode(500, "internal server error!");
+        }
+    }
+
+    [HttpGet("divisions/{divisionId}")]
+    public async Task<IActionResult> GetImageByDivisionId(int divisionId)
+    {
+        try
+        {
+            var imagePath = "./../../assets/datamodel.png";
+
+            if (!System.IO.File.Exists(imagePath))
+            {
+                throw new FileNotFoundException("Image file not found.", imagePath);
+            }
+
+
+            await divisions.AddDivision(new Division()
+            {
+                Name = "Test",
+                Color = "#333333",
+                Image = System.IO.File.ReadAllBytes(imagePath)
+            });
+            
+            Console.WriteLine(divisionId);
+            var division = await divisions.GetDivisionById(divisionId);
+            if (division.Image == null)
+            {
+                return NoContent();
+            }
+            return File(division.Image, "image/jpeg");
+        }
+        catch (TadeoTNotFoundException)
+        {
+            return NotFound("Could not find Division");
         }
     }
 }
