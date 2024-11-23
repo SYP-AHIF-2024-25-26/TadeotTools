@@ -8,7 +8,7 @@ export const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'stopgroups', component: StopgroupsComponent},
   {path: 'divisions', component: DivisionsListComponent},
-  {path: 'divisions/:id', component: DivisionDetailsComponent},
+  {path: 'division/:id', component: DivisionDetailsComponent},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
 ];
 

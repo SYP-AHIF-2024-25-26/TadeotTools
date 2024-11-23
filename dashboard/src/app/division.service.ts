@@ -23,6 +23,10 @@ export class DivisionService {
     return firstValueFrom(this.httpClient.get<Division[]>(`${this.baseUrl}/divisions`));
   }
 
+  async getDivision(divisionId: number): Promise<Division> {
+    return firstValueFrom(this.httpClient.get<Division>(`${this.baseUrl}/api/divisions/${divisionId}`));
+  }
+
   async deleteDivision(divisionId: number): Promise<void> {
     return;
   }
