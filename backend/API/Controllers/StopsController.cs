@@ -1,3 +1,4 @@
+using API.Dtos.RequestDtos;
 using API.Dtos.ResponseDtos;
 using API.RequestDto;
 using Microsoft.AspNetCore.Mvc;
@@ -187,6 +188,27 @@ public class StopsController(
         }
         catch (TadeoTDatabaseException)
         {
+            return StatusCode(500);
+        }
+    }
+    
+    [HttpPut("api/stops/order")]
+    public async Task<IActionResult> UpdateOrder(RequestOrderDto order) {
+        try
+        {
+            for (var i = 0; i < order.Order.Length; i++)
+            {
+                var stop = await stops.GetStopById(order.Order[i]);
+                stop.StopOrder = i;
+                await stops.UpdateStop(stop);
+            }
+            return Ok();
+        }
+        catch (TadeoTNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (TadeoTDatabaseException) {
             return StatusCode(500);
         }
     }

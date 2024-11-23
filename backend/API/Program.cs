@@ -1,48 +1,14 @@
-/*using API.Middleware;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddControllers();
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigins",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:4200")
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
-});
-
-var app = builder.Build();
-
-app.UseMiddleware<ApiKeyMiddleware>();
-
-// Enable routing
-app.UseRouting();
-
-app.UseCors("AllowSpecificOrigins");
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();  // This maps the controller routes
-});
-
-app.Run();*/
-
 using API.Middleware;
 using Microsoft.EntityFrameworkCore;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
-using TadeoT.Database.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddDbContext<TadeoTDbContext>(options =>
         options.UseMySql(TadeoTDbContextFactory.GetConnectionString(),
             new MySqlServerVersion(new Version(8, 0, 32))));
+    
     builder.Services.AddScoped<StopFunctions>();
     builder.Services.AddScoped<StopGroupFunctions>();
     builder.Services.AddScoped<DivisionFunctions>();
@@ -57,6 +23,9 @@ var builder = WebApplication.CreateBuilder(args);
                 .AllowAnyHeader();
         });
     });
+    
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
 }
 
 var app = builder.Build();
@@ -64,6 +33,16 @@ var app = builder.Build();
 app.UseRouting();
 
 app.UseCors("AllowAll");
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = string.Empty; // Sets Swagger UI at root
+    });
+}
 
 app.UseEndpoints(endpoints =>
 {
