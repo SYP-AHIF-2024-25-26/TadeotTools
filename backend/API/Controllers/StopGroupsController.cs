@@ -127,4 +127,25 @@ public class StopGroupsController(
             return StatusCode(500);
         }
     }
-}
+    
+    [HttpPut("api/groups/order")]
+    public async Task<IActionResult> UpdateOrder(RequestOrderDto order) {
+        try
+        {
+            for (var i = 0; i < order.Order.Length; i++)
+            {
+                var stopGroup = await stopGroups.GetStopGroupById(order.Order[i]);
+                stopGroup.StopGroupOrder = i;
+                await stopGroups.UpdateStopGroup(stopGroup);
+            }
+            return Ok();
+        }
+        catch (TadeoTNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (TadeoTDatabaseException) {
+            return StatusCode(500);
+        }
+    }
+} 
