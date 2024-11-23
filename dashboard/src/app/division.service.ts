@@ -4,7 +4,10 @@ import {BASE_URL} from './app.config';
 import { firstValueFrom } from 'rxjs';
 
 export type Division = {
-
+  divisionID: number,
+  name: string,
+  color: string,
+  image: null | string
 }
 
 @Injectable({
