@@ -13,7 +13,6 @@ import { NavbarComponent } from "../navbar/navbar.component";
   styleUrl: './division-details.component.css'
 })
 export class DivisionDetailsComponent {
-
   private service: DivisionService = inject(DivisionService);
 
   divisionId = signal<number>(-1);
@@ -21,8 +20,36 @@ export class DivisionDetailsComponent {
   color = signal<string>('');
   image = signal<string>('');
   newDivision = signal<boolean>(false);
+  errorMessage = signal<string | null>(null);
+  selectedFile: File | null = null;
+  byteArray: Uint8Array | null = null;
 
   constructor(private route: ActivatedRoute) {}
+
+  onFileChange(event: any) {
+    const file: File = event.target.files[0];
+
+    this.errorMessage.set(null);
+
+    if (file) {
+      const validFileTypes = ['image/jpeg', 'image/png'];
+      if (!validFileTypes.includes(file.type)) {
+        this.errorMessage.set('Invalid file type. Please upload a JPG, JPEG, or PNG file.');
+        this.selectedFile = null; // Reset the selected file
+        return;
+      }
+      this.selectedFile = file;
+      this.convertToByteArray(file);
+    }
+  }
+
+  convertToByteArray(file: File): void {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      this.byteArray = new Uint8Array(reader.result as ArrayBuffer);
+    };
+    reader.readAsArrayBuffer(file);
+  }
 
   ngOnInit() {
     const id: string | null = this.route.snapshot.paramMap.get('id');
