@@ -1,7 +1,4 @@
-import {
-  Component, EventEmitter, inject,
-  Input, Output, signal, ViewChild, WritableSignal,
-} from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal, ViewChild, WritableSignal } from '@angular/core';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { CommonModule } from '@angular/common';
 import { StopGroup } from '../types';
@@ -11,12 +8,9 @@ import { GUIDE_CARD_PREFIX, MANUAL_CHECK_PREFIX, STOP_GROUP_PROGRESS_PREFIX, STO
 @Component({
   selector: 'app-guide-card',
   standalone: true,
-  imports: [
-    CheckboxComponent,
-    CommonModule,
-  ],
+  imports: [CheckboxComponent, CommonModule],
   templateUrl: './guide-card.component.html',
-  styleUrl: './guide-card.component.css'
+  styleUrl: './guide-card.component.css',
 })
 export class GuideCardComponent {
   @Input() stopGroup!: StopGroup;

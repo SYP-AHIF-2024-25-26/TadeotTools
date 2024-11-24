@@ -1,8 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{html,ts}",
-  ],
+  content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
       colors: {
@@ -14,11 +12,8 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Roboto', 'sans-serif'],
-      }
+      },
     },
   },
-  plugins: [
-    require('tailwindcss-animated'),
-    require('@tailwindcss/line-clamp'),
-  ],
-}
+  plugins: [require('tailwindcss-animated')],
+};

@@ -4,9 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import { Division, Stop, StopGroup } from './types';
 import { BASE_URL } from './app.config';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiFetchService {
   private http = inject(HttpClient);
@@ -23,5 +22,4 @@ export class ApiFetchService {
   public async getStopsOfGroup(groupID: number): Promise<Stop[]> {
     return firstValueFrom(this.http.get<Stop[]>(this.baseURL + `/v1/stops/groups/${groupID}`));
   }
-
 }

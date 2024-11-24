@@ -11,5 +11,5 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     { provide: BASE_URL, useValue: 'http://localhost:5000' },
     provideHttpClient(withFetch()),
-  ]
+  ],
 };

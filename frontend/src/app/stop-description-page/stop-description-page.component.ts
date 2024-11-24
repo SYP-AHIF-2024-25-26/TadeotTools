@@ -10,14 +10,9 @@ import { CURRENT_STOP_GROUP_PREFIX, CURRENT_STOP_PREFIX } from '../constants';
 @Component({
   selector: 'app-stop-description-page',
   standalone: true,
-  imports: [
-    DescriptionContainerComponent,
-    HeaderComponent,
-    BreadcrumbComponent,
-    NavbarComponent,
-  ],
+  imports: [DescriptionContainerComponent, HeaderComponent, BreadcrumbComponent, NavbarComponent],
   templateUrl: './stop-description-page.component.html',
-  styleUrl: './stop-description-page.component.css'
+  styleUrl: './stop-description-page.component.css',
 })
 export class StopDescriptionPageComponent {
   private router = inject(Router);
@@ -29,8 +24,7 @@ export class StopDescriptionPageComponent {
   async ngOnInit() {
     if (sessionStorage.getItem(CURRENT_STOP_PREFIX) === null || sessionStorage.getItem(CURRENT_STOP_GROUP_PREFIX) === null) {
       await this.router.navigate(['/']);
-    }
-    else {
+    } else {
       this.onLoad();
     }
   }

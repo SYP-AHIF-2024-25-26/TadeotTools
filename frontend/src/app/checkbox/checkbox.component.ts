@@ -6,13 +6,9 @@ import { GUIDE_CARD_PREFIX, MANUAL_CHECK_PREFIX } from '../constants';
 @Component({
   selector: 'app-checkbox',
   standalone: true,
-  imports: [
-    FormsModule,
-    NgClass,
-    NgIf,
-  ],
+  imports: [FormsModule, NgClass, NgIf],
   templateUrl: './checkbox.component.html',
-  styleUrl: './checkbox.component.css'
+  styleUrl: './checkbox.component.css',
 })
 export class CheckboxComponent {
   @Input() id!: string;
@@ -26,7 +22,7 @@ export class CheckboxComponent {
   }
 
   toggleCheckbox() {
-    this.isChecked.update(old => !old);
+    this.isChecked.update((old) => !old);
     sessionStorage.setItem(this.parent + this.id, String(this.isChecked()));
     if (this.parent === GUIDE_CARD_PREFIX) {
       sessionStorage.setItem(MANUAL_CHECK_PREFIX + this.id, String(this.isChecked()));

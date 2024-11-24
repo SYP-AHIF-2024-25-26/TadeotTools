@@ -6,18 +6,14 @@ import { Stop } from '../types';
 @Component({
   selector: 'app-stop-card',
   standalone: true,
-  imports: [
-    CheckboxComponent,
-    NgClass,
-    NgStyle,
-  ],
+  imports: [CheckboxComponent, NgClass, NgStyle],
   templateUrl: './stop-card.component.html',
-  styleUrl: './stop-card.component.css'
+  styleUrl: './stop-card.component.css',
 })
 export class StopCardComponent {
   @Input() stop!: Stop;
   @Input() id!: string;
-  @ViewChild (CheckboxComponent) checkbox!: CheckboxComponent;
+  @ViewChild(CheckboxComponent) checkbox!: CheckboxComponent;
   @Input() color!: string | undefined;
   @Output() openStopDescriptionPage = new EventEmitter<void>();
   @Output() onChange = new EventEmitter<void>();

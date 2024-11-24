@@ -11,14 +11,9 @@ import { CURRENT_STOP_GROUP_PREFIX } from '../constants';
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [
-    GuideCardComponent,
-    NavbarComponent,
-    HeaderComponent,
-    NgClass,
-  ],
+  imports: [GuideCardComponent, NavbarComponent, HeaderComponent, NgClass],
   templateUrl: './main-page.component.html',
-  styleUrl: './main-page.component.css'
+  styleUrl: './main-page.component.css',
 })
 export class MainPageComponent {
   private apiFetchService = inject(ApiFetchService);
@@ -30,13 +25,11 @@ export class MainPageComponent {
   }
 
   async onLoad() {
-    this.groups.set(await this.apiFetchService.getStopGroups())
+    this.groups.set(await this.apiFetchService.getStopGroups());
   }
 
   async openStopPage(stopGroup: StopGroup) {
     sessionStorage.setItem(CURRENT_STOP_GROUP_PREFIX, JSON.stringify(stopGroup));
     await this.router.navigate(['/tour', stopGroup.stopGroupID]);
   }
-
 }
-

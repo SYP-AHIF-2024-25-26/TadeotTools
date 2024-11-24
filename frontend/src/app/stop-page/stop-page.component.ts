@@ -1,26 +1,21 @@
 import { Component, inject, Input, signal, ViewChildren, WritableSignal } from '@angular/core';
-import { HeaderComponent } from "../header/header.component";
-import { NavbarComponent } from "../navbar/navbar.component";
-import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
+import { HeaderComponent } from '../header/header.component';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 import { ApiFetchService } from '../api-fetch.service';
 import { Division, Stop, StopGroup } from '../types';
 import { StopCardComponent } from '../stop-card/stop-card.component';
 import { Router } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { DescriptionContainerComponent } from '../description-container/description-container.component';
-import {
-  CURRENT_STOP_GROUP_PREFIX,
-  CURRENT_STOP_PREFIX,
-  STOP_GROUP_PROGRESS_PREFIX,
-  STOPS_COUNT_PREFIX,
-} from '../constants';
+import { CURRENT_STOP_GROUP_PREFIX, CURRENT_STOP_PREFIX, STOP_GROUP_PROGRESS_PREFIX, STOPS_COUNT_PREFIX } from '../constants';
 
 @Component({
   selector: 'app-stop-page',
   standalone: true,
   imports: [HeaderComponent, NavbarComponent, BreadcrumbComponent, StopCardComponent, NgClass, DescriptionContainerComponent],
   templateUrl: './stop-page.component.html',
-  styleUrl: './stop-page.component.css'
+  styleUrl: './stop-page.component.css',
 })
 export class StopPageComponent {
   protected apiFetchService = inject(ApiFetchService);
@@ -34,8 +29,7 @@ export class StopPageComponent {
   async ngOnInit() {
     if (this.stopGroupId === undefined) {
       await this.router.navigate(['/']);
-    }
-    else {
+    } else {
       await this.onLoad();
     }
   }
@@ -49,7 +43,7 @@ export class StopPageComponent {
   }
 
   getColorOfStop(stop: Stop) {
-    return this.divisions().find(division => division.divisionID === stop.divisionID)?.color;
+    return this.divisions().find((division) => division.divisionID === stop.divisionID)?.color;
   }
 
   async openStopDescriptionPage(stop: Stop) {
@@ -58,7 +52,7 @@ export class StopPageComponent {
   }
 
   setProgress() {
-    const progress = this.stopCards.filter(stopCard => stopCard.isChecked()).length;
+    const progress = this.stopCards.filter((stopCard) => stopCard.isChecked()).length;
     sessionStorage.setItem(STOP_GROUP_PROGRESS_PREFIX + this.parentStopGroup().stopGroupID, progress.toString());
     sessionStorage.setItem(STOPS_COUNT_PREFIX + this.parentStopGroup().stopGroupID, this.stops().length.toString());
   }
