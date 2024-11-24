@@ -1,3 +1,4 @@
+using API.Dtos.RequestDtos;
 using API.Dtos.ResponseDtos;
 using API.RequestDto;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,17 @@ public class StopsController(
         allStops.ForEach(stop => { responseStops.Add(ResponseStopDto.FromStop(stop)); });
         return Ok(responseStops);
     }
+    
+    [HttpGet("api/stops/private")]
+    public async Task<IActionResult> GetPrivateStops()
+    {
+        var allStops = await stops.GetAllStops();
+        List<ResponseStopDto> responseStops = new();
+        allStops
+            .Where(stop => stop.StopGroupID == null).ToList()
+            .ForEach(stop => { responseStops.Add(ResponseStopDto.FromStop(stop)); });
+        return Ok(responseStops);
+    }
 
     [HttpGet("api/stops/{stopId}")]
     public async Task<IActionResult> GetStopById(int stopId)
@@ -43,13 +55,13 @@ public class StopsController(
     {
         try
         {
+            StopGroup? stopGroup = null;
             try
             {
-                await stopGroups.GetStopGroupById(stop.StopGroupID);
+                stopGroup = await stopGroups.GetStopGroupById(stop.StopGroupID);
             }
             catch (TadeoTNotFoundException)
             {
-                return NotFound("StopGroup not found");
             }
 
             if (stop.Name.Length > 50)
@@ -73,7 +85,7 @@ public class StopsController(
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
                 Division = await divisions.GetDivisionById(stop.DivisionID),
-                StopGroup = await stopGroups.GetStopGroupById(stop.StopGroupID)
+                StopGroup = stopGroup
             };
 
             stopToAdd.StopID = await stops.AddStop(stopToAdd);
@@ -187,6 +199,27 @@ public class StopsController(
         }
         catch (TadeoTDatabaseException)
         {
+            return StatusCode(500);
+        }
+    }
+    
+    [HttpPut("api/stops/order")]
+    public async Task<IActionResult> UpdateOrder(RequestOrderDto order) {
+        try
+        {
+            for (var i = 0; i < order.Order.Length; i++)
+            {
+                var stop = await stops.GetStopById(order.Order[i]);
+                stop.StopOrder = i;
+                await stops.UpdateStop(stop);
+            }
+            return Ok();
+        }
+        catch (TadeoTNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (TadeoTDatabaseException) {
             return StatusCode(500);
         }
     }

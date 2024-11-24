@@ -31,7 +31,7 @@ public class Program
     }
 
 
-    public static async void InitializeDatabase()
+    public static async Task InitializeDatabase()
     {
         DotNetEnv.Env.Load();
 
@@ -49,7 +49,7 @@ public class Program
 
     static void Main(string[] args)
     {
-        InitializeDatabase();
+        InitializeDatabase().Wait();
         /*
 
         var stopGroupFunctions = host.Services.GetRequiredService<StopGroupFunctions>();
