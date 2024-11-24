@@ -2,7 +2,6 @@
   <div>
     <app-header></app-header>
   </div>
-  @if (viewModeService.stationMode()) {
   <div class="flex flex-col justify-center">
     @for (group of groups(); track group.stopGroupID) {
         <app-guide-card
@@ -14,8 +13,7 @@
         </app-guide-card>
     }
   </div>
-  }
   <div class="fixed bottom-8 left-0 right-0 mx-4">
-    <app-navbar />
+    <app-navbar [isStationMode]="true" />
   </div>
 </div>

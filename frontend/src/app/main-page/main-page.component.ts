@@ -2,7 +2,6 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { GuideCardComponent } from '../guide-card/guide-card.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { HeaderComponent } from '../header/header.component';
-import { ViewModeService } from '../view-mode.service';
 import { StopGroup } from '../types';
 import { NgClass } from '@angular/common';
 import { ApiFetchService } from '../api-fetch.service';
@@ -22,7 +21,6 @@ import { CURRENT_STOP_GROUP_PREFIX } from '../constants';
   styleUrl: './main-page.component.css'
 })
 export class MainPageComponent {
-  protected viewModeService = inject(ViewModeService);
   private apiFetchService = inject(ApiFetchService);
   private router = inject(Router);
   groups: WritableSignal<StopGroup[]> = signal([]);
