@@ -46,9 +46,4 @@ public class APIKeyFunctions(TadeoTDbContext context)
             throw new TadeoTDatabaseException("Could not delete APIKey: " + e.Message);
         }
     }
-
-    public async Task<APIKey> GetLastAPIKey()
-    {
-        return await this.context.APIKeys.LastAsync();
-    }
 }
