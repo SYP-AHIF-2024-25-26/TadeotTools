@@ -1,4 +1,6 @@
-<div>
+<button class="bg-blue-600 h-10 w-24 rounded text-white" (click)="updateOrder()">Accept</button>
+
+<div class="flex">
     <div class="w-2/3"
          cdkDropList (cdkDropListDropped)="dropGroup($event)">
         @for (group of stopGroups(); track group) {
@@ -24,15 +26,20 @@
             </div>
         }
     </div>
-    @for (stop of privateStops(); track stop.stopID) {
-        <div class="mb-1 bg-gray-400 p-3 rounded-l"
-             cdkDrag
-        >
-            <p>{{ stop.name }}</p>
-        </div>
-    }
-    <div>
 
+    <div class="w-1/3"
+         cdkDropList
+         [cdkDropListConnectedTo]="getDropGroups()"
+         (cdkDropListDropped)="dropStop($event)"
+         id="group-0"
+
+    >
+        @for (stop of privateStops(); track stop.stopID) {
+            <div class="mb-1 bg-gray-400 p-3 rounded-l"
+                 cdkDrag
+            >
+                <p>{{ stop.name }}</p>
+            </div>
+        }
     </div>
-    <button (click)="updateOrder()">Accept</button>
 </div>

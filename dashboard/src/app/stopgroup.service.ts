@@ -1,24 +1,39 @@
 import {inject, Injectable} from '@angular/core';
 import {ResponseStopGroup, StopGroup} from "./types";
 import {StopService} from "./stop.service";
+import {HttpClient} from "@angular/common/http";
+import {firstValueFrom, map} from "rxjs";
+import {environment} from "../environments/environment.development";
 
 @Injectable({
     providedIn: 'root'
 })
 export class StopgroupService {
     stopService = inject(StopService);
+    httpClient = inject(HttpClient);
 
     constructor() {
     }
 
     async getStopGroups(): Promise<StopGroup[]> {
-        const response = await fetch(`http://localhost:5000/v1/groups`);
-        const responseStopGroups = await response.json() as ResponseStopGroup[];
+        const response = await firstValueFrom(this.httpClient.get<ResponseStopGroup[]>(environment.API_URL + 'groups'));
         return Promise.all(
-            responseStopGroups.map(async stops => ({
+            response.map(async stops => ({
                 ...stops,
                 stops: await this.stopService.getStopsByStopGroupID(stops.stopGroupID)
             } as StopGroup))
         );
     }
+
+    updateStopGroupOrder(stopGroups: number[]) {
+        return firstValueFrom(this.httpClient.put(environment.API_URL + `api/groups/order`, {
+                'order': stopGroups
+            },
+            {
+                headers: {
+                    "X-Api-Key": environment.API_KEY,
+                }
+            }));
+    }
 }
+
