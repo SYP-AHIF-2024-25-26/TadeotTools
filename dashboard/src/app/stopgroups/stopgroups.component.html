@@ -1,4 +1,38 @@
-<div class="bg-green-100">
-  <p class="font-bold">stopgroups sucks!</p>
-  <button class="bg-red-950">Test</button>
+<div>
+    <div class="w-2/3"
+         cdkDropList (cdkDropListDropped)="dropGroup($event)">
+        @for (group of stopGroups(); track group) {
+            <div class="bg-gray-200 p-5 m-10 rounded-xl" cdkDrag>
+                <p class="font-bold">{{ group.name }}</p>
+                <p>{{ group.description }}</p>
+                <div class="flex flex-col m-5"
+                     cdkDropList
+                     [cdkDropListData]="group.stops"
+                     [cdkDropListConnectedTo]="getDropGroups()"
+                     (cdkDropListDropped)="dropStop($event)"
+                     id="{{ 'group-' + group.stopGroupID }}"
+                >
+                    <p>Stops</p>
+                    @for (stop of group.stops; track stop.stopID) {
+                        <div class="mb-1 bg-gray-400 p-3 rounded-l"
+                             cdkDrag
+                        >
+                            <p>{{ stop.name }}</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    @for (stop of privateStops(); track stop.stopID) {
+        <div class="mb-1 bg-gray-400 p-3 rounded-l"
+             cdkDrag
+        >
+            <p>{{ stop.name }}</p>
+        </div>
+    }
+    <div>
+
+    </div>
+    <button (click)="updateOrder()">Accept</button>
 </div>
