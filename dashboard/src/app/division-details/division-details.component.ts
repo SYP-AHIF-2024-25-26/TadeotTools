@@ -13,15 +13,14 @@ import { NavbarComponent } from "../navbar/navbar.component";
   styleUrl: './division-details.component.css'
 })
 export class DivisionDetailsComponent {
-submitDivisionDetail() {
-throw new Error('Method not implemented.');
-}
+
   private service: DivisionService = inject(DivisionService);
 
   divisionId = signal<number>(-1);
   name = signal<string>('');
   color = signal<string>('');
   image = signal<string>('');
+  newDivision = signal<boolean>(false);
 
   constructor(private route: ActivatedRoute) {}
 
@@ -35,7 +34,23 @@ throw new Error('Method not implemented.');
         this.image.set(division.image || '');
       });
     } else {
-      // New division
+      this.newDivision.set(true);
+    }
+  }
+  submitDivisionDetail() {
+    if (this.newDivision()) {
+      this.service.addDivision({
+        name: this.name(),
+        color: this.color(),
+        image: this.image()
+      });
+    } else {
+      this.service.updateDivision({
+        divisionID: this.divisionId(),
+        name: this.name(),
+        color: this.color(),
+        image: this.image()
+      });
     }
   }
 }
