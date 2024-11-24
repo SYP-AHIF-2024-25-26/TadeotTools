@@ -21,8 +21,8 @@ export class StopgroupsComponent {
     privateStops = signal<Stop[]>([]);
 
     constructor() {
-        this.getStopGroups();
         this.initialisePrivateStops();
+        this.getStopGroups();
     }
 
     async getStopGroups() {
@@ -36,9 +36,17 @@ export class StopgroupsComponent {
     dropStop(event: CdkDragDrop<any[]>) {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        } else if (event.previousContainer.id === 'group-0') {
+
+            transferArrayItem(
+                this.privateStops(),
+                event.container.data,
+                event.previousIndex,
+                event.currentIndex,
+            );
         } else {
             transferArrayItem(
-                event.previousContainer.id === 'group-0' ? this.privateStops() : event.previousContainer.data,
+                event.previousContainer.data,
                 event.container.id === 'group-0' ? this.privateStops() : event.container.data,
                 event.previousIndex,
                 event.currentIndex,
@@ -59,8 +67,10 @@ export class StopgroupsComponent {
 
     updateOrder() {
         this.stopGroupFetcher.updateStopGroupOrder(this.stopGroups().map(group => group.stopGroupID));
-        this.stopFetcher.updateStopOrder([this.stopGroups().map(group => group.stops.map(stop => stop.stopID)).flat(), this.privateStops().map(stop => stop.stopID)].flat());
+        this.stopFetcher.updateStopOrder(
+            [
+                this.stopGroups().map(group => group.stops.map(stop => stop.stopID)).flat(),
+                this.privateStops().map(stop => stop.stopID)
+            ].flat());
     }
-
-    protected readonly window = window;
 }
