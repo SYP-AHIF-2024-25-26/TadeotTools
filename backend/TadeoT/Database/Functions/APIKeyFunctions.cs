@@ -3,14 +3,9 @@ using TadeoT.Database.Model;
 
 namespace TadeoT.Database.Functions;
 
-public class APIKeyFunctions
+public class APIKeyFunctions(TadeoTDbContext context)
 {
-    private readonly TadeoTDbContext context;
-
-    public APIKeyFunctions(TadeoTDbContext context)
-    {
-        this.context = context;
-    }
+    private readonly TadeoTDbContext context = context;
 
     public async Task<List<APIKey>> GetAllAPIKeys()
     {
@@ -25,6 +20,10 @@ public class APIKeyFunctions
 
     public async Task<APIKey> AddAPIKey(APIKey apiKey)
     {
+        if (apiKey == null)
+        {
+            throw new TadeoTArgumentNullException("Could not add APIKey because it was null");
+        }
         try
         {
             this.context.APIKeys.Add(apiKey);
@@ -36,7 +35,7 @@ public class APIKeyFunctions
         }
     }
 
-    public async void DeleteAPIKey(APIKey apiKey)
+    public async Task DeleteAPIKey(APIKey apiKey)
     {
         try
         {
@@ -46,10 +45,5 @@ public class APIKeyFunctions
         {
             throw new TadeoTDatabaseException("Could not delete APIKey: " + e.Message);
         }
-    }
-
-    public async Task<APIKey> GetLastAPIKey()
-    {
-        return await this.context.APIKeys.LastAsync();
     }
 }

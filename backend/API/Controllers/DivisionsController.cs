@@ -1,3 +1,4 @@
+using API.Dtos.ResponseDtos;
 using API.RequestDtos;
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
@@ -13,8 +14,10 @@ public class DivisionsController(
 ) : ControllerBase {
     [HttpGet("divisions")]
     public async Task<IActionResult> GetDivisions() {  
-        try {
-            return Ok(await divisions.GetAllDivisions());
+        try
+        {
+            var allDivisions = await divisions.GetAllDivisions();
+            return Ok(allDivisions.Select(division => ResponseDivisionDto.FromDivision(division)));
         }
         catch (Exception) {
             return StatusCode(500, "Internal server error!");
