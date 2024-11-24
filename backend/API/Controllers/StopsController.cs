@@ -24,6 +24,17 @@ public class StopsController(
         allStops.ForEach(stop => { responseStops.Add(ResponseStopDto.FromStop(stop)); });
         return Ok(responseStops);
     }
+    
+    [HttpGet("api/stops/private")]
+    public async Task<IActionResult> GetPrivateStops()
+    {
+        var allStops = await stops.GetAllStops();
+        List<ResponseStopDto> responseStops = new();
+        allStops
+            .Where(stop => stop.StopGroupID == null).ToList()
+            .ForEach(stop => { responseStops.Add(ResponseStopDto.FromStop(stop)); });
+        return Ok(responseStops);
+    }
 
     [HttpGet("api/stops/{stopId}")]
     public async Task<IActionResult> GetStopById(int stopId)
@@ -44,13 +55,13 @@ public class StopsController(
     {
         try
         {
+            StopGroup? stopGroup = null;
             try
             {
-                await stopGroups.GetStopGroupById(stop.StopGroupID);
+                stopGroup = await stopGroups.GetStopGroupById(stop.StopGroupID);
             }
             catch (TadeoTNotFoundException)
             {
-                return NotFound("StopGroup not found");
             }
 
             if (stop.Name.Length > 50)
@@ -74,7 +85,7 @@ public class StopsController(
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
                 Division = await divisions.GetDivisionById(stop.DivisionID),
-                StopGroup = await stopGroups.GetStopGroupById(stop.StopGroupID)
+                StopGroup = stopGroup
             };
 
             stopToAdd.StopID = await stops.AddStop(stopToAdd);
