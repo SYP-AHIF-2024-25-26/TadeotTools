@@ -1,13 +1,13 @@
 <nav class="bg-white flex justify-evenly items-center w-full h-16 rounded-lg shadow-2xl">
   <div>
-    <button (click)="switchToStationMode()" class="text-xl"
-            [ngClass]="!viewModeService.stationMode() ? 'text-black' : 'text-orange-500'">
+    <button (click)="router.navigate(['main'])" class="text-xl"
+            [ngClass]="!isStationMode ? 'text-black' : 'text-orange-500'">
       Station
     </button>
   </div>
   <div>
-    <button (click)="switchToCardMode()" class="text-xl"
-            [ngClass]="[viewModeService.stationMode() ? 'text-black' : 'text-orange-500']">
+    <button (click)="router.navigate(['map'])" class="text-xl"
+            [ngClass]="[isStationMode ? 'text-black' : 'text-orange-500']">
       Karte
     </button>
   </div>
