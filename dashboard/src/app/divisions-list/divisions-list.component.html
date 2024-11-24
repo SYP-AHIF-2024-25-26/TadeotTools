@@ -1,0 +1,15 @@
+<div class="mb-5">
+  <app-navbar></app-navbar>
+</div>
+<div class="flex flex-col justify-center items-center">
+  @for (division of divisions(); track $index) {
+    <div
+      class="w-64 p-6 border rounded-lg m-2 text-white"
+      [style.background-color]="division.color">
+      <p class="">{{ division.divisionID }}</p>
+      <p class="">{{ division.name }}</p>
+      <button class="text-white p-1.5 my-1 bg-gray-700 appearance-none border rounded border-transparent" [routerLink]="['/division/' + division.divisionID]">Details</button>
+    </div>
+  }
+  <button class="text-white p-1.5 my-1 bg-gray-700 appearance-none border rounded border-transparent" [routerLink]="['/division']">New Division</button>
+</div>
