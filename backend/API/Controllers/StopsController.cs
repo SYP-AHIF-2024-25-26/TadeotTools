@@ -24,6 +24,17 @@ public class StopsController(
         allStops.ForEach(stop => { responseStops.Add(ResponseStopDto.FromStop(stop)); });
         return Ok(responseStops);
     }
+    
+    [HttpGet("api/stops/private")]
+    public async Task<IActionResult> GetPrivateStops()
+    {
+        var allStops = await stops.GetAllStops();
+        List<ResponseStopDto> responseStops = new();
+        allStops
+            .Where(stop => stop.StopGroupID == null).ToList()
+            .ForEach(stop => { responseStops.Add(ResponseStopDto.FromStop(stop)); });
+        return Ok(responseStops);
+    }
 
     [HttpGet("api/stops/{stopId}")]
     public async Task<IActionResult> GetStopById(int stopId)
