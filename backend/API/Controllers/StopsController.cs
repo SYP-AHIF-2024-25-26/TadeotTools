@@ -44,13 +44,13 @@ public class StopsController(
     {
         try
         {
+            StopGroup? stopGroup = null;
             try
             {
-                await stopGroups.GetStopGroupById(stop.StopGroupID);
+                stopGroup = await stopGroups.GetStopGroupById(stop.StopGroupID);
             }
             catch (TadeoTNotFoundException)
             {
-                return NotFound("StopGroup not found");
             }
 
             if (stop.Name.Length > 50)
@@ -74,7 +74,7 @@ public class StopsController(
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
                 Division = await divisions.GetDivisionById(stop.DivisionID),
-                StopGroup = await stopGroups.GetStopGroupById(stop.StopGroupID)
+                StopGroup = stopGroup
             };
 
             stopToAdd.StopID = await stops.AddStop(stopToAdd);
