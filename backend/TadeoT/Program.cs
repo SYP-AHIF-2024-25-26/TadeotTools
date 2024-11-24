@@ -50,6 +50,7 @@ public class Program
     static void Main(string[] args)
     {
         InitializeDatabase().Wait();
+        ServiceProvider?.Dispose();
         /*
 
         var stopGroupFunctions = host.Services.GetRequiredService<StopGroupFunctions>();
