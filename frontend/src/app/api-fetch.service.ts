@@ -14,6 +14,7 @@ export class ApiFetchService {
   private async getStopGroupIDs(): Promise<string[]> {
     let result: string[] = [];
     let response = (await (await fetch(`http://localhost:5000/v1/groups`)).json()) as StopGroup[];
+
     response.forEach((group) => {
       if (this.tour.includes(group.name as StopGroupName)) {
         result.push(group.stopGroupID.toString());

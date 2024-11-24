@@ -16,12 +16,13 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddControllers();
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy("AllowAll", policy =>
-        {
-            policy.AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
+        options.AddPolicy(name: "default",
+            policy  =>
+            {
+                policy.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
     });
     
     builder.Services.AddEndpointsApiExplorer();
@@ -30,9 +31,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
+app.UseCors("default"); // Place before UseRouting
 app.UseRouting();
 
-app.UseCors("AllowAll");
+app.UseMiddleware<ApiKeyMiddleware>(); // Place after UseCors
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 if (app.Environment.IsDevelopment())
 {
@@ -43,11 +49,5 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty; // Sets Swagger UI at root
     });
 }
-
-app.UseEndpoints(endpoints =>
-{
-    app.UseMiddleware<ApiKeyMiddleware>();
-    endpoints.MapControllers();
-});
 
 app.Run();
