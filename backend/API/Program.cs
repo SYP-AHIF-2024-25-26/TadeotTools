@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddDbContext<TadeoTDbContext>(options =>
         options.UseMySql(TadeoTDbContextFactory.GetConnectionString(),
-            new MySqlServerVersion(new Version(8, 0, 32))));
+            new MySqlServerVersion(new Version(8, 0, 32))), ServiceLifetime.Transient);
     
     builder.Services.AddScoped<StopFunctions>();
     builder.Services.AddScoped<StopGroupFunctions>();

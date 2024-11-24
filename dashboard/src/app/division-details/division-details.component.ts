@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { DivisionService } from '../division.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { NavbarComponent } from "../navbar/navbar.component";
 
 @Component({
   selector: 'app-division-details',
   standalone: true,
-  imports: [FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule, NavbarComponent],
   templateUrl: './division-details.component.html',
   styleUrl: './division-details.component.css'
 })
