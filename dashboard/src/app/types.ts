@@ -3,13 +3,7 @@ export type Stop = {
     name: string;
     description: string;
     roomNr: string;
-}
-
-export type ResponseStopGroup = {
-    stopGroupID: number;
-    name: string;
-    description: string;
-    color: string;
+    stopGroupID: number | null;
 }
 
 export type StopGroup = {
@@ -17,5 +11,4 @@ export type StopGroup = {
     name: string;
     description: string;
     color: string;
-    stops: Stop[];
 }

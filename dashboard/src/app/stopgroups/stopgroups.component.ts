@@ -17,12 +17,17 @@ export class StopgroupsComponent {
     stopGroupFetcher = inject(StopgroupService);
     stopFetcher = inject(StopService);
 
+
     stopGroups = signal<StopGroup[]>([]);
-    privateStops = signal<Stop[]>([]);
+    allStops = signal<Stop[]>([]);
 
     constructor() {
-        this.initialisePrivateStops();
+        this.initialiseStops();
         this.getStopGroups();
+    }
+
+    getStopsByGroupID(groupID: number | null): Stop[] {
+        return this.allStops().filter(stop => stop.stopGroupID === groupID)
     }
 
     async getStopGroups() {
@@ -34,43 +39,22 @@ export class StopgroupsComponent {
     }
 
     dropStop(event: CdkDragDrop<any[]>) {
-        if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        } else if (event.previousContainer.id === 'group-0') {
-
-            transferArrayItem(
-                this.privateStops(),
-                event.container.data,
-                event.previousIndex,
-                event.currentIndex,
-            );
-        } else {
-            transferArrayItem(
-                event.previousContainer.data,
-                event.container.id === 'group-0' ? this.privateStops() : event.container.data,
-                event.previousIndex,
-                event.currentIndex,
-            );
-        }
+        moveItemInArray(this.allStops(), event.previousIndex, event.currentIndex);
     }
 
     getDropGroups(): string[] {
         return [...this.stopGroups().map(group => 'group-' + group.stopGroupID), 'group-0'];
     }
 
-    async initialisePrivateStops() {
-        const stops = await this.stopFetcher.getPrivateStops();
+    async initialiseStops() {
+        const stops = await this.stopFetcher.getAllStops();
         if (stops) {
-            this.privateStops.set(stops);
+            this.allStops.set(stops);
         }
     }
 
     updateOrder() {
         this.stopGroupFetcher.updateStopGroupOrder(this.stopGroups().map(group => group.stopGroupID));
-        this.stopFetcher.updateStopOrder(
-            [
-                this.stopGroups().map(group => group.stops.map(stop => stop.stopID)).flat(),
-                this.privateStops().map(stop => stop.stopID)
-            ].flat());
+        this.stopFetcher.updateStopOrder(this.allStops().map(stop => stop.stopID));
     }
 }

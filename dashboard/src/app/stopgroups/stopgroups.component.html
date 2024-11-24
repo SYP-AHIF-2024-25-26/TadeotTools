@@ -9,13 +9,14 @@
                 <p>{{ group.description }}</p>
                 <div class="flex flex-col m-5"
                      cdkDropList
-                     [cdkDropListData]="group.stops"
+                     [cdkDropListData]="getStopsByGroupID(group.stopGroupID)"
                      [cdkDropListConnectedTo]="getDropGroups()"
                      (cdkDropListDropped)="dropStop($event)"
                      id="{{ 'group-' + group.stopGroupID }}"
                 >
                     <p>Stops</p>
-                    @for (stop of group.stops; track stop.stopID) {
+                    {{getStopsByGroupID(group.stopGroupID)}}
+                    @for (stop of getStopsByGroupID(group.stopGroupID); track stop.stopID) {
                         <div class="mb-1 bg-gray-400 p-3 rounded-l"
                              cdkDrag
                         >
@@ -34,7 +35,7 @@
          id="group-0"
 
     >
-        @for (stop of privateStops(); track stop.stopID) {
+        @for (stop of getStopsByGroupID(null); track stop.stopID) {
             <div class="mb-1 bg-gray-400 p-3 rounded-l"
                  cdkDrag
             >
