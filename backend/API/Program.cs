@@ -31,14 +31,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
-app.UseCors("default"); // Place before UseRouting
+app.UseCors("default");
 app.UseRouting();
-
-app.UseMiddleware<ApiKeyMiddleware>(); // Place after UseCors
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
 
 if (app.Environment.IsDevelopment())
 {
@@ -49,5 +43,11 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty; // Sets Swagger UI at root
     });
 }
+
+app.UseEndpoints(endpoints =>
+{
+    //app.UseMiddleware<ApiKeyMiddleware>();
+    endpoints.MapControllers();
+});
 
 app.Run();
