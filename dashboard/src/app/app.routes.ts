@@ -10,7 +10,7 @@ export const routes: Routes = [
   {path: 'test', component: TestComponent},
   {path: 'stopgroups', component: StopgroupsComponent},
   {path: 'divisions', component: DivisionsListComponent},
-  {path: 'division/:id', component: DivisionDetailsComponent},
+  {path: 'division', component: DivisionDetailsComponent},
   {path: '', redirectTo: 'login', pathMatch: 'full'},
 ];
 
