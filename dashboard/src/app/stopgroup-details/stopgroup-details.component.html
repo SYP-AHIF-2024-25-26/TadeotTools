@@ -1,1 +1,36 @@
-<p>stopgroup-details works!</p>
+<div>
+  <h3>StopGroup Details</h3>
+  @if(stopGroupId() != -1) {
+    <h4>StopGroup ID: {{ stopGroupId() }}</h4>
+  } @else {
+    <h4>New StopGroup</h4>
+  }
+  <form (submit)="submitStopGroupDetails()">
+    <div class="input-field">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        [value]="name()"
+        [(ngModel)]="name"
+        name="name"
+        id="name"
+      />
+    </div>
+    <div class="input-field">
+      <label for="description">Description</label>
+      <input
+        type="text"
+        [value]="description()"
+        [(ngModel)]="description"
+        name="description"
+        id="description"
+      />
+    </div>
+    @if (errorMessage() != null) {
+      <p class="text-danger">{{ errorMessage() }}</p>
+    }
+    <button (click)="deleteAndGoBack()">Delete and go back</button>
+    <button type="submit">Submit</button>
+  </form>
+  <button [routerLink]="['/stopgroups']">Go Back (without submit)</button>
+</div>

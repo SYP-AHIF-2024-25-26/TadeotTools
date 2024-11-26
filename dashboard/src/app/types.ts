@@ -8,10 +8,10 @@ export type Stop = {
 }
 
 export type StopGroup = {
-    stopGroupID: number;
-    name: string;
-    description: string;
-    color: string;
+  stopGroupID: number;
+  name: string;
+  description: string;
+  isPublic: boolean;
 }
 
 export type Division = {

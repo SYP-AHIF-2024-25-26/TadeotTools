@@ -20,8 +20,6 @@ export class DivisionDetailsComponent {
   name = signal<string>('');
   color = signal<string>('');
 
-  newDivision = () => this.divisionId() === -1;
-
   errorMessage = signal<string | null>(null);
   selectedFile: File | null = null;
 
@@ -54,7 +52,7 @@ export class DivisionDetailsComponent {
 
   ngOnInit() {}
   async submitDivisionDetail() {
-    if (this.newDivision()) {
+    if (this.divisionId() === -1) {
       await this.service.addDivision({
         name: this.name(),
         color: this.color(),
