@@ -1,9 +1,9 @@
 <div>
   <h3>StopGroup Details</h3>
   @if(stopGroupId() != -1) {
-    <h4>StopGroup ID: {{ stopGroupId() }}</h4>
+  <h4>StopGroup ID: {{ stopGroupId() }}</h4>
   } @else {
-    <h4>New StopGroup</h4>
+  <h4>New StopGroup</h4>
   }
   <form (submit)="submitStopGroupDetails()">
     <div class="input-field">
@@ -26,8 +26,18 @@
         id="description"
       />
     </div>
+    <div>
+      <label for="isPublic">Is public?</label>
+      <input
+        type="checkbox"
+        id="isPublic"
+        [(ngModel)]="isPublic"
+        name="isPublic"
+      />
+    </div>
+
     @if (errorMessage() != null) {
-      <p class="text-danger">{{ errorMessage() }}</p>
+    <p class="text-danger">{{ errorMessage() }}</p>
     }
     <button (click)="deleteAndGoBack()">Delete and go back</button>
     <button type="submit">Submit</button>

@@ -1,9 +1,9 @@
 <div>
   <h3>Stop Details</h3>
   @if(stopId() != -1) {
-    <h4>Stop ID: {{ stopId() }}</h4>
+  <h4>Stop ID: {{ stopId() }}</h4>
   } @else {
-    <h4>New Stop</h4>
+  <h4>New Stop</h4>
   }
   <form (submit)="submitStopDetail()">
     <div>
@@ -27,23 +27,21 @@
         id="roomNr"
       />
       @if (stopGroupId() != null) {
-        <p>StopGroup ID: {{ stopGroupId() }}</p>
+      <p>StopGroup ID: {{ stopGroupId() }}</p>
       }
     </div>
-      <h4></h4>
-    <div>
-
-    </div>
+    <h4></h4>
+    <div></div>
 
     <label for="division">Division</label>
     <select id="division" [(ngModel)]="divisionId" name="division">
       @for (division of divisions(); track $index) {
-        <option [value]="division.divisionID">{{ division.name }}</option>
+      <option [value]="division.divisionID">{{ division.name }}</option>
       }
     </select>
 
     @if (errorMessage() != null) {
-      <p class="text-danger">{{ errorMessage() }}</p>
+    <p class="text-danger">{{ errorMessage() }}</p>
     }
     <button (click)="deleteAndGoBack()">Delete and go back</button>
     <button type="submit">Submit</button>

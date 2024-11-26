@@ -13,19 +13,23 @@ export class StopGroupService {
   httpClient = inject(HttpClient);
   baseUrl = inject(BASE_URL);
 
-    async getStopGroups(): Promise<StopGroupWithStops[]> {
-        const stopGroups = await firstValueFrom(this.httpClient.get<StopGroup[]>(this.baseUrl + '/groups'));
-        const stopGroupsWithStops = stopGroups.map(group => {
-          return {
-            ...group,
-            stops: [] as Stop[]
-          };
-        });
-      for (const stopGroup of stopGroupsWithStops) {
-        stopGroup.stops = await this.stopService.getStopsByStopGroupID(stopGroup.stopGroupID);
-      }
-      return stopGroupsWithStops;
+  async getStopGroups(): Promise<StopGroupWithStops[]> {
+    const stopGroups = await firstValueFrom(
+      this.httpClient.get<StopGroup[]>(this.baseUrl + '/groups')
+    );
+    const stopGroupsWithStops = stopGroups.map((group) => {
+      return {
+        ...group,
+        stops: [] as Stop[],
+      };
+    });
+    for (const stopGroup of stopGroupsWithStops) {
+      stopGroup.stops = await this.stopService.getStopsByStopGroupID(
+        stopGroup.stopGroupID
+      );
     }
+    return stopGroupsWithStops;
+  }
 
   updateStopGroupOrder(stopGroups: number[]) {
     firstValueFrom(

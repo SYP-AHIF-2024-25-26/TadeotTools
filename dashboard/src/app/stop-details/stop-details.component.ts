@@ -12,7 +12,7 @@ import { DivisionService } from '../division.service';
   standalone: true,
   imports: [FormsModule, RouterModule],
   templateUrl: './stop-details.component.html',
-  styleUrl: './stop-details.component.css'
+  styleUrl: './stop-details.component.css',
 })
 export class StopDetailsComponent {
   private service: StopService = inject(StopService);
@@ -32,14 +32,14 @@ export class StopDetailsComponent {
 
   constructor(private route: ActivatedRoute, private router: Router) {
     this.loadDivisions();
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.stopId.set(params['id'] || -1);
       this.name.set(params['name'] || '');
       this.description.set(params['description'] || '');
       this.roomNr.set(params['roomNr'] || '');
       this.stopGroupId.set(params['stopGroupID'] || null);
     });
-    this.divisionService.getDivisions().then(divisions => {
+    this.divisionService.getDivisions().then((divisions) => {
       this.divisions.set(divisions);
     });
   }
@@ -55,7 +55,7 @@ export class StopDetailsComponent {
         name: this.name(),
         description: this.description(),
         roomNr: this.roomNr(),
-        divisionID: this.divisionId()
+        divisionID: this.divisionId(),
       });
     } else {
       await this.service.updateStop({
@@ -64,7 +64,7 @@ export class StopDetailsComponent {
         description: this.description(),
         roomNr: this.roomNr(),
         stopGroupID: this.stopGroupId() === -1 ? null : this.stopGroupId(),
-        divisionID: this.divisionId()
+        divisionID: this.divisionId(),
       });
     }
     this.router.navigate(['/divisions']);
