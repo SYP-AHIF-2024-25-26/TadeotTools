@@ -41,14 +41,8 @@ public class DivisionsController(
     }
     
     [HttpPost("api/divisions")]
-    public async Task<IActionResult> CreateDivision([FromBody] RequestDivsionDto division, [FromForm] IFormFile image) {
+    public async Task<IActionResult> CreateDivision([FromBody] RequestDivisionDto division) {
         try {
-            if (image == null || image.Length == 0)
-                return BadRequest("No image uploaded.");
-
-            using var memoryStream = new MemoryStream();
-            await image.CopyToAsync(memoryStream);
-            
             if (division.Name.Length > 50) {
                 return BadRequest("Invalid Name");
             }
@@ -58,7 +52,7 @@ public class DivisionsController(
             var divisionId = await divisions.AddDivision(new Division {
                 Name = division.Name,
                 Color = division.Color,
-                Image = memoryStream.ToArray(),
+                Image = null,
             });
             return Ok(await divisions.GetDivisionById(divisionId));
         }
@@ -94,15 +88,8 @@ public class DivisionsController(
     }
     
     [HttpPut("api/divisions/{divisionId}")] 
-    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivsionDto division , [FromForm] IFormFile image) {
+    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivisionDto division) {
         try {
-            if (image == null || image.Length == 0)
-                return BadRequest("No image uploaded.");
-
-            using var memoryStream = new MemoryStream();
-            await image.CopyToAsync(memoryStream);
-
-            
             if (division.Name.Length > 50) {
                 return BadRequest("Invalid Name");
             }
@@ -110,12 +97,12 @@ public class DivisionsController(
                 return BadRequest("Invalid Color");
             }
 
-            await divisions.GetDivisionById(divisionId);
+            Division div = await divisions.GetDivisionById(divisionId);
             await divisions.UpdateDivision(new Division {
                 DivisionID = divisionId,
                 Name = division.Name,
                 Color = division.Color,
-                Image = memoryStream.ToArray()
+                Image = div.Image
             });
             return Ok();
         }
