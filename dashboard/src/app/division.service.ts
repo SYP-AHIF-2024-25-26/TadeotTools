@@ -27,22 +27,23 @@ export class DivisionService {
   async addDivision(division: {
     name: string;
     color: string;
-    image: string;
+    image: number[] | null;
   }): Promise<void> {
-    this.httpClient.post(`${this.baseUrl}/api/divisions`, division, {
+    await firstValueFrom(this.httpClient.post(`${this.baseUrl}/api/divisions`, division, {
       headers: {
         'X-Api-Key': localStorage.getItem('API_KEY') || '',
       },
-    });
+    }));
   }
 
   async updateDivision(division: {
     divisionID: number;
     name: string;
     color: string;
-    image: string;
+    image: number[] | null;
   }): Promise<void> {
-    this.httpClient.put(
+    console.log(division.image);
+    await firstValueFrom(this.httpClient.put(
       `${this.baseUrl}/api/divisions/${division.divisionID}`,
       division,
       {
@@ -50,14 +51,14 @@ export class DivisionService {
           'X-Api-Key': localStorage.getItem('API_KEY') || '',
         },
       }
-    );
+    ));
   }
 
   async deleteDivision(divisionId: number): Promise<void> {
-    this.httpClient.delete(`${this.baseUrl}/api/divisions/${divisionId}`, {
+    await firstValueFrom(this.httpClient.delete(`${this.baseUrl}/api/divisions/${divisionId}`, {
       headers: {
         'X-Api-Key': localStorage.getItem('API_KEY') || '',
       },
-    });
+    }));
   }
 }

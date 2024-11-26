@@ -8,15 +8,8 @@
     <p class="">{{ division.name }}</p>
     <button
       class="text-white p-1.5 my-1 bg-gray-700 appearance-none border rounded border-transparent"
-      [routerLink]="[
-        '/division/' +
-          division.divisionID +
-          '/' +
-          division.name +
-          '/' +
-          division.color
-      ]"
-    >
+      [routerLink]="['/division']"
+      [queryParams]="{ id: division.divisionID, name: division.name, color: division.color }">
       Details
     </button>
   </div>

@@ -41,11 +41,12 @@
       accept=".jpg, .jpeg, .png, .svg"
       (change)="onFileChange($event)"
     />
+
     @if (errorMessage() != null) {
-    <p class="text-danger">{{ errorMessage() }}</p>
+      <p class="text-danger">{{ errorMessage() }}</p>
     }
 
-    <button>Delete and go back</button>
+    <button (click)="deleteAndGoBack()">Delete and go back</button>
     <button type="submit">Submit</button>
   </form>
 
