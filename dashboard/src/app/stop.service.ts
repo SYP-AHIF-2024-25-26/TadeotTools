@@ -11,8 +11,8 @@ export class StopService {
     httpClient = inject(HttpClient);
     baseUrl = inject(BASE_URL);
 
-    public async getAllStops() {
-        return firstValueFrom(this.httpClient.get<Stop[]>(this.baseUrl + '/api/stops', {
+    public async getPrivateStops() {
+        return firstValueFrom(this.httpClient.get<Stop[]>(this.baseUrl + '/api/stops/private', {
             headers: {
                 'X-Api-Key': localStorage.getItem('API_KEY') ?? '',
             }
@@ -28,13 +28,31 @@ export class StopService {
 
 
     updateStopOrder(stops: number[]) {
-        this.httpClient.put(this.baseUrl + '/api/stops/order', {
+        firstValueFrom(this.httpClient.put(this.baseUrl + '/api/stops/order', {
                 'order': stops
             },
             {
                 headers: {
                     'X-Api-Key': localStorage.getItem('API_KEY') ?? '',
                 }
-            });
+            }));
+    }
+
+    async updateStopStopGroupId(stop: Stop) {
+        return await firstValueFrom(this.httpClient.put(this.baseUrl + `/api/stops/` + stop.stopID, {
+                "name": stop.name,
+                "description": stop.description,
+                "roomNr": stop.roomNr,
+                "stopGroupId": stop.stopGroupID,
+                "divisionId": stop.divisionID
+            },
+            {
+                headers: {
+                    'X-Api-Key':
+                        localStorage.getItem('API_KEY') ?? '',
+                }
+            }
+        ))
+            ;
     }
 }

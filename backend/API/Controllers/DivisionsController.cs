@@ -41,7 +41,7 @@ public class DivisionsController(
     }
     
     [HttpPost("api/divisions")]
-    public async Task<IActionResult> CreateDivision([FromBody] RequestDivsionDto division) {
+    public async Task<IActionResult> CreateDivision([FromBody] RequestDivisionDto division) {
         try {
             if (division.Name.Length > 50) {
                 return BadRequest("Invalid Name");
@@ -62,7 +62,7 @@ public class DivisionsController(
     }
     
     [HttpPut("api/divisions/{divisionId}")] 
-    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivsionDto division) {
+    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivisionDto division) {
         try {
             if (division.Name.Length > 50) {
                 return BadRequest("Invalid Name");

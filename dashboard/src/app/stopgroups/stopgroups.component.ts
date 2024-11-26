@@ -39,7 +39,28 @@ export class StopgroupsComponent {
     }
 
     dropStop(event: CdkDragDrop<any[]>) {
-        moveItemInArray(this.allStops(), event.previousIndex, event.currentIndex);
+      const groupId = this.getGroupIdFromEvent(event);
+      if (groupId === null) {
+        this.allStops()[event.currentIndex].stopGroupID = null;
+      } else {
+        console.log('group-' + groupId);
+        const maxIndex = this.allStops().filter(stop => stop.stopGroupID !== null && stop.stopGroupID <= groupId).length;
+        const index = maxIndex - event.currentIndex;
+        console.log(index);
+      }
+      /*const previousGroupId = event.previousContainer.id.split('-')[1];
+      const oldId = this.allStops().filter(stop => stop.stopGroupID === (previousGroupId === null ? null : parseInt(previousGroupId))).map(stop => stop.stopID)[0] + event.previousIndex;
+      const groupId = event.container.id.split('-')[1];
+      const idkWhatThisIs = this.allStops().filter(stop => stop.stopGroupID === (groupId === null ? null : parseInt(groupId))).map(stop => stop.stopID)[0];
+      const newId =  + event.currentIndex;
+      this.allStops()[event.currentIndex].stopGroupID = groupId === '0' ? null : parseInt(groupId);
+      console.log(oldId, newId);
+      moveItemInArray(this.allStops(), event.previousIndex, event.currentIndex);*/
+    }
+
+    getGroupIdFromEvent(event: CdkDragDrop<any[]>): number | null {
+      const groupIdString = event.container.id.split('-')[1];
+      return groupIdString === null ? null : parseInt(groupIdString);
     }
 
     getDropGroups(): string[] {
@@ -47,14 +68,15 @@ export class StopgroupsComponent {
     }
 
     async initialiseStops() {
-        const stops = await this.stopFetcher.getAllStops();
+        /*const stops = await this.stopFetcher.getAllStops();
         if (stops) {
             this.allStops.set(stops);
-        }
+        }*/
     }
 
     updateOrder() {
         this.stopGroupFetcher.updateStopGroupOrder(this.stopGroups().map(group => group.stopGroupID));
+        console.log(this.allStops().map(stop => stop.stopID));
         this.stopFetcher.updateStopOrder(this.allStops().map(stop => stop.stopID));
     }
 }
