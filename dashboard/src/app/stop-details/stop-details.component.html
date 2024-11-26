@@ -1,0 +1,34 @@
+<div>
+  <h3>Stop Details</h3>
+  @if(stopId() != -1) {
+    <h4>Stop ID: {{ stopId() }}</h4>
+  } @else {
+    <h4>New Stop</h4>
+  }
+  <form (submit)="submitStopDetail()">
+    <div class="input-field">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        [value]="name()"
+        [(ngModel)]="name"
+        name="name"
+        id="name"
+      />
+    </div>
+
+    <label for="division">Division</label>
+    <select id="division" [(ngModel)]="divisionId" name="division">
+      @for (division of divisions(); track $index) {
+        <option [value]="division.divisionID">{{ division.name }}</option>
+      }
+    </select>
+
+    @if (errorMessage() != null) {
+      <p class="text-danger">{{ errorMessage() }}</p>
+    }
+    <button (click)="deleteAndGoBack()">Delete and go back</button>
+    <button type="submit">Submit</button>
+  </form>
+  <button [routerLink]="['/stopgroups']">Go Back (without submit)</button>
+</div>
