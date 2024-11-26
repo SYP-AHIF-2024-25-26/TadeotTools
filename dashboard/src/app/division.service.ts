@@ -2,12 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BASE_URL } from './app.config';
 import { firstValueFrom } from 'rxjs';
-
-export type Division = {
-  divisionID: number;
-  name: string;
-  color: string;
-};
+import { Division } from './types';
 
 @Injectable({
   providedIn: 'root',
@@ -36,12 +31,7 @@ export class DivisionService {
     }));
   }
 
-  async updateDivision(division: {
-    divisionID: number;
-    name: string;
-    color: string;
-    image: number[] | null;
-  }): Promise<void> {
+  async updateDivision(division: Division): Promise<void> {
     console.log(division.image);
     await firstValueFrom(this.httpClient.put(
       `${this.baseUrl}/api/divisions/${division.divisionID}`,

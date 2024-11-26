@@ -4,6 +4,7 @@ export type Stop = {
     description: string;
     roomNr: string;
     stopGroupID: number | null;
+    divisionID: number;
 }
 
 export type StopGroup = {
@@ -12,3 +13,10 @@ export type StopGroup = {
     description: string;
     color: string;
 }
+
+export type Division = {
+  divisionID: number;
+  name: string;
+  color: string;
+  image: number[] | null;
+};

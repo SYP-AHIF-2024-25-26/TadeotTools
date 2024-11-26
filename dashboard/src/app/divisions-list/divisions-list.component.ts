@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Division, DivisionService } from '../division.service';
+import { DivisionService } from '../division.service';
+import { Division } from '../types';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
