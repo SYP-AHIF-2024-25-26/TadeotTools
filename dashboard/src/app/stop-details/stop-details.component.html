@@ -6,15 +6,33 @@
     <h4>New Stop</h4>
   }
   <form (submit)="submitStopDetail()">
-    <div class="input-field">
-      <label for="name">Name</label>
+    <div>
+      <label for="name">Description</label>
       <input
         type="text"
-        [value]="name()"
-        [(ngModel)]="name"
-        name="name"
-        id="name"
+        [value]="description()"
+        [(ngModel)]="description"
+        name="description"
+        id="description"
       />
+    </div>
+
+    <div>
+      <label for="roomNr">Room Number</label>
+      <input
+        type="text"
+        [value]="roomNr()"
+        [(ngModel)]="roomNr"
+        name="roomNr"
+        id="roomNr"
+      />
+      @if (stopGroupId() != null) {
+        <p>StopGroup ID: {{ stopGroupId() }}</p>
+      }
+    </div>
+      <h4></h4>
+    <div>
+
     </div>
 
     <label for="division">Division</label>

@@ -28,8 +28,6 @@ export class StopDetailsComponent {
 
   divisions = signal<Division[]>([]);
 
-  newStop = () => this.stopId() === -1;
-
   errorMessage = signal<string | null>(null);
 
   constructor(private route: ActivatedRoute, private router: Router) {
@@ -52,7 +50,7 @@ export class StopDetailsComponent {
   }
 
   async submitStopDetail() {
-    if (this.newStop()) {
+    if (this.stopId() === -1) {
       await this.service.addStop({
         name: this.name(),
         description: this.description(),
