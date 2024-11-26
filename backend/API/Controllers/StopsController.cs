@@ -196,6 +196,7 @@ public class StopsController(
     public async Task<IActionResult> UpdateOrder(RequestOrderDto order) {
         try
         {
+            Console.WriteLine(order.Order);
             for (var i = 0; i < order.Order.Length; i++)
             {
                 var stop = await stops.GetStopById(order.Order[i]);
