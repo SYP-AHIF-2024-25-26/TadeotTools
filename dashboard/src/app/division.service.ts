@@ -36,7 +36,7 @@ export class DivisionService {
     const formData = new FormData();
     formData.append('image', image);
     await firstValueFrom(this.httpClient.put(
-      `${this.baseUrl}/api/divisions/${divisionID}`,
+      `${this.baseUrl}/api/divisions/${divisionID}/image`,
       formData,
       {
         headers: {

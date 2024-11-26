@@ -7,9 +7,11 @@
   }
 
   <img
-    [src]="this.baseUrl + '/divisions/' + this.divisionId"
+    [src]="baseUrl + '/divisions/' + divisionId()"
     alt="Division Picture will load here"
   />
+  <!--    src="http://localhost:5000/v1/divisions/2"
+-->
 
   <form (submit)="submitDivisionDetail()">
     <div class="input-field">

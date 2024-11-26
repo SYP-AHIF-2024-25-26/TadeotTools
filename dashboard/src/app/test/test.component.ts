@@ -1,6 +1,6 @@
 import {Component, inject, signal} from '@angular/core';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {StopgroupService} from "../stopgroup.service";
+import {StopGroupService} from "../stopgroup.service";
 import {StopService} from "../stop.service";
 import {Stop, StopGroup, StopGroupWithStops} from "../types";
 import {group} from "@angular/animations";
@@ -16,7 +16,7 @@ import {group} from "@angular/animations";
     styleUrl: './test.component.css'
 })
 export class TestComponent {
-    stopGroupFetcher = inject(StopgroupService);
+    stopGroupFetcher = inject(StopGroupService);
     stopFetcher = inject(StopService);
 
     stopGroups = signal<StopGroupWithStops[]>([]);
