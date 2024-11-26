@@ -37,4 +37,28 @@ export class StopService {
                 }
             });
     }
+
+  async addStop(stop: { name: string; description: string; roomNr: string, divisionID: number }) {
+    await firstValueFrom(this.httpClient.post(this.baseUrl + '/api/stops', stop, {
+        headers: {
+            'X-Api-Key': localStorage.getItem('API_KEY') ?? '',
+        }
+    }));
+  }
+
+  async updateStop(stop: Stop) {
+    await firstValueFrom(this.httpClient.put(this.baseUrl + `/api/stops/${stop.stopID}`, stop, {
+        headers: {
+            'X-Api-Key': localStorage.getItem('API_KEY') ?? '',
+        }
+    }));
+  }
+
+  async deleteStop(stopId: number) {
+    await firstValueFrom(this.httpClient.delete(this.baseUrl + `/api/stops/${stopId}`, {
+        headers: {
+            'X-Api-Key': localStorage.getItem('API_KEY') ?? '',
+        }
+    }));
+  }
 }
