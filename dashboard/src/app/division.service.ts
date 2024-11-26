@@ -22,17 +22,36 @@ export class DivisionService {
   async addDivision(division: {
     name: string;
     color: string;
-    image: number[] | null;
   }): Promise<void> {
-    await firstValueFrom(this.httpClient.post(`${this.baseUrl}/api/divisions`, division, {
+    await firstValueFrom(this.httpClient.post(`${this.baseUrl}/api/divisions`, {
+      name: division.name,
+      color: division.color,
+    }, {
       headers: {
         'X-Api-Key': localStorage.getItem('API_KEY') || '',
       },
     }));
   }
+  async updateDivisionImg(divisionID: number, image: File): Promise<void> {
+    const formData = new FormData();
+    formData.append('image', image);
+    await firstValueFrom(this.httpClient.put(
+      `${this.baseUrl}/api/divisions/${divisionID}`,
+      formData,
+      {
+        headers: {
+          'X-Api-Key': localStorage.getItem('API_KEY') || '',
+        },
+      }
+    ));
+  }
 
-  async updateDivision(division: Division): Promise<void> {
-    console.log(division.image);
+
+  async updateDivision(division: {
+    divisionID: number;
+    name: string;
+    color: string;
+  }): Promise<void> {
     await firstValueFrom(this.httpClient.put(
       `${this.baseUrl}/api/divisions/${division.divisionID}`,
       division,

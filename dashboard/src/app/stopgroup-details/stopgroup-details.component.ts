@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 @Component({
   selector: 'app-stopgroup-details',
@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './stopgroup-details.component.css'
 })
 export class StopgroupDetailsComponent {
-
+  stopgroupId = signal<number>(-1);
 }

@@ -18,5 +18,5 @@ export type Division = {
   divisionID: number;
   name: string;
   color: string;
-  image: number[] | null;
+  image: File | null;
 };

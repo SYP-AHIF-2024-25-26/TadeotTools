@@ -19,7 +19,6 @@ export class DivisionDetailsComponent {
   divisionId = signal<number>(-1);
   name = signal<string>('');
   color = signal<string>('');
-  image: Uint8Array = new Uint8Array();
 
   newDivision = () => this.divisionId() === -1;
 
@@ -50,23 +49,7 @@ export class DivisionDetailsComponent {
         return;
       }
       this.selectedFile = file;
-      this.image = await this.fileToByteArray(file);
     }
-  }
-
-  private fileToByteArray(file: File): Promise<Uint8Array> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result instanceof ArrayBuffer) {
-          resolve(new Uint8Array(reader.result));
-        } else {
-          reject(new Error('Failed to read file as ArrayBuffer'));
-        }
-      };
-      reader.onerror = () => reject(reader.error);
-      reader.readAsArrayBuffer(file);
-    });
   }
 
   ngOnInit() {}
@@ -75,15 +58,16 @@ export class DivisionDetailsComponent {
       await this.service.addDivision({
         name: this.name(),
         color: this.color(),
-        image: this.image.length > 0 ? Array.from(this.image) : null
       });
     } else {
       await this.service.updateDivision({
         divisionID: this.divisionId(),
         name: this.name(),
         color: this.color(),
-        image: this.image.length > 0 ? Array.from(this.image) : null
       });
+    }
+    if (this.selectedFile) {
+      await this.service.updateDivisionImg(this.divisionId(), this.selectedFile);
     }
     this.router.navigate(['/divisions']);
   }
