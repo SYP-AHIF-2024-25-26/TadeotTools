@@ -74,4 +74,14 @@ export class StopGroupService {
       )
     );
   }
+
+  async deleteStopGroup(stopGroupID: number) {
+    await firstValueFrom(
+      this.httpClient.delete(this.baseUrl + `/api/groups/${stopGroupID}`, {
+        headers: {
+          'X-Api-Key': localStorage.getItem('API_KEY') ?? '',
+        },
+      })
+    );
+  }
 }

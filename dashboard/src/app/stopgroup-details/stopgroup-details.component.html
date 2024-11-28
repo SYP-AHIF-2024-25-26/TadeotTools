@@ -1,14 +1,15 @@
-<div>
-  <h3>StopGroup Details</h3>
+<div class="m-6">
+  <h1 class="mb-4 text-4xl">StopGroup Details</h1>
   @if(stopGroupId() != -1) {
-  <h4>StopGroup ID: {{ stopGroupId() }}</h4>
+  <h4 class="text-2xl">StopGroup ID: {{ stopGroupId() }}</h4>
   } @else {
-  <h4>New StopGroup</h4>
+  <h4 class="text-2xl">New StopGroup</h4>
   }
-  <form (submit)="submitStopGroupDetails()">
+  <form (submit)="submitStopGroupDetails()" class="mt-4">
     <div>
-      <label for="name">Name</label>
+      <label for="name" class="mr-4">Name</label>
       <input
+        class="mb-4 border rounded px-4 py-2"
         type="text"
         [value]="name()"
         [(ngModel)]="name"
@@ -17,8 +18,9 @@
       />
     </div>
     <div>
-      <label for="description">Description</label>
+      <label for="description" class="mr-4">Description</label>
       <input
+        class="mb-4 border rounded px-4 py-2 text-gray-700"
         type="text"
         [value]="description()"
         [(ngModel)]="description"
@@ -27,8 +29,9 @@
       />
     </div>
     <div>
-      <label for="isPublic">Is public?</label>
+      <label for="isPublic" class="mr-4">Is public?</label>
       <input
+        class="mb-4 border rounded px-4 py-2"
         type="checkbox"
         id="isPublic"
         [(ngModel)]="isPublic"
@@ -39,8 +42,22 @@
     @if (errorMessage() != null) {
     <p class="text-danger">{{ errorMessage() }}</p>
     }
-    <button (click)="deleteAndGoBack()">Delete and go back</button>
-    <button type="submit">Submit</button>
+    <button type="submit" class="bg-htl-orange p-2 rounded text-white">
+      Submit
+    </button>
   </form>
-  <button [routerLink]="['/stopgroups']">Go Back (without submit)</button>
+  <div>
+    <button
+      (click)="deleteAndGoBack()"
+      class="mt-4 mr-4 bg-htl-orange p-2 rounded text-white"
+    >
+      Delete and go back
+    </button>
+    <button
+      [routerLink]="['/stopgroups']"
+      class="bg-htl-orange p-2 rounded text-white"
+    >
+      Go Back (without submit)
+    </button>
+  </div>
 </div>
