@@ -1,20 +1,21 @@
-<div>
-  <h3>Division Details</h3>
+<div class="m-6">
+  <h1 class="mb-4 text-4xl">Division Details</h1>
   @if(divisionId() != -1) {
-    <h4>Division ID: {{ divisionId() }}</h4>
+    <h4 class="text-2xl">Division ID: {{ divisionId() }}</h4>
   } @else {
-    <h4>New Division</h4>
+    <h4 class="text-2xl">New Division</h4>
   }
 
   <img
+    class="w-32 h-32 object-cover"
     [src]="baseUrl + '/divisions/' + divisionId()"
     alt="Division Picture will load here"
   />
-
-  <form (submit)="submitDivisionDetail()">
-    <div class="input-field">
-      <label for="name">Name</label>
+  <form (submit)="submitDivisionDetail()" class="mt-4">
+    <div>
+      <label for="name" class="mr-4">Name</label>
       <input
+        class="mb-4 border rounded px-4 py-2 text-gray-700"
         type="text"
         [value]="name()"
         [(ngModel)]="name"
@@ -23,32 +24,34 @@
       />
     </div>
 
-    <label for="color">Color</label>
+    <label for="color" class="mr-4">Color</label>
     <input
+      class="mb-4"
       type="color"
       [value]="color()"
       [(ngModel)]="color"
       name="color"
       id="color"
     />
-    <div class="w-100 h-100" s [style.backgroundColor]="color()"></div>
+    <div class="w-100 h-100" [style.backgroundColor]="color()"></div>
+    <div>
+      <label for="file" class="mr-4">Upload File</label>
+      <input
+        type="file"
+        class="mb-4 border rounded px-4 py-2 text-gray-700"
+        id="file"
+        accept=".jpg, .jpeg, .png, .svg"
+        (change)="onFileChange($event)"
+      />
 
-    <label for="file">Upload File</label>
-    <input
-      type="file"
-      class="mb-4 border rounded px-4 py-2 text-gray-700"
-      id="file"
-      accept=".jpg, .jpeg, .png, .svg"
-      (change)="onFileChange($event)"
-    />
-
-    @if (errorMessage() != null) {
-      <p class="text-danger">{{ errorMessage() }}</p>
-    }
-
-    <button (click)="deleteAndGoBack()">Delete and go back</button>
-    <button type="submit">Submit</button>
+      @if (errorMessage() != null) {
+        <p class="text-danger">{{ errorMessage() }}</p>
+      }
+    </div>
+    <button type="submit" class="bg-htl-orange p-2 rounded text-white">Submit</button>
   </form>
-
-  <button [routerLink]="['/divisions']">Go Back (without submit)</button>
+  <div>
+    <button [routerLink]="['/divisions']" class="mt-4 mr-4 bg-htl-orange p-2 rounded text-white">Go Back (without submit)</button>
+    <button (click)="deleteAndGoBack()" class="bg-htl-orange p-2 rounded text-white">Delete</button>
+  </div>
 </div>
