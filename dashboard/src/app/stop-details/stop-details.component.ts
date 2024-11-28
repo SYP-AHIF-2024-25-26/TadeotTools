@@ -17,6 +17,9 @@ import { DivisionService } from '../division.service';
 export class StopDetailsComponent {
   private service: StopService = inject(StopService);
   private divisionService: DivisionService = inject(DivisionService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private router: Router = inject(Router);
+
   baseUrl = inject(BASE_URL);
 
   stopId = signal<number>(-1);
@@ -30,7 +33,7 @@ export class StopDetailsComponent {
 
   errorMessage = signal<string | null>(null);
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  ngOnInit() {
     this.loadDivisions();
     this.route.queryParams.subscribe((params) => {
       this.stopId.set(params['id'] || -1);
@@ -43,8 +46,6 @@ export class StopDetailsComponent {
       this.divisions.set(divisions);
     });
   }
-
-  ngOnInit() {}
   async loadDivisions() {
     this.divisions.set(await this.divisionService.getDivisions());
   }
@@ -67,11 +68,11 @@ export class StopDetailsComponent {
         divisionID: this.divisionId(),
       });
     }
-    this.router.navigate(['/divisions']);
+    this.router.navigate(['/stopgroups']);
   }
 
   async deleteAndGoBack() {
     await this.service.deleteStop(this.stopId());
-    this.router.navigate(['/divisions']);
+    this.router.navigate(['/stopgroups']);
   }
 }
