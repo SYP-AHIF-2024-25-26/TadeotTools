@@ -14,6 +14,9 @@ import { BASE_URL } from '../app.config';
 })
 export class DivisionDetailsComponent {
   private service: DivisionService = inject(DivisionService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private router: Router = inject(Router);
+
   baseUrl = inject(BASE_URL);
 
   divisionId = signal<number>(-1);
@@ -23,7 +26,7 @@ export class DivisionDetailsComponent {
   errorMessage = signal<string | null>(null);
   selectedFile: File | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.divisionId.set(params['id'] || -1);
       this.name.set(params['name'] || '');
@@ -50,7 +53,6 @@ export class DivisionDetailsComponent {
     }
   }
 
-  ngOnInit() {}
   async submitDivisionDetail() {
     if (this.divisionId() === -1) {
       await this.service.addDivision({
