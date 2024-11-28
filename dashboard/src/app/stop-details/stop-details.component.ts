@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Division } from '../types';
 import { DivisionService } from '../division.service';
+import { isValid } from '../utilfunctions';
 
 @Component({
   selector: 'app-stop-details',
@@ -50,7 +51,25 @@ export class StopDetailsComponent {
     this.divisions.set(await this.divisionService.getDivisions());
   }
 
+  isInputValid() {
+    if (!isValid(this.name(), 50)) {
+      this.errorMessage.set('Name must be between 1 and 50 characters');
+      return false;
+    }
+    if (!isValid(this.description(), 255)) {
+      this.errorMessage.set('Description must be between 1 and 255 characters');
+      return false;
+    }
+    if (!isValid(this.roomNr(), 5)) {
+      this.errorMessage.set('Room number must be between 1 and 5 characters');
+      return false;
+    }
+    return true;
+  }
   async submitStopDetail() {
+    if (!this.isInputValid()) {
+      return;
+    }
     if (this.stopId() === -1) {
       await this.service.addStop({
         name: this.name(),

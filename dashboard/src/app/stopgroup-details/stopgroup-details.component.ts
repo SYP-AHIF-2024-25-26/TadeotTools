@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { StopGroupService } from '../stopgroup.service';
+import { isValid } from '../utilfunctions';
 
 @Component({
   selector: 'app-stopgroup-details',
@@ -30,6 +31,18 @@ export class StopgroupDetailsComponent implements OnInit {
       this.stopGroupId.set(params['stopGroupID'] || null);
       this.isPublic.set(params['isPublic'] || false);
     });
+  }
+
+  isInputValid(): boolean {
+    if (!isValid(this.name(), 50)) {
+      this.errorMessage.set('Name is invalid, must be less than 50 characters');
+      return false;
+    }
+    if (!isValid(this.description(), 255)) {
+      this.errorMessage.set('Description is invalid, must be less than 255 characters');
+      return false;
+    }
+    return true;
   }
 
   async submitStopGroupDetails() {
