@@ -94,15 +94,8 @@ public class DivisionsController(
     }
     
     [HttpPut("api/divisions/{divisionId}")] 
-    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivsionDto division , [FromForm] IFormFile image) {
+    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivsionDto division) {
         try {
-            if (image == null || image.Length == 0)
-                return BadRequest("No image uploaded.");
-
-            using var memoryStream = new MemoryStream();
-            await image.CopyToAsync(memoryStream);
-
-            
             if (division.Name.Length > 50) {
                 return BadRequest("Invalid Name");
             }
@@ -110,12 +103,12 @@ public class DivisionsController(
                 return BadRequest("Invalid Color");
             }
 
-            await divisions.GetDivisionById(divisionId);
+            var oldDivision = await divisions.GetDivisionById(divisionId);
             await divisions.UpdateDivision(new Division {
                 DivisionID = divisionId,
                 Name = division.Name,
                 Color = division.Color,
-                Image = memoryStream.ToArray()
+                Image = oldDivision.Image
             });
             return Ok();
         }
