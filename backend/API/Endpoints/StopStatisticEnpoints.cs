@@ -2,11 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
 
-namespace API.Controllers;
+namespace API.Endpoints;
 
-[ApiController]
-[Route("v1/stats")]
-public class GroupStopsController : ControllerBase {
+public class StopStatisticEndpoints {
     /*
     [HttpGet]
     [Route("api")]
