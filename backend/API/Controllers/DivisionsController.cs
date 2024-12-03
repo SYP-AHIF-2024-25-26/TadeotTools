@@ -1,4 +1,3 @@
-using API.Dtos.ResponseDtos;
 using API.RequestDtos;
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
@@ -14,10 +13,8 @@ public class DivisionsController(
 ) : ControllerBase {
     [HttpGet("divisions")]
     public async Task<IActionResult> GetDivisions() {  
-        try
-        {
-            var allDivisions = await divisions.GetAllDivisions();
-            return Ok(allDivisions.Select(division => ResponseDivisionDto.FromDivision(division)));
+        try {
+            return Ok(await divisions.GetAllDivisions());
         }
         catch (Exception) {
             return StatusCode(500, "Internal server error!");
@@ -41,14 +38,8 @@ public class DivisionsController(
     }
     
     [HttpPost("api/divisions")]
-    public async Task<IActionResult> CreateDivision([FromBody] RequestDivsionDto division, [FromForm] IFormFile image) {
+    public async Task<IActionResult> CreateDivision([FromBody] RequestDivisionDto division, [FromForm] IFormFile image) {
         try {
-            if (image == null || image.Length == 0)
-                return BadRequest("No image uploaded.");
-
-            using var memoryStream = new MemoryStream();
-            await image.CopyToAsync(memoryStream);
-            
             if (division.Name.Length > 50) {
                 return BadRequest("Invalid Name");
             }
@@ -58,7 +49,7 @@ public class DivisionsController(
             var divisionId = await divisions.AddDivision(new Division {
                 Name = division.Name,
                 Color = division.Color,
-                Image = memoryStream.ToArray(),
+                Image = division.Image
             });
             return Ok(await divisions.GetDivisionById(divisionId));
         }
@@ -67,34 +58,8 @@ public class DivisionsController(
         }
     }
     
-    [HttpPut("api/divisions/{divisionId}/image")] 
-    public async Task<IActionResult> UpdateDivisionImage(int divisionId, [FromForm] IFormFile image) {
-        try {
-            if (image == null || image.Length == 0)
-                return BadRequest("No image uploaded.");
-
-            using var memoryStream = new MemoryStream();
-            await image.CopyToAsync(memoryStream);
-            
-            Division division = await divisions.GetDivisionById(divisionId);
-            await divisions.UpdateDivision(new Division {
-                DivisionID = divisionId,
-                Name = division.Name,
-                Color = division.Color,
-                Image = memoryStream.ToArray()
-            });
-            return Ok();
-        }
-        catch (TadeoTNotFoundException) {
-            return NotFound("Could not find Division");
-        }
-        catch (TadeoTDatabaseException) {
-            return StatusCode(500, "internal server error!");
-        }
-    }
-    
     [HttpPut("api/divisions/{divisionId}")] 
-    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivsionDto division) {
+    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivisionDto division) {
         try {
             if (division.Name.Length > 50) {
                 return BadRequest("Invalid Name");
@@ -103,12 +68,12 @@ public class DivisionsController(
                 return BadRequest("Invalid Color");
             }
 
-            var oldDivision = await divisions.GetDivisionById(divisionId);
+            await divisions.GetDivisionById(divisionId);
             await divisions.UpdateDivision(new Division {
                 DivisionID = divisionId,
                 Name = division.Name,
                 Color = division.Color,
-                Image = oldDivision.Image
+                Image = division.Image
             });
             return Ok();
         }
@@ -125,6 +90,22 @@ public class DivisionsController(
     {
         try
         {
+            var imagePath = "./../../assets/datamodel.png";
+
+            if (!System.IO.File.Exists(imagePath))
+            {
+                throw new FileNotFoundException("Image file not found.", imagePath);
+            }
+
+
+            await divisions.AddDivision(new Division()
+            {
+                Name = "Test",
+                Color = "#333333",
+                Image = System.IO.File.ReadAllBytes(imagePath)
+            });
+            
+            Console.WriteLine(divisionId);
             var division = await divisions.GetDivisionById(divisionId);
             if (division.Image == null)
             {
