@@ -4,6 +4,7 @@ import { DivisionService } from '../division.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { BASE_URL } from '../app.config';
+import { isValid } from '../utilfunctions';
 
 @Component({
   selector: 'app-division-details',
@@ -14,19 +15,19 @@ import { BASE_URL } from '../app.config';
 })
 export class DivisionDetailsComponent {
   private service: DivisionService = inject(DivisionService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private router: Router = inject(Router);
+
   baseUrl = inject(BASE_URL);
 
   divisionId = signal<number>(-1);
   name = signal<string>('');
   color = signal<string>('');
-  image: Uint8Array = new Uint8Array();
-
-  newDivision = () => this.divisionId() === -1;
 
   errorMessage = signal<string | null>(null);
   selectedFile: File | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.divisionId.set(params['id'] || -1);
       this.name.set(params['name'] || '');
@@ -50,40 +51,39 @@ export class DivisionDetailsComponent {
         return;
       }
       this.selectedFile = file;
-      this.image = await this.fileToByteArray(file);
     }
   }
 
-  private fileToByteArray(file: File): Promise<Uint8Array> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result instanceof ArrayBuffer) {
-          resolve(new Uint8Array(reader.result));
-        } else {
-          reject(new Error('Failed to read file as ArrayBuffer'));
-        }
-      };
-      reader.onerror = () => reject(reader.error);
-      reader.readAsArrayBuffer(file);
-    });
+  isInputValid(): boolean {
+    if (!isValid(this.name(), 50)) {
+      this.errorMessage.set('Name must be between 1 and 50 characters');
+      return false;
+    }
+    if (!isValid(this.color(), 7)) {
+      this.errorMessage.set('Color must be a valid hex color');
+      return false;
+    }
+    return true;
   }
 
-  ngOnInit() {}
   async submitDivisionDetail() {
-    if (this.newDivision()) {
+    if (!this.isInputValid()) {
+      return;
+    }
+    if (this.divisionId() === -1) {
       await this.service.addDivision({
         name: this.name(),
         color: this.color(),
-        image: this.image.length > 0 ? Array.from(this.image) : null
       });
     } else {
       await this.service.updateDivision({
         divisionID: this.divisionId(),
         name: this.name(),
         color: this.color(),
-        image: this.image.length > 0 ? Array.from(this.image) : null
       });
+    }
+    if (this.selectedFile) {
+      await this.service.updateDivisionImg(this.divisionId(), this.selectedFile);
     }
     this.router.navigate(['/divisions']);
   }

@@ -1,0 +1,77 @@
+<div class="m-6">
+  <h3 class="mb-4 text-4xl">Stop Details</h3>
+  @if(stopId() != -1) {
+  <h4 class="text-2xl">Stop ID: {{ stopId() }}</h4>
+  } @else {
+  <h4 class="text-2xl">New Stop</h4>
+  }
+  <form (submit)="submitStopDetail()" class="mt-4">
+    <div>
+      <label for="name" class="mr-4">Name</label>
+      <input
+        class="mb-4 border rounded px-4 py-2 text-gray-700"
+        type="text"
+        [value]="name()"
+        [(ngModel)]="name"
+        name="name"
+        id="name"
+      />
+    </div>
+    <div>
+      <label for="description" class="mr-4">Description</label>
+      <input
+        class="mb-4 border rounded px-4 py-2 text-gray-700"
+        type="text"
+        [value]="description()"
+        [(ngModel)]="description"
+        name="description"
+        id="description"
+      />
+    </div>
+
+    <div>
+      <label for="roomNr" class="mr-4">Room Number</label>
+      <input
+        class="mb-4 border rounded px-4 py-2 text-gray-700"
+        type="text"
+        [value]="roomNr()"
+        [(ngModel)]="roomNr"
+        name="roomNr"
+        id="roomNr"
+      />
+      @if (stopGroupId() != null) {
+      <p>StopGroup ID: {{ stopGroupId() }}</p>
+      }
+    </div>
+
+    <div>
+      <label for="division" class="mr-4">Division</label>
+      <select id="division" [(ngModel)]="divisionId" name="division">
+        @for (division of divisions(); track $index) {
+        <option [value]="division.divisionID">{{ division.name }}</option>
+        }
+      </select>
+    </div>
+
+    @if (errorMessage() != null) {
+    <p class="text-danger">{{ errorMessage() }}</p>
+    }
+    <button type="submit" class="bg-htl-orange p-2 rounded text-white">
+      Submit
+    </button>
+  </form>
+  <div>
+    <button
+      [routerLink]="['/stopgroups']"
+      class="mt-4 mr-4 bg-htl-orange p-2 rounded text-white"
+    >
+      Go Back (without submit)
+    </button>
+    <button
+      (click)="deleteAndGoBack()"
+      class="mt-4 mr-4 bg-htl-orange p-2 rounded text-white"
+    >
+      Delete and go back
+    </button>
+  </div>
+</div>

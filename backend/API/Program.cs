@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddDbContext<TadeoTDbContext>(options =>
         options.UseMySql(TadeoTDbContextFactory.GetConnectionString(),
             new MySqlServerVersion(new Version(8, 0, 32))), ServiceLifetime.Transient);
-    
+
     builder.Services.AddScoped<StopFunctions>();
     builder.Services.AddScoped<StopGroupFunctions>();
     builder.Services.AddScoped<DivisionFunctions>();
@@ -17,14 +17,15 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddCors(options =>
     {
         options.AddPolicy(name: "default",
-            policy  =>
+            policy =>
             {
-                policy.WithOrigins("http://localhost:4200")
+                policy
+                    .AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
     });
-    
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 }
@@ -44,10 +45,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseEndpoints(endpoints =>
-{
-    //app.UseMiddleware<ApiKeyMiddleware>();
-    endpoints.MapControllers();
-});
+app.UseMiddleware<ApiKeyMiddleware>();
+
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 app.Run();

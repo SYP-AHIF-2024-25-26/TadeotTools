@@ -5,19 +5,26 @@ export type Stop = {
   roomNr: string;
   divisionID: number;
   stopGroupID: number | null;
-}
+};
 
 export type StopGroup = {
   stopGroupID: number;
   name: string;
   description: string;
-  color: string;
-}
+  isPublic: boolean;
+};
 
 export type StopGroupWithStops = {
   stopGroupID: number;
   name: string;
   description: string;
-  color: string;
+  isPublic: boolean;
   stops: Stop[];
-}
+};
+
+export type Division = {
+  divisionID: number;
+  name: string;
+  color: string;
+  image: File | null;
+};

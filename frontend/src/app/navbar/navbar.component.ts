@@ -1,23 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ViewModeService } from '../view-mode.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [
-    CommonModule,
-  ],
+  imports: [CommonModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
-  protected viewModeService = inject(ViewModeService);
-
-  switchToCardMode() {
-    this.viewModeService.switchToCardMode();
-  }
-  switchToStationMode() {
-    this.viewModeService.switchToStationMode();
-  }
-
+  protected router = inject(Router);
+  @Input({ required: true }) isStationMode!: boolean;
 }

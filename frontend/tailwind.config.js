@@ -1,8 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{html,ts}",
-  ],
+  content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
       colors: {
@@ -11,11 +9,11 @@ module.exports = {
         'electronics-red': '#CE1223',
         'medicin-technology-yellow': '#f1a102',
         'neutral-green': '#80c076',
-      }
+      },
+      fontFamily: {
+        sans: ['Roboto', 'sans-serif'],
+      },
     },
   },
-  plugins: [
-    require('tailwindcss-animated'),
-    require('@tailwindcss/line-clamp'),
-  ],
-}
+  plugins: [require('tailwindcss-animated')],
+};
