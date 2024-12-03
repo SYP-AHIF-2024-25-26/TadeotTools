@@ -52,23 +52,6 @@ public class StopStatisticFunctions(StopFunctions stopFunctions, TadeoTDbContext
         }
     }
 
-    public async Task UpdateStopStatistic(StopStatistic statistic)
-    {
-        if (statistic == null)
-        {
-            throw new TadeoTArgumentNullException("Statistic is null");
-        }
-        try
-        {
-            this.context.ChangeTracker.Clear();
-            this.context.StopStatistics.Update(statistic);
-            await this.context.SaveChangesAsync();
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not update StopStatistic: " + e.Message);
-        }
-    }
-
     public async Task DeleteStopStopStatisticById(int id)
     {
         try
