@@ -23,7 +23,9 @@ export class StopService {
     }
 
     async getStopsByStopGroupID(stopGroupID: number): Promise<Stop[]> {
-        return firstValueFrom(this.httpClient.get<Stop[]>(this.baseUrl + `/stops/groups/${stopGroupID}`));
+        const result = firstValueFrom(this.httpClient.get<Stop[]>(this.baseUrl + `/stops/groups/${stopGroupID}`));
+        console.log(await result);
+        return result;
     }
 
 

@@ -80,7 +80,7 @@ public class StopGroupsController(
     public async Task<IActionResult> UpdateGroup(int groupId, [FromBody] RequestStopGroupDto group) {
         try
         {
-            await stopGroups.GetStopGroupById(groupId);
+            var oldStopGroup = await stopGroups.GetStopGroupById(groupId);
             if (group.Name.Length > 50)
             {
                 return BadRequest("Invalid Name");
@@ -96,7 +96,8 @@ public class StopGroupsController(
                 StopGroupID = groupId,
                 Name = group.Name,
                 Description = group.Description,
-                IsPublic = group.IsPublic
+                IsPublic = group.IsPublic,
+                StopGroupOrder = oldStopGroup.StopGroupOrder
             };
 
             await stopGroups.UpdateStopGroup(stopGroup);
@@ -148,4 +149,4 @@ public class StopGroupsController(
             return StatusCode(500);
         }
     }
-} 
+}

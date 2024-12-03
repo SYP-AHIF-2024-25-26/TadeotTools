@@ -129,7 +129,7 @@ public class StopsController(
                 return BadRequest("Invalid RoomNr");
             }
 
-            await stops.GetStopById(stopId);
+            var oldStop = await stops.GetStopById(stopId);
 
             await stops.UpdateStop(new Stop
             {
@@ -138,9 +138,12 @@ public class StopsController(
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
                 Division = await divisions.GetDivisionById(stop.DivisionID),
-                StopGroup = stopGroup
+                StopGroupID = stop.StopGroupID,
+                DivisionID = stop.DivisionID,
+                StopGroup = stopGroup,
+                StopOrder = oldStop.StopOrder
             });
-            return Ok();
+            return Ok(stop.StopGroupID);
         }
         catch (TadeoTNotFoundException)
         {
@@ -196,7 +199,6 @@ public class StopsController(
     public async Task<IActionResult> UpdateOrder(RequestOrderDto order) {
         try
         {
-            Console.WriteLine(order.Order);
             for (var i = 0; i < order.Order.Length; i++)
             {
                 var stop = await stops.GetStopById(order.Order[i]);
