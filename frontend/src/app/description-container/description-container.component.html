@@ -1,20 +1,29 @@
 <div class="mx-4 max-w-full overflow-x-hidden rounded-lg bg-white shadow-md">
   <div class="p-6">
-    <div class="flex flex-col flex-wrap content-center justify-between">
-      <h2 class="mb-4 text-wrap text-3xl font-medium text-gray-800">{{ title }}</h2>
-      @if (roomNr === undefined) {
-        <p class="text-lg font-normal text-gray-600">
-          {{ description }}
-        </p>
-      }
-      @if (roomNr !== undefined) {
-        <h3 class="mb-4 text-wrap text-2xl font-medium text-gray-800">Raum: {{ roomNr }}</h3>
-        <p class="self-start text-lg font-normal text-gray-600">
-          {{ description }}
-        </p>
-        <button class="h- mb-2 mt-8 h-10 w-32 self-start rounded-2xl bg-orange-500 text-white shadow-md" (click)="router.navigate(['map', roomNr])">
-          Auf der Karte
-        </button>
+    <div class="flex justify-between">
+      <div class="flex flex-col">
+        <h2 class="mb-4 break-words text-3xl font-medium text-gray-800">{{ title }}</h2>
+        @if (roomNr === undefined) {
+          <p class="text-lg font-normal text-gray-600">
+            {{ description }}
+          </p>
+        }
+        @if (roomNr !== undefined) {
+          <h3 class="mb-4 break-words text-2xl font-medium text-gray-800">Raum: {{ roomNr }}</h3>
+          <p class="mb-4 self-start text-lg font-normal text-gray-600">
+            {{ description }}
+          </p>
+          <button class="mb-2 h-10 w-32 rounded-2xl bg-orange-500 text-white shadow-md" (click)="router.navigate(['map', roomNr])">
+            Auf der Karte
+          </button>
+        }
+      </div>
+      @if (divisionIds !== undefined) {
+        <div class="mx-2 flex w-20 max-w-20 flex-col justify-normal">
+          @for (divisionId of divisionIds; track $index) {
+            <img class="mb-1 mt-1 object-cover" [src]="baseUrl + '/v1/divisions/' + divisionId + '/image'" alt="Division Picture will load here" />
+          }
+        </div>
       }
     </div>
   </div>
