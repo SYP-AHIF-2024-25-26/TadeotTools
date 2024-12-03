@@ -83,8 +83,16 @@ public class StopFunctions(
         }
         try
         {
-            this.context.ChangeTracker.Clear();
-            this.context.Stops.Update(stop);
+            await this.context
+                .Stops
+                .Where(s => s.StopID == stop.StopID)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(s => s.Name, stop.Name)
+                    .SetProperty(s => s.Description, stop.Description)
+                    .SetProperty(s => s.StopOrder, stop.StopOrder)
+                    .SetProperty(s => s.StopGroupID, stop.StopGroupID)
+                    .SetProperty(s => s.DivisionID, stop.DivisionID)
+                );
             await this.context.SaveChangesAsync();
         } catch (Exception e)
         {

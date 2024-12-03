@@ -63,7 +63,6 @@ public class StopGroupFunctions(TadeoTDbContext context)
         }
         try
         {
-            // this.context.ChangeTracker.Clear();
             await this.context
                 .StopGroups
                 .Where(sg => sg.StopGroupID == group.StopGroupID)
@@ -73,7 +72,6 @@ public class StopGroupFunctions(TadeoTDbContext context)
                     .SetProperty(g => g.IsPublic, group.IsPublic)
                     .SetProperty(g => g.StopGroupOrder, group.StopGroupOrder)
                 );
-            // TODO: this.context.StopGroups.ExecuteUpdateAsync(group);
             await this.context.SaveChangesAsync();
         } catch (Exception e)
         {
