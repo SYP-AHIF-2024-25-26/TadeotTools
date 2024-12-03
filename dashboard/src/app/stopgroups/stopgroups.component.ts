@@ -1,82 +1,137 @@
 import {Component, inject, signal} from '@angular/core';
-import {Stop, StopGroup} from "../types";
+import {Stop, StopGroup, StopGroupWithStops} from "../types";
 import {StopGroupService} from "../stopgroup.service";
 import {StopService} from "../stop.service";
 import {CdkDragDrop, moveItemInArray, transferArrayItem, CdkDropList, CdkDrag} from "@angular/cdk/drag-drop";
 import {group} from "@angular/animations";
 import {window} from "rxjs";
+import {RouterLink} from "@angular/router";
 
 @Component({
     selector: 'app-stopgroups',
     standalone: true,
-    imports: [CdkDropList, CdkDrag],
+  imports: [CdkDropList, CdkDrag, RouterLink],
     templateUrl: './stopgroups.component.html',
     styleUrl: './stopgroups.component.css'
 })
 export class StopgroupsComponent {
-    stopGroupFetcher = inject(StopGroupService);
-    stopFetcher = inject(StopService);
+  stopGroupFetcher = inject(StopGroupService);
+  stopFetcher = inject(StopService);
 
+  stopGroups = signal<StopGroupWithStops[]>([]);
+  privateStops = signal<Stop[]>([]);
+  stopsToUpdate = signal<Stop[]>([]);
 
-    stopGroups = signal<StopGroup[]>([]);
-    allStops = signal<Stop[]>([]);
+  constructor() {
+    this.getStopGroups();
+    console.log(this.stopGroups());
+    console.log('TEst');
+    this.getPrivateStops();
+  }
 
-    constructor() {
-        this.initialiseStops();
-        this.getStopGroups();
+  async getStopGroups() {
+    this.stopGroups.set(await this.stopGroupFetcher.getStopGroups());
+  }
+
+  async getPrivateStops() {
+    const stops = await this.stopFetcher.getPrivateStops();
+    console.log(stops);
+    this.privateStops.set(stops);
+  }
+
+  dropGroup(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.stopGroups(), event.previousIndex, event.currentIndex);
+    console.log(this.stopGroups())
+  }
+
+  dropToUnassigned(event: CdkDragDrop<any[]>) {
+    const previousGroupId = parseInt(event.previousContainer.id.split('-')[1]);
+    if (previousGroupId === 0) {
+      moveItemInArray(
+        this.privateStops(),
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else {
+      transferArrayItem(
+        this.stopGroups()
+          .find(group => group.stopGroupID === previousGroupId)!.stops,
+        this.privateStops(),
+        event.previousIndex,
+        event.currentIndex
+      );
+      const stop = this.privateStops()[event.currentIndex];
+      stop.stopGroupID = null;
+      this.stopsToUpdate.update(stops => [...stops, this.privateStops()[event.currentIndex]]);
+      console.log(this.stopGroups());
     }
+  }
 
-    getStopsByGroupID(groupID: number | null): Stop[] {
-        return this.allStops().filter(stop => stop.stopGroupID === groupID)
-    }
+  dropStop(event: CdkDragDrop<any[]>) {
+    const previousGroupId = parseInt(event.previousContainer.id.split('-')[1]);
+    const currentGroupId = parseInt(event.container.id.split('-')[1]);
 
-    async getStopGroups() {
-        this.stopGroups.set(await this.stopGroupFetcher.getStopGroups());
+    if (previousGroupId !== 0) {
+      this.dropFromGroup(event);
+    } else {
+      this.dropFromNoGroup(event);
     }
+  }
 
-    dropGroup(event: CdkDragDrop<any[]>) {
-        moveItemInArray(this.stopGroups(), event.previousIndex, event.currentIndex);
-    }
+  getGroupIdFromEvent(event: CdkDragDrop<any[]>): number | null {
+    const groupIdString = event.container.id.split('-')[1];
+    return groupIdString === null ? null : parseInt(groupIdString);
+  }
 
-    dropStop(event: CdkDragDrop<any[]>) {
-      const groupId = this.getGroupIdFromEvent(event);
-      if (groupId === null) {
-        this.allStops()[event.currentIndex].stopGroupID = null;
-      } else {
-        console.log('group-' + groupId);
-        const maxIndex = this.allStops().filter(stop => stop.stopGroupID !== null && stop.stopGroupID <= groupId).length;
-        const index = maxIndex - event.currentIndex;
-        console.log(index);
-      }
-      /*const previousGroupId = event.previousContainer.id.split('-')[1];
-      const oldId = this.allStops().filter(stop => stop.stopGroupID === (previousGroupId === null ? null : parseInt(previousGroupId))).map(stop => stop.stopID)[0] + event.previousIndex;
-      const groupId = event.container.id.split('-')[1];
-      const idkWhatThisIs = this.allStops().filter(stop => stop.stopGroupID === (groupId === null ? null : parseInt(groupId))).map(stop => stop.stopID)[0];
-      const newId =  + event.currentIndex;
-      this.allStops()[event.currentIndex].stopGroupID = groupId === '0' ? null : parseInt(groupId);
-      console.log(oldId, newId);
-      moveItemInArray(this.allStops(), event.previousIndex, event.currentIndex);*/
-    }
+  getDropGroups(): string[] {
+    return [...this.stopGroups().map(group => 'group-' + group.stopGroupID), 'group-0'];
+  }
 
-    getGroupIdFromEvent(event: CdkDragDrop<any[]>): number | null {
-      const groupIdString = event.container.id.split('-')[1];
-      return groupIdString === null ? null : parseInt(groupIdString);
-    }
+  updateOrder() {
+    this.stopFetcher.updateStopOrder([this.stopGroups().map(stop => stop.stops).map(stops => stops.map(stop => stop.stopID)).flat(), this.privateStops().map(stop => stop.stopID)].flat());
+    this.stopsToUpdate().forEach(async stop => {
+      console.log("Updating Stop: " + stop.stopGroupID + stop.stopID);
+      console.log(await this.stopFetcher.updateStopStopGroupId(stop));
+    });
+    this.stopsToUpdate.set([]);
+    this.stopGroupFetcher.updateStopGroupOrder(this.stopGroups().map(group => group.stopGroupID));
+  }
 
-    getDropGroups(): string[] {
-        return [...this.stopGroups().map(group => 'group-' + group.stopGroupID), 'group-0'];
-    }
+  dropFromNoGroup(event: CdkDragDrop<any>) {
+    const currentGroupId = parseInt(event.container.id.split('-')[1]);
 
-    async initialiseStops() {
-        /*const stops = await this.stopFetcher.getAllStops();
-        if (stops) {
-            this.allStops.set(stops);
-        }*/
-    }
+    const stop = this.privateStops()[event.previousIndex];
+    stop.stopGroupID = currentGroupId;
+    this.stopsToUpdate.update(stops => [...stops, stop]);
 
-    updateOrder() {
-        this.stopGroupFetcher.updateStopGroupOrder(this.stopGroups().map(group => group.stopGroupID));
-        console.log(this.allStops().map(stop => stop.stopID));
-        this.stopFetcher.updateStopOrder(this.allStops().map(stop => stop.stopID));
-    }
+    transferArrayItem(
+      this.privateStops(),
+      this.stopGroups()
+        .find(group => group.stopGroupID === currentGroupId)!.stops,
+      event.previousIndex,
+      event.currentIndex
+    );
+
+
+    console.log(this.stopGroups())
+  }
+
+  dropFromGroup(event: CdkDragDrop<any[]>) {
+    const previousGroupId = parseInt(event.previousContainer.id.split('-')[1]);
+    const currentGroupId = parseInt(event.container.id.split('-')[1]);
+
+    transferArrayItem(
+      this.stopGroups()
+        .find(group => group.stopGroupID === previousGroupId)!.stops,
+      this.stopGroups()
+        .find(group => group.stopGroupID === currentGroupId)!.stops,
+      event.previousIndex,
+      event.currentIndex
+    );
+    const stop = this.stopGroups().find(group => group.stopGroupID === currentGroupId)!.stops[event.currentIndex];
+    stop.stopGroupID = currentGroupId;
+    this.stopsToUpdate.update(stops => [...stops, stop]);
+
+    console.log(this.stopGroups());
+  }
 }
