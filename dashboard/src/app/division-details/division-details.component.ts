@@ -4,6 +4,7 @@ import { DivisionService } from '../division.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { BASE_URL } from '../app.config';
+import { isValid } from '../utilfunctions';
 
 @Component({
   selector: 'app-division-details',
@@ -14,6 +15,9 @@ import { BASE_URL } from '../app.config';
 })
 export class DivisionDetailsComponent {
   private service: DivisionService = inject(DivisionService);
+  private route: ActivatedRoute = inject(ActivatedRoute);
+  private router: Router = inject(Router);
+
   baseUrl = inject(BASE_URL);
 
   divisionId = signal<number>(-1);
@@ -23,7 +27,7 @@ export class DivisionDetailsComponent {
   errorMessage = signal<string | null>(null);
   selectedFile: File | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.divisionId.set(params['id'] || -1);
       this.name.set(params['name'] || '');
@@ -50,8 +54,22 @@ export class DivisionDetailsComponent {
     }
   }
 
-  ngOnInit() {}
+  isInputValid(): boolean {
+    if (!isValid(this.name(), 50)) {
+      this.errorMessage.set('Name must be between 1 and 50 characters');
+      return false;
+    }
+    if (!isValid(this.color(), 7)) {
+      this.errorMessage.set('Color must be a valid hex color');
+      return false;
+    }
+    return true;
+  }
+
   async submitDivisionDetail() {
+    if (!this.isInputValid()) {
+      return;
+    }
     if (this.divisionId() === -1) {
       await this.service.addDivision({
         name: this.name(),
