@@ -66,6 +66,11 @@ builder.Services.AddScoped<StopFunctions>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "x-api-key";
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "default",
@@ -81,6 +86,8 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors("default");
+
+app.UseAntiforgery();
 
 app.MapStopGroupEndpoints();
 app.MapStopEndpoints();
