@@ -11,7 +11,6 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './divisions-list.component.css',
 })
 export class DivisionsListComponent implements OnInit {
-  constructor(private router: Router) {}
   divisions = signal<Division[]>([]);
 
   private service: DivisionService = inject(DivisionService);
