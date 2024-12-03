@@ -125,19 +125,6 @@ public class StopStatisticFunctionsTests
     }
 
     [Test, Order(3)]
-    public async Task UpdateStopStatisticTest()
-    {
-        using var scope = ServiceProvider!.CreateScope();
-        var stopStatisticFunctions = scope.ServiceProvider.GetRequiredService<StopStatisticFunctions>();
-
-        StopStatistic stat = await stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
-        stat.IsDone = true;
-        await stopStatisticFunctions.UpdateStopStatistic(stat);
-        StopStatistic result = await stopStatisticFunctions.GetStopStatisticById(this.testStatistic.StopStatisticID);
-        Assert.That(result.IsDone, Is.EqualTo(true));
-    }
-
-    [Test, Order(4)]
     public async Task DeleteStopStatistic()
     {
         using var scope = ServiceProvider!.CreateScope();

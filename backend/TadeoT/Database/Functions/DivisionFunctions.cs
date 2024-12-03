@@ -61,8 +61,13 @@ public class DivisionFunctions(TadeoTDbContext context)
         }
         try
         {
-            this.context.ChangeTracker.Clear();
-            this.context.Divisions.Update(division);
+            await this.context
+                .Divisions
+                .Where(d => d.DivisionID == division.DivisionID)
+                .ExecuteUpdateAsync(d => d
+                    .SetProperty(d => d.Name, division.Name)
+                    .SetProperty(d => d.Color, division.Color)
+                    .SetProperty(d => d.Image, division.Image));
             await this.context.SaveChangesAsync();
         } catch (Exception e)
         {
