@@ -88,7 +88,7 @@ public class DivisionsController(
     }
     
     [HttpPut("api/divisions/{divisionId}")] 
-    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivsionDto division , [FromForm] IFormFile image) {
+    public async Task<IActionResult> UpdateDivision(int divisionId, [FromBody] RequestDivisionDto division , [FromForm] IFormFile image) {
         try {
             if (image == null || image.Length == 0)
                 return BadRequest("No image uploaded.");
