@@ -64,7 +64,19 @@ public class StopGroupFunctions(TadeoTDbContext context)
         try
         {
             this.context.ChangeTracker.Clear();
-            this.context.StopGroups.Update(group);
+
+            StopGroup sg = this.GetStopGroupById(group.StopGroupID).Result;
+
+            await this.context
+                .StopGroups
+                .Where(sg => sg.StopGroupID == group.StopGroupID)
+                .ExecuteUpdateAsync(g => g
+                    .SetProperty(g => g.Name, group.Name)
+                    .SetProperty(g => g.Description, group.Description)
+                    .SetProperty(g => g.IsPublic, group.IsPublic)
+                    .SetProperty(g => g.StopGroupOrder, group.StopGroupOrder)
+                );
+            // TODO: this.context.StopGroups.ExecuteUpdateAsync(group);
             await this.context.SaveChangesAsync();
         } catch (Exception e)
         {
