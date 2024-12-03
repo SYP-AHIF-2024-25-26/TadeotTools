@@ -16,9 +16,15 @@ public class ApiKeyMiddleware
         _next = next;
     }
 
+
     public async Task InvokeAsync(HttpContext context)
     {
         this._apiKeyRepository = context.RequestServices.GetRequiredService<APIKeyFunctions>();
+        if (context.Request.Method == HttpMethods.Options)
+        {
+            context.Response.StatusCode = StatusCodes.Status204NoContent;
+            return;
+        }
         // Only apply to api routes
         if (context.Request.Path.ToString().Contains("api"))
         {
@@ -42,21 +48,24 @@ public class ApiKeyMiddleware
 
     private async Task<bool> IsValidApiKey(string userApiKey)
     {
-        List<string> systemApiKeys = (await _apiKeyRepository.GetAllAPIKeys()).Select(ak => ak.APIKeyValue).ToList();
+        // Fetch and store system API keys in a HashSet for faster lookups
+        HashSet<string> systemApiKeys = (await _apiKeyRepository.GetAllAPIKeys())
+            .Select(ak => ak.APIKeyValue)
+            .ToHashSet();
 
+        // Compare using FixedTimeEquals for security
         byte[] userApiKeyBytes = Encoding.UTF8.GetBytes(userApiKey);
 
-        bool result = false;
-
-        systemApiKeys.ForEach(systemApiKey =>
+        foreach (var systemApiKey in systemApiKeys)
         {
             byte[] systemApiKeyBytes = Encoding.UTF8.GetBytes(systemApiKey);
-
             if (CryptographicOperations.FixedTimeEquals(userApiKeyBytes, systemApiKeyBytes))
             {
-                result = true;
+                return true;
             }
-        });
-        return result;
+        }
+
+        return false;
     }
+
 }
