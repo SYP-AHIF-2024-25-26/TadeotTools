@@ -17,7 +17,7 @@ public static class DivisionEndpoints
         group.MapPost("api/divisions", CreateDivision);
         group.MapPut("api/divisions/{divisionId}", UpdateDivision);
         group.MapPut("api/divisions/{divisionId}/image", UpdateDivisionImage).DisableAntiforgery();
-        group.MapGet("api/divisions/{divisionId}/image", GetImageByDivisionId).DisableAntiforgery();
+        group.MapGet("divisions/{divisionId}/image", GetImageByDivisionId).DisableAntiforgery();
     }
     
     public static async Task<IResult> GetDivisions(
