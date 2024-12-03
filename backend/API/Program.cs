@@ -15,26 +15,21 @@ using TadeoT.Database.Functions;
     builder.Services.AddScoped<DivisionFunctions>();
     builder.Services.AddScoped<APIKeyFunctions>();
     builder.Services.AddControllers();
-    builder.Services.AddCors(options =>
-    {
-        options.AddPolicy(name: "default",
-            policy =>
-            {
-                policy
-                    .AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-            });
-    });
-
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 }
 
+builder.Services.AddCors(options =>  
+{  
+    options.AddPolicy(name: "default",  
+        policy  =>  
+        {  
+            policy.WithOrigins("http://localhost:4200"); // add the allowed origins  
+        });  
+});  
+
 var app = builder.Build();
 
-app.UseRouting();
-app.UseCors("default");
 app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 if (app.Environment.IsDevelopment())
@@ -48,6 +43,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ApiKeyMiddleware>();
+app.UseRouting();
+app.UseCors("default");
 
 
 app.Run();*/
@@ -96,6 +93,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseMiddleware<ApiKeyMiddleware>();  // Add the ApiKeyMiddleware here
+//app.UseMiddleware<ApiKeyMiddleware>();  // Add the ApiKeyMiddleware here
 
 app.Run();
