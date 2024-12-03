@@ -1,4 +1,4 @@
-import { Component, inject, Input, signal, ViewChildren, WritableSignal } from '@angular/core';
+import { Component, computed, inject, Input, signal, ViewChildren, WritableSignal } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
@@ -25,6 +25,7 @@ export class StopPageComponent {
   parentStopGroup: WritableSignal<StopGroup> = signal({} as StopGroup);
   stops: WritableSignal<Stop[]> = signal([]);
   divisions: WritableSignal<Division[]> = signal([]);
+  divisionIds = computed(() => Array.from(new Set(this.stops().map((stop) => stop.divisionID))).sort((a, b) => a - b));
 
   async ngOnInit() {
     if (this.stopGroupId === undefined) {

@@ -6,7 +6,7 @@
 
   <div class="flex flex-col justify-center">
     @if (stops().length > 1) {
-      <app-description-container [title]="parentStopGroup().name" [description]="parentStopGroup().description" />
+      <app-description-container [title]="parentStopGroup().name" [description]="parentStopGroup().description" [divisionIds]="divisionIds()" />
       @for (stop of stops(); track stop.stopID) {
         <app-stop-card
           (onChange)="setProgress()"
