@@ -55,14 +55,9 @@ public class StopsController(
     {
         try
         {
-            StopGroup? stopGroup = null;
-            try
-            {
-                stopGroup = await stopGroups.GetStopGroupById(stop.StopGroupID);
-            }
-            catch (TadeoTNotFoundException)
-            {
-            }
+            StopGroup? stopGroup = 
+                stop.StopGroupID == null ? 
+                    null : await stopGroups.GetStopGroupById(Convert.ToInt32(stop.StopGroupID));
 
             if (stop.Name.Length > 50)
             {
@@ -107,15 +102,9 @@ public class StopsController(
     {
         try
         {
-            try
-            {
-                await stopGroups.GetStopGroupById(stop.StopGroupID);
-            }
-            catch (TadeoTNotFoundException)
-            {
-                return NotFound("StopGroup not found");
-            }
-
+            StopGroup? stopGroup = 
+                stop.StopGroupID == null ? 
+                    null : await stopGroups.GetStopGroupById(Convert.ToInt32(stop.StopGroupID));
             try
             {
                 await divisions.GetDivisionById(stop.DivisionID);
@@ -127,20 +116,20 @@ public class StopsController(
 
             if (stop.Name.Length > 50)
             {
-                return NotFound("Invalid Name");
+                return BadRequest("Invalid Name");
             }
 
             if (stop.Description.Length > 255)
             {
-                return NotFound("Invalid Description");
+                return BadRequest("Invalid Description");
             }
 
             if (stop.RoomNr.Length > 5)
             {
-                return NotFound("Invalid RoomNr");
+                return BadRequest("Invalid RoomNr");
             }
 
-            await stops.GetStopById(stopId);
+            var oldStop = await stops.GetStopById(stopId);
 
             await stops.UpdateStop(new Stop
             {
@@ -149,9 +138,12 @@ public class StopsController(
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
                 Division = await divisions.GetDivisionById(stop.DivisionID),
-                StopGroup = await stopGroups.GetStopGroupById(stop.StopGroupID)
+                StopGroupID = stop.StopGroupID,
+                DivisionID = stop.DivisionID,
+                StopGroup = stopGroup,
+                StopOrder = oldStop.StopOrder
             });
-            return Ok();
+            return Ok(stop.StopGroupID);
         }
         catch (TadeoTNotFoundException)
         {

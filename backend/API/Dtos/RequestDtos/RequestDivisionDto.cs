@@ -1,6 +1,6 @@
 namespace API.RequestDtos;
 
-public class RequestDivsionDto
+public class RequestDivisionDto
 {
     public required string Name { get; set; }
     public required string Color { get; set; }
