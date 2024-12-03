@@ -32,8 +32,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
-app.UseCors("default");
 app.UseRouting();
+app.UseCors("default");
+app.UseEndpoints(endpoints => endpoints.MapControllers());
 
 if (app.Environment.IsDevelopment())
 {
@@ -47,6 +48,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ApiKeyMiddleware>();
 
-app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 app.Run();
