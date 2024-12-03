@@ -13,6 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     { provide: BASE_URL, useValue: 'http://localhost:5000/v1' },
     provideRouter(routes),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch())
   ],
 };

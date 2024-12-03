@@ -1,20 +1,21 @@
 import {Component, inject, signal} from '@angular/core';
 import {Stop, StopGroup, StopGroupWithStops} from "../types";
-import {StopgroupService} from "../stopgroup.service";
+import {StopGroupService} from "../stopgroup.service";
 import {StopService} from "../stop.service";
 import {CdkDragDrop, moveItemInArray, transferArrayItem, CdkDropList, CdkDrag} from "@angular/cdk/drag-drop";
 import {group} from "@angular/animations";
 import {window} from "rxjs";
+import {RouterLink} from "@angular/router";
 
 @Component({
     selector: 'app-stopgroups',
     standalone: true,
-    imports: [CdkDropList, CdkDrag],
+  imports: [CdkDropList, CdkDrag, RouterLink],
     templateUrl: './stopgroups.component.html',
     styleUrl: './stopgroups.component.css'
 })
 export class StopgroupsComponent {
-  stopGroupFetcher = inject(StopgroupService);
+  stopGroupFetcher = inject(StopGroupService);
   stopFetcher = inject(StopService);
 
   stopGroups = signal<StopGroupWithStops[]>([]);
@@ -23,6 +24,7 @@ export class StopgroupsComponent {
 
   constructor() {
     this.getStopGroups();
+    console.log(this.stopGroups());
     console.log('TEst');
     this.getPrivateStops();
   }
