@@ -1,5 +1,6 @@
 import { Component, inject, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { BASE_URL } from '../app.config';
 
 @Component({
   selector: 'app-description-container',
@@ -12,6 +13,9 @@ export class DescriptionContainerComponent {
   @Input({ required: true }) title!: string;
   @Input({ required: true }) description!: string;
   @Input() roomNr: string | undefined;
+  @Input() divisionIds: number[] | undefined;
+
+  protected baseUrl = inject(BASE_URL);
 
   protected router = inject(Router);
 }
