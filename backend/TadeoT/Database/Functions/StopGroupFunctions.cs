@@ -63,10 +63,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
         }
         try
         {
-            this.context.ChangeTracker.Clear();
-
-            StopGroup sg = this.GetStopGroupById(group.StopGroupID).Result;
-
+            // this.context.ChangeTracker.Clear();
             await this.context
                 .StopGroups
                 .Where(sg => sg.StopGroupID == group.StopGroupID)
