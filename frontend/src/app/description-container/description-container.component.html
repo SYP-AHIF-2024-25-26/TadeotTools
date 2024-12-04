@@ -1,15 +1,15 @@
 <div class="mx-4 max-w-full overflow-x-hidden rounded-lg bg-white shadow-md">
   <div class="p-6">
-    <div class="flex justify-between">
-      <div class="flex flex-col">
-        <h2 class="mb-4 break-words text-3xl font-medium text-gray-800">{{ title }}</h2>
+    <div class="flex">
+      <div class="flex flex-col w-4/5">
+        <h2 class="mb-4 mr-2 break-words text-2xl font-medium text-gray-800">{{ title }}</h2>
         @if (roomNr === undefined) {
-          <p class="text-lg font-normal text-gray-600">
+          <p class="mb-4 self-start text-lg font-normal text-gray-600">
             {{ description }}
           </p>
         }
         @if (roomNr !== undefined) {
-          <h3 class="mb-4 break-words text-2xl font-medium text-gray-800">Raum: {{ roomNr }}</h3>
+          <h3 class="mb-4 break-words text-xl font-medium text-gray-800">Raum: {{ roomNr }}</h3>
           <p class="mb-4 self-start text-lg font-normal text-gray-600">
             {{ description }}
           </p>
@@ -19,9 +19,9 @@
         }
       </div>
       @if (divisionIds !== undefined) {
-        <div class="mx-2 flex w-20 max-w-20 flex-col justify-normal">
+        <div class="mx-2 flex max-w-10 flex-col">
           @for (divisionId of divisionIds; track $index) {
-            <img class="mb-1 mt-1 object-cover" [src]="baseUrl + '/v1/divisions/' + divisionId + '/image'" alt="Division Picture will load here" />
+            <img class="mb-2 object-cover" [src]="baseUrl + '/v1/divisions/' + divisionId + '/image'" alt="Division Picture will load here" />
           }
         </div>
       }
