@@ -20,7 +20,7 @@ public static class StopGroupEndpoints
         group.MapDelete("api/groups/{groupId}", DeleteGroup);
         group.MapPut("api/groups/order", UpdateOrder);
     }
-    
+
     public static async Task<IResult> GetGroups(
         StopGroupFunctions stopGroups
     )
@@ -50,14 +50,21 @@ public static class StopGroupEndpoints
     {
         try
         {
-            return Results.Ok(await stopGroups.GetAllStopGroups());
+            var allStopGroups = await stopGroups.GetAllStopGroups();
+            return Results.Ok(allStopGroups.Select(stopGroup => new ResponseApiStopGroupDto()
+            {
+                StopGroupID = stopGroup.StopGroupID,
+                Name = stopGroup.Name,
+                Description = stopGroup.Description,
+                IsPublic = stopGroup.IsPublic
+            }));
         }
         catch (TadeoTDatabaseException)
         {
             return Results.StatusCode(500);
         }
     }
-    
+
     public static async Task<IResult> CreateGroup(
         [FromBody] RequestStopGroupDto group,
         StopGroupFunctions stopGroups
