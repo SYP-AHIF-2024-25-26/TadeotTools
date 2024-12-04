@@ -1,4 +1,4 @@
-# TadeotTools
+# TadeoTTools
 
 ## Sprint Planung
 1. Milestone 8. Oktober: GUI-Mockups für Mobile als Prototyp

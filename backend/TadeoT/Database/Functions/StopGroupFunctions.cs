@@ -98,6 +98,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
         {
             return await this.context.Stops
                         .Where(s => s.StopGroupID == groupId)
+                        .OrderBy(s => s.StopOrder)
                         .ToListAsync();
         } catch (Exception e)
         {
@@ -107,8 +108,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
 
     public async Task MoveStopGroupUp(int groupId)
     {
-        StopGroup group = await this.GetStopGroupById(groupId);
-        if (group == null) return;
+        var group = await this.GetStopGroupById(groupId);
 
         var aboveItem = await context.StopGroups
             .Where(i => i.StopGroupOrder < group.StopGroupOrder)
@@ -127,8 +127,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
 
     public async Task MoveStopGroupDown(int stopId)
     {
-        StopGroup group = await this.GetStopGroupById(stopId);
-        if (group == null) return;
+        var group = await this.GetStopGroupById(stopId);
 
         var aboveItem = await context.StopGroups
             .Where(i => i.StopGroupOrder > group.StopGroupOrder)

@@ -1,3 +1,4 @@
+using API.Dtos.ResponseDtos;
 using API.RequestDtos;
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
@@ -13,8 +14,10 @@ public class DivisionsController(
 ) : ControllerBase {
     [HttpGet("divisions")]
     public async Task<IActionResult> GetDivisions() {  
-        try {
-            return Ok(await divisions.GetAllDivisions());
+        try
+        {
+            var allDivisions = await divisions.GetAllDivisions();
+            return Ok(allDivisions.Select(division => ResponseDivisionDto.FromDivision(division)));
         }
         catch (Exception) {
             return StatusCode(500, "Internal server error!");
@@ -90,22 +93,6 @@ public class DivisionsController(
     {
         try
         {
-            var imagePath = "./../../assets/datamodel.png";
-
-            if (!System.IO.File.Exists(imagePath))
-            {
-                throw new FileNotFoundException("Image file not found.", imagePath);
-            }
-
-
-            await divisions.AddDivision(new Division()
-            {
-                Name = "Test",
-                Color = "#333333",
-                Image = System.IO.File.ReadAllBytes(imagePath)
-            });
-            
-            Console.WriteLine(divisionId);
             var division = await divisions.GetDivisionById(divisionId);
             if (division.Image == null)
             {
