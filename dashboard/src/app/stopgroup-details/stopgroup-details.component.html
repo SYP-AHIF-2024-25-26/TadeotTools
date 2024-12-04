@@ -48,16 +48,18 @@
   </form>
   <div>
     <button
-      (click)="deleteAndGoBack()"
-      class="mt-4 mr-4 bg-htl-orange p-2 rounded text-white"
-    >
-      Delete and go back
-    </button>
-    <button
       [routerLink]="['/stopgroups']"
       class="bg-htl-orange p-2 rounded text-white"
     >
       Go Back (without submit)
     </button>
+    @if (stopGroupId() != -1) {
+    <button
+      (click)="deleteAndGoBack()"
+      class="mt-4 mr-4 bg-htl-orange p-2 rounded text-white"
+    >
+      Delete and go back
+    </button>
+    }
   </div>
 </div>
