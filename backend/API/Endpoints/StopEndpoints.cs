@@ -13,7 +13,7 @@ public static class StopEndpoints
     public static void MapStopEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("v1");
-        group.MapGet("api/groups", GetAllStops);
+        group.MapGet("api/stops", GetAllStops);
         group.MapGet("api/stops/private", GetPrivateStops);
         group.MapGet("api/stops/{stopId}", GetStopById);
         group.MapPost("api/stops", CreateStop);
@@ -23,7 +23,7 @@ public static class StopEndpoints
         group.MapPut("api/stops/order", UpdateOrder);
     }
 
-    public static async Task<IResult> GetAllStops(
+    private static async Task<IResult> GetAllStops(
         StopFunctions stops
     )
     {
@@ -33,7 +33,7 @@ public static class StopEndpoints
         return Results.Ok(responseStops);
     }
 
-    public static async Task<IResult> GetPrivateStops(
+    private static async Task<IResult> GetPrivateStops(
         StopFunctions stops
     )
     {
@@ -46,7 +46,7 @@ public static class StopEndpoints
     }
 
     [HttpGet("api/stops/{stopId}")]
-    public static async Task<IResult> GetStopById(
+    private static async Task<IResult> GetStopById(
         int stopId,
         StopFunctions stops
     )
@@ -62,7 +62,7 @@ public static class StopEndpoints
         }
     }
 
-    public static async Task<IResult> CreateStop(
+    private static async Task<IResult> CreateStop(
         [FromBody] RequestStopDto stop,
         StopFunctions stops,
         StopGroupFunctions stopGroups,
@@ -71,9 +71,6 @@ public static class StopEndpoints
     {
         try
         {
-            StopGroup? stopGroup =
-                stop.StopGroupID == null ? null : await stopGroups.GetStopGroupById(Convert.ToInt32(stop.StopGroupID));
-
             if (stop.Name.Length > 50)
             {
                 return Results.BadRequest("Invalid Name");
@@ -94,8 +91,8 @@ public static class StopEndpoints
                 Name = stop.Name,
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
-                Division = await divisions.GetDivisionById(stop.DivisionID),
-                StopGroup = stopGroup
+                DivisionID = stop.DivisionID,
+                StopGroupID = stop.StopGroupID,
             };
 
             stopToAdd.StopID = await stops.AddStop(stopToAdd);
@@ -112,7 +109,7 @@ public static class StopEndpoints
         }
     }
 
-    public static async Task<IResult> UpdateStop(
+    private static async Task<IResult> UpdateStop(
         int stopId,
         [FromBody] RequestStopDto stop,
         StopGroupFunctions stopGroups,
@@ -122,8 +119,6 @@ public static class StopEndpoints
     {
         try
         {
-            StopGroup? stopGroup =
-                stop.StopGroupID == null ? null : await stopGroups.GetStopGroupById(Convert.ToInt32(stop.StopGroupID));
             try
             {
                 await divisions.GetDivisionById(stop.DivisionID);
@@ -156,10 +151,8 @@ public static class StopEndpoints
                 Name = stop.Name,
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
-                Division = await divisions.GetDivisionById(stop.DivisionID),
                 StopGroupID = stop.StopGroupID,
                 DivisionID = stop.DivisionID,
-                StopGroup = stopGroup,
                 StopOrder = oldStop.StopOrder
             });
             return Results.Ok(stop.StopGroupID);
@@ -174,7 +167,7 @@ public static class StopEndpoints
         }
     }
 
-    public static async Task<IResult> DeleteStop(
+    private static async Task<IResult> DeleteStop(
         int stopId,
         StopFunctions stops
     )
@@ -195,7 +188,7 @@ public static class StopEndpoints
         }
     }
 
-    public static async Task<IResult> GetStopsByGroupId(
+    private static async Task<IResult> GetStopsByGroupId(
         int groupId,
         StopFunctions stops,
         StopGroupFunctions stopGroups
@@ -219,7 +212,7 @@ public static class StopEndpoints
         }
     }
 
-    public static async Task<IResult> UpdateOrder(
+    private static async Task<IResult> UpdateOrder(
         RequestOrderDto order,
         StopFunctions stops
     )
