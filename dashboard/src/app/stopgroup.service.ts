@@ -1,9 +1,9 @@
-import { inject, Injectable } from '@angular/core';
-import { Stop, StopGroup, StopGroupWithStops } from './types';
-import { StopService } from './stop.service';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom, map } from 'rxjs';
-import { BASE_URL } from './app.config';
+import {inject, Injectable} from '@angular/core';
+import {Stop, StopGroup, StopGroupWithStops} from './types';
+import {StopService} from './stop.service';
+import {HttpClient} from '@angular/common/http';
+import {firstValueFrom, map} from 'rxjs';
+import {BASE_URL} from './app.config';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +15,13 @@ export class StopGroupService {
 
   async getStopGroups(): Promise<StopGroupWithStops[]> {
     const stopGroups = await firstValueFrom(
-      this.httpClient.get<StopGroup[]>(this.baseUrl + '/groups')
+      this.httpClient.get<StopGroup[]>(this.baseUrl + '/api/groups', {
+        headers: {
+          'X-Api-Key': localStorage.getItem('API_KEY') ?? '',
+        },
+      })
     );
+    console.log(stopGroups.map((group) => group.stopGroupID));
     const stopGroupsWithStops = stopGroups.map((group) => {
       return {
         ...group,
@@ -62,6 +67,7 @@ export class StopGroupService {
   }
 
   async updateStopGroup(stopGroup: StopGroup) {
+    console.log(typeof(stopGroup.isPublic));
     await firstValueFrom(
       this.httpClient.put(
         this.baseUrl + `/api/groups/${stopGroup.stopGroupID}`,
