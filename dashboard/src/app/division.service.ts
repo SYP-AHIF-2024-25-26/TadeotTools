@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { BASE_URL } from './app.config';
-import { firstValueFrom } from 'rxjs';
-import { Division } from './types';
+import {HttpClient} from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {BASE_URL} from './app.config';
+import {firstValueFrom} from 'rxjs';
+import {Division} from './types';
 
 @Injectable({
   providedIn: 'root',
@@ -11,12 +11,11 @@ export class DivisionService {
   private readonly httpClient = inject(HttpClient);
   private readonly baseUrl = inject(BASE_URL);
 
-  constructor() {}
+  constructor() {
+  }
 
-  async getDivisions(): Promise<Division[]> {
-    return firstValueFrom(
-      this.httpClient.get<Division[]>(`${this.baseUrl}/divisions`)
-    );
+  public async getDivisions(): Promise<Division[]> {
+    return firstValueFrom(this.httpClient.get<Division[]>(this.baseUrl + '/divisions'));
   }
 
   async addDivision(division: { name: string; color: string }): Promise<void> {
@@ -35,6 +34,7 @@ export class DivisionService {
       )
     );
   }
+
   async updateDivisionImg(divisionID: number, image: File): Promise<void> {
     const formData = new FormData();
     formData.append('image', image);

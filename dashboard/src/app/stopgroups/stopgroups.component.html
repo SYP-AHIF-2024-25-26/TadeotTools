@@ -1,4 +1,25 @@
-<button (click)="updateOrder()" class="bg-blue-600 h-fit p-1.5 m-1.5 w-fit rounded text-white">Save Changes</button>
+<div class="flex justify-between mr-10 ml-10 mt-5">
+  <div>
+    <button (click)="updateOrder()" class="bg-blue-600 h-fit p-1.5 m-1.5 w-fit rounded text-white">Save Changes</button>
+    <button (click)="initialiseData()" [disabled]="!hasChanged()"
+            class="bg-blue-600 h-fit p-1.5 m-1.5 w-fit rounded text-white disabled:bg-gray-400">Cancel
+    </button>
+  </div>
+
+  <div>
+    <button
+      [routerLink]="['/stopgroup']"
+      class="text-white p-1.5 m-1.5 bg-gray-700 appearance-none border rounded border-transparent">
+      Add StopGroup
+    </button>
+
+    <button
+      [routerLink]="['/stop']"
+      class="text-white p-1.5 m-1.5 bg-gray-700 appearance-none border rounded border-transparent">
+      Add Stop
+    </button>
+  </div>
+</div>
 
 <div class="flex">
   <div (cdkDropListDropped)="dropGroup($event)"
@@ -25,18 +46,17 @@
         >
           <p>Stops</p>
           @for (stop of group.stops; track stop.stopID) {
-            <div class="mb-1 bg-gray-400 p-3 rounded-l"
+            <div class="mb-1 p-3 rounded-l flex justify-between items-center cursor-grab"
+                 [ngStyle]="{ 'background-color': getColorCodeByStopId(stop.divisionID) }"
                  cdkDrag
             >
-              <div class="flex justify-between">
-                <p>{{ stop.name }}</p>
-                <button
-                  class="text-white p-1.5 my-1 bg-gray-700 appearance-none border rounded border-transparent"
-                  [routerLink]="['/stop']"
-                  [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: group.stopGroupID }">
-                  Details
-                </button>
-              </div>
+              <p class="ml-5">{{ stop.name }}</p>
+              <button
+                class="text-white p-1 my-1 bg-gray-700 appearance-none border rounded border-transparent"
+                [routerLink]="['/stop']"
+                [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: group.stopGroupID }">
+                Details
+              </button>
             </div>
           }
         </div>
@@ -52,19 +72,17 @@
          id='group-0'>
       <p>Unassigned Stops</p>
       @for (stop of privateStops(); track stop.stopID) {
-        <div class="mb-1 bg-gray-400 p-3 rounded-l"
+        <div class="mb-1 p-3 rounded-l cursor-grab flex items-center justify-between"
+             [ngStyle]="{ 'background-color': getColorCodeByStopId(stop.divisionID) }"
              cdkDrag
         >
-          <div class="flex justify-between">
-
-            <p>{{ stop.name }}</p>
-            <button
-              class="text-white p-1.5 my-1 bg-gray-700 appearance-none border rounded border-transparent"
-              [routerLink]="['/stop']"
-              [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: stop.stopGroupID }">
-              Details
-            </button>
-          </div>
+          <p>{{ stop.name }}</p>
+          <button
+            class="text-white p-1.5 my-1 bg-gray-700 appearance-none border rounded border-transparent"
+            [routerLink]="['/stop']"
+            [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: stop.stopGroupID }">
+            Details
+          </button>
         </div>
       }
     </div>
