@@ -1,28 +1,39 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {Stop, StopGroupWithStops} from "../types";
+import {Division, Stop, StopGroupWithStops} from "../types";
 import {StopGroupService} from "../stopgroup.service";
 import {StopService} from "../stop.service";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {RouterLink} from "@angular/router";
+import {DivisionService} from "../division.service";
+import {NgClass, NgStyle} from "@angular/common";
 
 @Component({
   selector: 'app-stopgroups',
   standalone: true,
-  imports: [CdkDropList, CdkDrag, RouterLink],
+  imports: [CdkDropList, CdkDrag, RouterLink, NgClass, NgStyle],
   templateUrl: './stopgroups.component.html',
   styleUrl: './stopgroups.component.css'
 })
 export class StopGroupsComponent implements OnInit {
   stopGroupFetcher = inject(StopGroupService);
   stopFetcher = inject(StopService);
+  divisionFetcher = inject(DivisionService);
+  hasChanged = signal<boolean>(false);
 
   stopGroups = signal<StopGroupWithStops[]>([]);
   privateStops = signal<Stop[]>([]);
   stopsToUpdate = signal<Stop[]>([]);
+  divisions = signal<Division[]>([]);
 
   async ngOnInit() {
+    await this.initialiseData();
+  }
+
+  async initialiseData() {
+    await this.getDivisions();
     await this.getStopGroups();
     await this.getPrivateStops();
+    this.hasChanged.set(false);
   }
 
   // Fetching Functions for StopGroups and PrivateStops
@@ -35,9 +46,16 @@ export class StopGroupsComponent implements OnInit {
     this.privateStops.set(stops);
   }
 
+  async getDivisions() {
+    const divisions = await this.divisionFetcher.getDivisions();
+    console.log(divisions);
+    this.divisions.set(divisions);
+  }
+
   // Drag and Drop Function for Groups
   dropGroup(event: CdkDragDrop<any[]>) {
     moveItemInArray(this.stopGroups(), event.previousIndex, event.currentIndex);
+    this.hasChanged.set(true);
   }
 
   // Drag and Drop Function for Stops
@@ -45,6 +63,7 @@ export class StopGroupsComponent implements OnInit {
     const previousGroupId = parseInt(event.previousContainer.id.split('-')[1]);
     const currentGroupId = parseInt(event.container.id.split('-')[1]);
 
+    this.hasChanged.set(true);
     if (previousGroupId === 0 && currentGroupId === 0) {
       this.dropStopFromUnassignedToUnassigned(event);
     } else if (currentGroupId === 0) {
@@ -116,5 +135,10 @@ export class StopGroupsComponent implements OnInit {
 
   getDropGroups(): string[] {
     return [...this.stopGroups().map(group => 'group-' + group.stopGroupID), 'group-0'];
+  }
+
+  getColorCodeByStopId(divisionId: number): string {
+    console.log(this.divisions());
+    return this.divisions().find(division => division.divisionID === divisionId)!.color;
   }
 }

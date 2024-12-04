@@ -26,5 +26,4 @@ export type Division = {
   divisionID: number;
   name: string;
   color: string;
-  image: File | null;
 };

@@ -25,18 +25,17 @@
         >
           <p>Stops</p>
           @for (stop of group.stops; track stop.stopID) {
-            <div class="mb-1 bg-gray-400 p-3 rounded-l"
+            <div class="mb-1 p-3 rounded-l flex justify-between items-center cursor-grab"
+                 [ngStyle]="{ 'background-color': getColorCodeByStopId(stop.divisionID) }"
                  cdkDrag
             >
-              <div class="flex justify-between">
-                <p>{{ stop.name }}</p>
-                <button
-                  class="text-white p-1.5 my-1 bg-gray-700 appearance-none border rounded border-transparent"
-                  [routerLink]="['/stop']"
-                  [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: group.stopGroupID, divisionID: stop.divisionID}">
-                  Details
-                </button>
-              </div>
+              <p class="ml-5">{{ stop.name }}</p>
+              <button
+                class="text-white p-1 my-1 bg-gray-700 appearance-none border rounded border-transparent"
+                [routerLink]="['/stop']"
+                [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: group.stopGroupID }">
+                Details
+              </button>
             </div>
           }
         </div>
@@ -52,19 +51,17 @@
          id='group-0'>
       <p>Unassigned Stops</p>
       @for (stop of privateStops(); track stop.stopID) {
-        <div class="mb-1 bg-gray-400 p-3 rounded-l"
+        <div class="mb-1 p-3 rounded-l cursor-grab flex items-center justify-between"
+             [ngStyle]="{ 'background-color': getColorCodeByStopId(stop.divisionID) }"
              cdkDrag
         >
-          <div class="flex justify-between">
-
-            <p>{{ stop.name }}</p>
-            <button
-              class="text-white p-1.5 my-1 bg-gray-700 appearance-none border rounded border-transparent"
-              [routerLink]="['/stop']"
-              [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: stop.stopGroupID }">
-              Details
-            </button>
-          </div>
+          <p>{{ stop.name }}</p>
+          <button
+            class="text-white p-1.5 my-1 bg-gray-700 appearance-none border rounded border-transparent"
+            [routerLink]="['/stop']"
+            [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: stop.stopGroupID }">
+            Details
+          </button>
         </div>
       }
     </div>
