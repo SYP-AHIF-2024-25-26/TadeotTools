@@ -67,11 +67,13 @@
     >
       Go Back (without submit)
     </button>
+    @if (stopId() != -1) {
     <button
       (click)="deleteAndGoBack()"
       class="mt-4 mr-4 bg-htl-orange p-2 rounded text-white"
     >
       Delete and go back
     </button>
+    }
   </div>
 </div>
