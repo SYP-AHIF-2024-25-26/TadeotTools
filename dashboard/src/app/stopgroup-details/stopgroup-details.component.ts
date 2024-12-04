@@ -28,7 +28,9 @@ export class StopgroupDetailsComponent implements OnInit {
       console.log('stopGroupId', this.stopGroupId());
       this.name.set(params['name'] || '');
       this.description.set(params['description'] || '');
-      this.isPublic.set(params['isPublic'] || false);
+      let isPublic = params['isPublic'] || "";
+      this.isPublic.set(isPublic !== "" && isPublic === "true");
+      console.log("test: " + typeof(this.isPublic()));
     });
   }
 
@@ -59,7 +61,7 @@ export class StopgroupDetailsComponent implements OnInit {
         isPublic: this.isPublic(),
       });
     }
-    //this.router.navigate(['/stopgroups']);
+    this.router.navigate(['/stopgroups']);
   }
 
   deleteAndGoBack() {
