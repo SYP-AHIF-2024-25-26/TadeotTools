@@ -1,0 +1,25 @@
+services:
+  my-sql:
+    image: mysql:latest
+    container_name: tadeot-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_USER: user
+      MYSQL_PASSWORD: test
+    ports:
+      - 4100:3306
+    volumes:
+      - tadeot-data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    container_name: tadeot-tools-adminer
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - my-sql
+
+volumes:
+  tadeot-data:
