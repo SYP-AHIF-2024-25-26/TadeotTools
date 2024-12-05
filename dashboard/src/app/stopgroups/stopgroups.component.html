@@ -29,13 +29,12 @@
                  [ngStyle]="{ 'background-color': getColorCodeByStopId(stop.divisionID) }"
                  cdkDrag
             >
-              <p class="ml-5">{{ stop.name }}</p>
-              <button
-                class="text-white p-1 my-1 bg-gray-700 appearance-none border rounded border-transparent"
-                [routerLink]="['/stop']"
-                [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: group.stopGroupID }">
-                Details
-              </button>
+              <div class="flex justify-between">
+                <p>{{ stop.name }}</p>
+                <button
+                  class="text-white p-1.5 my-1 bg-gray-700 appearance-none border rounded border-transparent"
+                  [routerLink]="['/stop']"
+              </div>
             </div>
           }
         </div>
