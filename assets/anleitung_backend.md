@@ -2,9 +2,9 @@
 1. Docker Desktop und tadeot container, welcher auf MySQL image mit :latest basiert, erstellen: 
     - Ports: 4100, 41000
     - env Variable: 
-        - MYSQL_USER=user
-        - MYSQL_PASSWORD=test
         - MYSQL_ROOT_PASSWORD=test 
+    - ODER:
+    - docker run --name tadeot-tools -e MYSQL_ROOT_PASSWORD=test -e MYSQL_DATABASE=tadeot -p 4100:3306 -d mysql:latest
 2. Container run
 3. Datagrip öffnen und mit DB verbinden
     - Configure Data source
