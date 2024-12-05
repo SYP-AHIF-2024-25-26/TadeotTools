@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: "default",
         policyBuilder =>
         {
-            policyBuilder.WithOrigins("http://localhost:4200");
+            policyBuilder.WithOrigins("http://localhost:4200", "http://localhost:4300");
             policyBuilder.AllowAnyHeader();
             policyBuilder.AllowAnyMethod();
             policyBuilder.AllowCredentials();
