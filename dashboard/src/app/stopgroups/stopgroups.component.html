@@ -1,4 +1,25 @@
-<button (click)="updateOrder()" class="bg-blue-600 h-fit p-1.5 m-1.5 w-fit rounded text-white">Save Changes</button>
+<div class="flex justify-between mr-10 ml-10 mt-5">
+  <div>
+    <button (click)="updateOrder()" [disabled]="!hasChanged()" class="bg-blue-600 h-fit p-1.5 m-1.5 w-fit rounded text-white disabled:bg-gray-400">Save Changes</button>
+    <button (click)="initialiseData()" [disabled]="!hasChanged()"
+            class="bg-blue-600 h-fit p-1.5 m-1.5 w-fit rounded text-white disabled:bg-gray-400">Cancel
+    </button>
+  </div>
+
+  <div>
+    <button
+      [routerLink]="['/stopgroup']"
+      class="text-white p-1.5 m-1.5 bg-gray-700 appearance-none border rounded border-transparent">
+      Add StopGroup
+    </button>
+
+    <button
+      [routerLink]="['/stop']"
+      class="text-white p-1.5 m-1.5 bg-gray-700 appearance-none border rounded border-transparent">
+      Add Stop
+    </button>
+  </div>
+</div>
 
 <div class="flex">
   <div (cdkDropListDropped)="dropGroup($event)"
@@ -33,7 +54,7 @@
               <button
                 class="text-white p-1 my-1 bg-gray-700 appearance-none border rounded border-transparent"
                 [routerLink]="['/stop']"
-                [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: group.stopGroupID }">
+                [queryParams]="{ id: stop.stopID, name: stop.name, description: stop.description, roomNr: stop.roomNr, stopGroupID: group.stopGroupID, divisionID: stop.divisionID }">
                 Details
               </button>
             </div>

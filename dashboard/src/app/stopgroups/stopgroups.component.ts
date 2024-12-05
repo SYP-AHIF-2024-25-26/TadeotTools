@@ -124,8 +124,9 @@ export class StopGroupsComponent implements OnInit {
 
     // Update the order of the stopGroups
     const stopGroupOrder = this.stopGroups().map(group => group.stopGroupID);
-    console.log(stopGroupOrder);
     this.stopGroupFetcher.updateStopGroupOrder(stopGroupOrder);
+
+    this.hasChanged.set(false);
   }
 
   getGroupIdFromEvent(event: CdkDragDrop<any[]>): number | null {
