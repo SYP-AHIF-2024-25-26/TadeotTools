@@ -1,11 +1,11 @@
 <div class="flex justify-between mr-10 ml-10 mt-5">
   <div>
-    <button (click)="updateOrder()" class="bg-blue-600 h-fit p-1.5 m-1.5 w-fit rounded text-white">Save Changes</button>
+    <button (click)="updateOrder()" [disabled]="!hasChanged()" class="bg-blue-600 h-fit p-1.5 m-1.5 w-fit rounded text-white disabled:bg-gray-400">Save Changes</button>
     <button (click)="initialiseData()" [disabled]="!hasChanged()"
             class="bg-blue-600 h-fit p-1.5 m-1.5 w-fit rounded text-white disabled:bg-gray-400">Cancel
     </button>
   </div>
- 
+
   <div>
     <button
       [routerLink]="['/stopgroup']"
