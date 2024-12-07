@@ -27,3 +27,9 @@ export type Division = {
   name: string;
   color: string;
 };
+
+export type Info = {
+  id: number;
+  type: 'info' | 'error';
+  message: string;
+}
