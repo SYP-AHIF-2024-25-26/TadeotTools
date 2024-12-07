@@ -1,16 +1,17 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {Division, Stop, StopGroupWithStops} from "../types";
+import {Division, Info, Stop, StopGroupWithStops} from "../types";
 import {StopGroupService} from "../stopgroup.service";
 import {StopService} from "../stop.service";
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {RouterLink} from "@angular/router";
 import {DivisionService} from "../division.service";
-import {NgClass, NgStyle} from "@angular/common";
+import {NgStyle} from "@angular/common";
+import {StopgroupsInfoPopupComponent} from "../stopgroups-info-popup/stopgroups-info-popup.component";
 
 @Component({
   selector: 'app-stopgroups',
   standalone: true,
-  imports: [CdkDropList, CdkDrag, RouterLink, NgClass, NgStyle],
+  imports: [CdkDropList, CdkDrag, RouterLink, NgStyle, StopgroupsInfoPopupComponent],
   templateUrl: './stopgroups.component.html',
   styleUrl: './stopgroups.component.css'
 })
@@ -24,6 +25,7 @@ export class StopGroupsComponent implements OnInit {
   privateStops = signal<Stop[]>([]);
   stopsToUpdate = signal<Stop[]>([]);
   divisions = signal<Division[]>([]);
+  infos = signal<Info[]>([]);
 
   async ngOnInit() {
     await this.initialiseData();
@@ -48,7 +50,6 @@ export class StopGroupsComponent implements OnInit {
 
   async getDivisions() {
     const divisions = await this.divisionFetcher.getDivisions();
-    console.log(divisions);
     this.divisions.set(divisions);
   }
 
@@ -129,6 +130,11 @@ export class StopGroupsComponent implements OnInit {
     this.hasChanged.set(false);
   }
 
+  deleteInfo(index: number) {
+    console.log("Deleting info with index: " + index);
+    this.infos.update(infos => infos.filter((info) => info.id !== index));
+  }
+
   getGroupIdFromEvent(event: CdkDragDrop<any[]>): number | null {
     const groupIdString = event.container.id.split('-')[1];
     return groupIdString === null ? null : parseInt(groupIdString);
@@ -139,7 +145,6 @@ export class StopGroupsComponent implements OnInit {
   }
 
   getColorCodeByStopId(divisionId: number): string {
-    console.log(this.divisions());
     return this.divisions().find(division => division.divisionID === divisionId)!.color;
   }
 }
