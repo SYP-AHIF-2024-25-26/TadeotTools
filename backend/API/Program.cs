@@ -20,19 +20,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: "default",
+    options.AddPolicy("test",
         policyBuilder =>
         {
-            policyBuilder.WithOrigins("http://localhost:4200");
-            policyBuilder.AllowAnyHeader();
-            policyBuilder.AllowAnyMethod();
-            policyBuilder.AllowCredentials();
+            policyBuilder.WithOrigins("http://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         });
 });
 
 var app = builder.Build();
 
-app.UseCors("default");
+app.UseCors("test");
 
 app.MapStopGroupEndpoints();
 app.MapStopEndpoints();
