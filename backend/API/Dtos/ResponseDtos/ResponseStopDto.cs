@@ -1,5 +1,5 @@
+using Core.Entities;
 using TadeoT.Database.Functions;
-using TadeoT.Database.Model;
 
 namespace API.Dtos.ResponseDtos;
 
@@ -16,12 +16,13 @@ public class ResponseStopDto
     {
         return new ResponseStopDto()
         {
-            StopID = stop.StopID,
+            StopID = stop.Id,
             Name = stop.Name,
             Description = stop.Description,
             RoomNr = stop.RoomNr,
-            StopGroupID = stop.StopGroupID,
-            DivisionID = stop.DivisionID
+            // TODO: Handle relations to StopGroup and Division correctly!
+            StopGroupID = -1,
+            DivisionID = -1
         };
     }
 }

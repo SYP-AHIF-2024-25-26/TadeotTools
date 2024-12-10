@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TadeoT.Database.Model;
+namespace Core.Entities;
 public class APIKey
 {
     public required string APIKeyValue { get; set; }

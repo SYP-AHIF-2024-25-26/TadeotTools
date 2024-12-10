@@ -1,4 +1,5 @@
-using TadeoT.Database.Model;
+
+using Core.Entities;
 
 namespace API.Dtos.ResponseDtos;
 
@@ -12,7 +13,7 @@ public class ResponseDivisionDto
     {
         return new ResponseDivisionDto()
         {
-            DivisionID = division.DivisionID,
+            DivisionID = division.Id,
             Name = division.Name,
             Color = division.Color
         };

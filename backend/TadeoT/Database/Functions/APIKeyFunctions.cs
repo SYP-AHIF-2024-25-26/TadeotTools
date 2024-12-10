@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TadeoT.Database.Model;
+﻿using Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace TadeoT.Database.Functions;
 

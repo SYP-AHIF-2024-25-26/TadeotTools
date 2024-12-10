@@ -1,10 +1,10 @@
 using API.Dtos.RequestDtos;
 using API.Dtos.ResponseDtos;
 using API.RequestDto;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
-using TadeoT.Database.Model;
 
 namespace API.Endpoints;
 
@@ -40,7 +40,8 @@ public static class StopEndpoints
         var allStops = await stops.GetAllStops();
         List<ResponseStopDto> responseStops = new();
         allStops
-            .Where(stop => stop.StopGroupID == null).ToList()
+            // TODO: rewrite query. Assignment could also be null if they were not included in the database query
+            .Where(stop => stop.StopGroupAssignments.Count == 0).ToList()
             .ForEach(stop => { responseStops.Add(ResponseStopDto.FromStop(stop)); });
         return Results.Ok(responseStops);
     }
@@ -91,11 +92,12 @@ public static class StopEndpoints
                 Name = stop.Name,
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
-                DivisionID = stop.DivisionID,
-                StopGroupID = stop.StopGroupID,
+                // TODO: handle relations to division and stopgroup properly
+                //DivisionID = stop.DivisionID,
+                //StopGroupID = stop.StopGroupID,
             };
 
-            stopToAdd.StopID = await stops.AddStop(stopToAdd);
+            stopToAdd.Id = await stops.AddStop(stopToAdd);
 
             return Results.Ok(ResponseStopDto.FromStop(stopToAdd));
         }
@@ -143,17 +145,20 @@ public static class StopEndpoints
                 return Results.BadRequest("Invalid RoomNr");
             }
 
+            // TODO: DONOT DO THIS!!!
+            // Use db context change tracker to update an entity
+            // fetch the object, update the properties, save changes
             var oldStop = await stops.GetStopById(stopId);
 
             await stops.UpdateStop(new Stop
             {
-                StopID = stopId,
+                Id = stopId,
                 Name = stop.Name,
                 Description = stop.Description,
                 RoomNr = stop.RoomNr,
-                StopGroupID = stop.StopGroupID,
-                DivisionID = stop.DivisionID,
-                StopOrder = oldStop.StopOrder
+                //StopGroupID = stop.StopGroupID,
+                //DivisionID = stop.DivisionID,
+                //StopOrder = oldStop.StopOrder
             });
             return Results.Ok(stop.StopGroupID);
         }
@@ -222,7 +227,8 @@ public static class StopEndpoints
             for (var i = 0; i < order.Order.Length; i++)
             {
                 var stop = await stops.GetStopById(order.Order[i]);
-                stop.StopOrder = i;
+                // TODO: Handle ranking correctly!
+                //stop.StopOrder = i;
                 await stops.UpdateStop(stop);
             }
 

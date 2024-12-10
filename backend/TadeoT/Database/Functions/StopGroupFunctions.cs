@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TadeoT.Database.Model;
+﻿using Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace TadeoT.Database.Functions;
 
@@ -12,7 +12,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
         try
         {
             return await this.context.StopGroups
-                .OrderBy(s => s.StopGroupOrder)
+                .OrderBy(s => s.Rank)
                 .ToListAsync();
         } catch (Exception e)
         {
@@ -23,19 +23,8 @@ public class StopGroupFunctions(TadeoTDbContext context)
     public async Task<StopGroup> GetStopGroupById(int id)
     {
         StopGroup? group = await this.context.StopGroups
-            .FirstOrDefaultAsync(sg => sg.StopGroupID == id);
+            .SingleOrDefaultAsync(sg => sg.Id == id);
         return group ?? throw new TadeoTNotFoundException("StopGroup not found");
-    }
-
-    public async Task<int> GetMaxId()
-    {
-        try
-        {
-            return !(await this.context.StopGroups.AnyAsync()) ? 0 : this.context.StopGroups.Max(s => s.StopGroupID);
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not get MaxId: " + e.Message);
-        }
     }
 
     public async Task<int> AddStopGroup(StopGroup group)
@@ -48,7 +37,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
         {
             this.context.StopGroups.Add(group);
             await this.context.SaveChangesAsync();
-            return group.StopGroupID;
+            return group.Id;
         } catch (Exception e)
         {
             throw new TadeoTDatabaseException("Could not add StopGroup: " + e.Message);
@@ -65,12 +54,12 @@ public class StopGroupFunctions(TadeoTDbContext context)
         {
             await this.context
                 .StopGroups
-                .Where(sg => sg.StopGroupID == group.StopGroupID)
+                .Where(sg => sg.Id == group.Id)
                 .ExecuteUpdateAsync(g => g
                     .SetProperty(g => g.Name, group.Name)
                     .SetProperty(g => g.Description, group.Description)
                     .SetProperty(g => g.IsPublic, group.IsPublic)
-                    .SetProperty(g => g.StopGroupOrder, group.StopGroupOrder)
+                    .SetProperty(g => g.Rank, group.Rank)
                 );
             await this.context.SaveChangesAsync();
         } catch (Exception e)
@@ -83,7 +72,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
     {
         try
         {
-            StopGroup group = this.GetStopGroupById(id).Result;
+            StopGroup group = await this.GetStopGroupById(id);
             this.context.StopGroups.Remove(group);
             await this.context.SaveChangesAsync();
         } catch (Exception e)
@@ -96,9 +85,11 @@ public class StopGroupFunctions(TadeoTDbContext context)
     {
         try
         {
-            return await this.context.Stops
-                        .Where(s => s.StopGroupID == groupId)
-                        .OrderBy(s => s.StopOrder)
+            return await this.context.StopGroupAssignments
+                        .Include(s => s.Stop)   
+                        .Where(s => s.StopGroupId == groupId)
+                        .OrderBy(s => s.Rank)
+                        .Select(sg => sg.Stop!)
                         .ToListAsync();
         } catch (Exception e)
         {
@@ -108,38 +99,41 @@ public class StopGroupFunctions(TadeoTDbContext context)
 
     public async Task MoveStopGroupUp(int groupId)
     {
+        // TODO: messy! Refactor this
         var group = await this.GetStopGroupById(groupId);
 
         var aboveItem = await context.StopGroups
-            .Where(i => i.StopGroupOrder < group.StopGroupOrder)
-            .OrderByDescending(i => i.StopGroupOrder)
+            .Where(i => i.Rank < group.Rank)
+            .OrderByDescending(i => i.Rank)
             .FirstOrDefaultAsync();
 
         if (aboveItem != null)
         {
-            (aboveItem.StopGroupOrder, group.StopGroupOrder) = (group.StopGroupOrder, aboveItem.StopGroupOrder);
+            (aboveItem.Rank, group.Rank) = (group.Rank, aboveItem.Rank);
         } else
         {
-            group.StopGroupOrder++;
+            group.Rank++;
         }
         await context.SaveChangesAsync();
     }
 
     public async Task MoveStopGroupDown(int stopId)
     {
+        // TODO: messy! Refactor this
+
         var group = await this.GetStopGroupById(stopId);
 
         var aboveItem = await context.StopGroups
-            .Where(i => i.StopGroupOrder > group.StopGroupOrder)
-            .OrderByDescending(i => i.StopGroupOrder)
+            .Where(i => i.Rank > group.Rank)
+            .OrderByDescending(i => i.Rank)
             .FirstOrDefaultAsync();
 
         if (aboveItem != null)
         {
-            (aboveItem.StopGroupOrder, group.StopGroupOrder) = (group.StopGroupOrder, aboveItem.StopGroupOrder);
+            (aboveItem.Rank, group.Rank) = (group.Rank, aboveItem.Rank);
         } else
         {
-            group.StopGroupOrder--;
+            group.Rank--;
         }
         await context.SaveChangesAsync();
     }

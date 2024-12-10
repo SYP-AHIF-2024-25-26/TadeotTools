@@ -1,10 +1,10 @@
 using System.Text.RegularExpressions;
 using API.Dtos.RequestDtos;
 using API.Dtos.ResponseDtos;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
-using TadeoT.Database.Model;
 
 namespace API.Endpoints;
 
@@ -32,7 +32,7 @@ public static class StopGroupEndpoints
                 .Where(stopGroup => stopGroup.IsPublic)
                 .Select(stopGroup => new ResponseStopGroupDto()
                 {
-                    StopGroupID = stopGroup.StopGroupID,
+                    StopGroupID = stopGroup.Id,
                     Name = stopGroup.Name,
                     Description = stopGroup.Description,
                 })
@@ -53,7 +53,7 @@ public static class StopGroupEndpoints
             var allStopGroups = await stopGroups.GetAllStopGroups();
             return Results.Ok(allStopGroups.Select(stopGroup => new ResponseApiStopGroupDto()
             {
-                StopGroupID = stopGroup.StopGroupID,
+                StopGroupID = stopGroup.Id,
                 Name = stopGroup.Name,
                 Description = stopGroup.Description,
                 IsPublic = stopGroup.IsPublic
@@ -89,7 +89,7 @@ public static class StopGroupEndpoints
                 IsPublic = group.IsPublic
             };
             var stopGroupId = await stopGroups.AddStopGroup(stopGroupToAdd);
-            stopGroupToAdd.StopGroupID = stopGroupId;
+            stopGroupToAdd.Id = stopGroupId;
             return Results.Ok(stopGroupToAdd);
         }
         catch (TadeoTDatabaseException)
@@ -117,13 +117,14 @@ public static class StopGroupEndpoints
                 return Results.BadRequest("Invalid Description");
             }
 
+            // TODO: NO! This is not how you update a StopGroup
             var stopGroup = new StopGroup
             {
-                StopGroupID = groupId,
+                Id = groupId,
                 Name = group.Name,
                 Description = group.Description,
                 IsPublic = group.IsPublic,
-                StopGroupOrder = oldStopGroup.StopGroupOrder
+                //StopGroupOrder = oldStopGroup.StopGroupOrder
             };
 
             await stopGroups.UpdateStopGroup(stopGroup);
@@ -170,7 +171,8 @@ public static class StopGroupEndpoints
             for (var i = 0; i < order.Order.Length; i++)
             {
                 var stopGroup = await stopGroups.GetStopGroupById(order.Order[i]);
-                stopGroup.StopGroupOrder = i;
+                // NOOOO This is not how you update the order of a StopGroup
+                //stopGroup.StopGroupOrder = i;
                 await stopGroups.UpdateStopGroup(stopGroup);
             }
 

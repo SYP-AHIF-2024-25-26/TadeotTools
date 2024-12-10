@@ -1,9 +1,9 @@
 using API.Dtos.ResponseDtos;
 using API.RequestDtos;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
-using TadeoT.Database.Model;
 
 namespace API.Endpoints;
 
@@ -84,11 +84,13 @@ public static class DivisionEndpoints
             {
                 return Results.BadRequest("Invalid Color");
             }
-
+            // TODO: Really really a bad idea to get the division first and then update a new object instead??
+            // use db context change tracker to update the object
+            // means: fetch the object, update the properties, save changes
             await divisions.GetDivisionById(divisionId);
             await divisions.UpdateDivision(new Division
             {
-                DivisionID = divisionId,
+                Id = divisionId,
                 Name = division.Name,
                 Color = division.Color,
                 Image = null
@@ -163,9 +165,10 @@ public static class DivisionEndpoints
             await image.CopyToAsync(memoryStream);
 
             Division division = await divisions.GetDivisionById(divisionId);
+            // TODO: NOOOO This is not how you update  a Division
             await divisions.UpdateDivision(new Division
             {
-                DivisionID = divisionId,
+                Id = divisionId,
                 Name = division.Name,
                 Color = division.Color,
                 Image = memoryStream.ToArray()

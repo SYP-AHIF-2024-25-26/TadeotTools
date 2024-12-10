@@ -1,6 +1,6 @@
 ﻿
+using Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using TadeoT.Database.Model;
 
 namespace TadeoT.Database.Functions;
 public class DivisionFunctions(TadeoTDbContext context)
@@ -21,23 +21,13 @@ public class DivisionFunctions(TadeoTDbContext context)
     public async Task<Division> GetDivisionById(int id)
     {
         Division? division = await this.context.Divisions
-            .FirstOrDefaultAsync(d => d.DivisionID == id);
+            .SingleOrDefaultAsync(d => d.Id == id);
         return division ?? throw new TadeoTNotFoundException("Division not found");
-    }
-
-    public async Task<int> GetMaxId()
-    {
-        try
-        {
-            return !(await this.context.Divisions.AnyAsync()) ? 0 : this.context.Divisions.Max(d => d.DivisionID);
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not get MaxId: " + e.Message);
-        }
     }
 
     public async Task<int> AddDivision(Division division)
     {
+        // TODO: Add validation! division cannot be null by design
         if (division == null)
         {
             throw new TadeoTArgumentNullException("Could not add Division because it was null");
@@ -46,7 +36,7 @@ public class DivisionFunctions(TadeoTDbContext context)
         {
             this.context.Divisions.Add(division);
             await this.context.SaveChangesAsync();
-            return division.DivisionID;
+            return division.Id;
         } catch (Exception e)
         {
             throw new TadeoTDatabaseException("Could not add Division: " + e.Message);
@@ -55,6 +45,7 @@ public class DivisionFunctions(TadeoTDbContext context)
 
     public async Task UpdateDivision(Division division)
     {
+        // TODO: Add validation! division cannot be null by design
         if (division == null)
         {
             throw new TadeoTArgumentNullException("Could not update Division because it was null");
@@ -63,7 +54,7 @@ public class DivisionFunctions(TadeoTDbContext context)
         {
             await this.context
                 .Divisions
-                .Where(d => d.DivisionID == division.DivisionID)
+                .Where(d => d.Id == division.Id)
                 .ExecuteUpdateAsync(d => d
                     .SetProperty(d => d.Name, division.Name)
                     .SetProperty(d => d.Color, division.Color)
@@ -79,7 +70,6 @@ public class DivisionFunctions(TadeoTDbContext context)
     {
         try
         {
-            this.context.ChangeTracker.Clear();
             Division division = await this.GetDivisionById(id);
             this.context.Divisions.Remove(division);
             await this.context.SaveChangesAsync();
@@ -94,7 +84,7 @@ public class DivisionFunctions(TadeoTDbContext context)
         try
         {
             return await this.context.Stops
-                .Where(d => d.DivisionID == id)
+                .Where(s => s.Divisions.Any(d => d.Id == id))
                 .ToListAsync();
         } catch (Exception e)
         {
