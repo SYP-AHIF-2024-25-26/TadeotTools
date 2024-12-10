@@ -1,45 +1,39 @@
 ﻿
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace TadeoT.Database.Functions;
 public class DivisionFunctions(TadeoTDbContext context)
 {
     private readonly TadeoTDbContext context = context;
 
-    public async Task<List<Division>> GetAllDivisions()
+    public record DivisionWithoutImageDto(int Id, string Name, string Color);
+    public async Task<List<DivisionWithoutImageDto>> GetAllDivisionsWithoutImageAsync()
     {
-        try
-        {
-            return await this.context.Divisions.ToListAsync();
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not retrieve Divisions: " + e.Message);
-        }
+        return await this.context.Divisions
+            .Select(d => new DivisionWithoutImageDto(d.Id,d.Name, d.Color))
+            .ToListAsync();
     }
 
-    public async Task<Division> GetDivisionById(int id)
+    public async Task<Division?> GetDivisionById(int id)
     {
         Division? division = await this.context.Divisions
             .SingleOrDefaultAsync(d => d.Id == id);
-        return division ?? throw new TadeoTNotFoundException("Division not found");
+        return division;
     }
 
-    public async Task<int> AddDivision(Division division)
+    public async Task<Division> AddDivision(Division division)
     {
-        // TODO: Add validation! division cannot be null by design
-        if (division == null)
-        {
-            throw new TadeoTArgumentNullException("Could not add Division because it was null");
-        }
         try
         {
             this.context.Divisions.Add(division);
             await this.context.SaveChangesAsync();
-            return division.Id;
+            return division;
         } catch (Exception e)
         {
-            throw new TadeoTDatabaseException("Could not add Division: " + e.Message);
+            var message = e.InnerException?.Message ?? e.Message;
+            throw new TadeoTDatabaseException("Could not add Division: " + message);
         }
     }
 
@@ -70,13 +64,19 @@ public class DivisionFunctions(TadeoTDbContext context)
     {
         try
         {
-            Division division = await this.GetDivisionById(id);
-            this.context.Divisions.Remove(division);
-            await this.context.SaveChangesAsync();
-        } catch (Exception e)
+            Division? division = await this.GetDivisionById(id);
+            if (division == null)
+            {
+                throw new TadeoTNotFoundException("Could not delete Division because it was not found");
+            }
+            context.Divisions.Remove(division);
+            await context.SaveChangesAsync();
+        }
+        catch (DbException e)
         {
             throw new TadeoTDatabaseException("Could not delete Division: " + e.Message);
         }
+
     }
 
     public async Task<List<Stop>> GetStopsOfDivisionId(int id)

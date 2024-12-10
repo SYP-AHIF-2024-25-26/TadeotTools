@@ -70,17 +70,13 @@ namespace ImportConsoleApp
                 int rank = 1;
                 sg.StopAssignments.ForEach(sa =>
                 {
-                    sa.Rank = rank++;
+                    sa.Order = rank++;
                 });
             });
             await context.Divisions.AddRangeAsync(divisions);
             await context.StopGroups.AddRangeAsync(stopGroups);
             await context.Stops.AddRangeAsync(stops);
             await context.SaveChangesAsync();
-
- 
-
-
         }
     }
 }

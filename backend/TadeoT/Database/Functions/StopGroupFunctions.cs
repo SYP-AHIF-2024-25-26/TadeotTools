@@ -88,7 +88,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
             return await this.context.StopGroupAssignments
                         .Include(s => s.Stop)   
                         .Where(s => s.StopGroupId == groupId)
-                        .OrderBy(s => s.Rank)
+                        .OrderBy(s => s.Order)
                         .Select(sg => sg.Stop!)
                         .ToListAsync();
         } catch (Exception e)

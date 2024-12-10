@@ -13,10 +13,10 @@ Buffet;j;1.Stock;Buffet im 1.Stock ;Schröder/Meszaros/Lehenbauer;101 (Aula);;;;
 ;;1.Stock;Lernbüro;Schmid Silke;Gang bis 143;;2,3;;
 ;j;1.Stock;Mathematik anwenden und begreifen;Rumetshofer;119;;2,3;;
 ;;1.Stock;Highlight: Leo Green (School-IoT, DrivingEfficiencyTracker, …);Dilly / Stütz;101 (Aula);;2;Umweltschutzbezogene Vorzeigeprojekte;
-MedienT;;1.Stock;Streaming- und Regieraum;Erich Baar;101 (Aula);;2,5;;x
-MedienT;;1.Stock;Highlight: Beam-VR / Gaming Development;Haslinger Markus;101 (Aula);;2,5;Mit BeamVR kannst Du auf einem Holzbalken balancieren und wirst in eine atemberaubende Dschungelwelt vesetzt. ;x
-INF;j;1.Stock;Advanced Algorithms / IOI / Coder Dojo;Rainer Stropek;101 (Aula);;2,5;;x
-INF/Elektronik;j;1.Stock;Embedded Systems Club;Stefan Schraml/ Robert Raschhofer;101 (Aula);;2,3,5;;x
+HITM;;1.Stock;Streaming- und Regieraum;Erich Baar;101 (Aula);;2,5;;x
+HITM;;1.Stock;Highlight: Beam-VR / Gaming Development;Haslinger Markus;101 (Aula);;2,5;Mit BeamVR kannst Du auf einem Holzbalken balancieren und wirst in eine atemberaubende Dschungelwelt vesetzt. ;x
+HIF;j;1.Stock;Advanced Algorithms / IOI / Coder Dojo;Rainer Stropek;101 (Aula);;2,5;;x
+HIF,HEL;j;1.Stock;Embedded Systems Club;Stefan Schraml/ Robert Raschhofer;101 (Aula);;2,3,5;;x
 INF;j;1.Stock;Highlight: Naos, Pepper, Lego-Roboter;Steiner Dietmar/Auernig Franz;101 (Aula);;2,5;;x
 EL;j;1.Stock;ESA Raumfahrt / Amateurfunk;Wagner/Gallistl;101 (Aula);;3;;x
 INF/MDT;j;1.Stock;Best of Projects (INF+MDT);Schröder/Kern;120;;2;Die besten Apps aus den Abschlussjahrgängen der Informatik und Medientechnik;
@@ -45,5 +45,3 @@ Werkstätte;;UG;Robotik / Kuka / Industrierobotik;Wenigwieser;U85;;3;;
 MedizinT;;UG;Medizintechnik / Ultraschall / EKG..;Moser;U04a;;3;;
 MedizinT;;UG;check your health / Biomedizin-Labor;Knogler / Povcaz;U04b;;3;;
  ;; ;;;;;;;
-;;;;;;;;;
-;;;;;;;;;

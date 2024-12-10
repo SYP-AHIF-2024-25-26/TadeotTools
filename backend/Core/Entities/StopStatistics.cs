@@ -9,6 +9,6 @@ public class StopStatistic
     public required DateTime Time { get; set; }
     public required bool IsDone { get; set; }
 
-    public required int StopId { get; set; }
-    public required Stop? Stop { get; set; }
+    public int StopId { get; set; }
+    public Stop? Stop { get; set; }
 }

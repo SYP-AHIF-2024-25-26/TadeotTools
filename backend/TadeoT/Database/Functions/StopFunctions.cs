@@ -4,6 +4,15 @@ using System;
 
 namespace TadeoT.Database.Functions;
 
+public record DivisionDto(string Name, string Color);
+public record StopGroupDto(string Name, int Order);
+public record StopWithAssignmentsDto(
+    int Id, 
+    string Name, 
+    string Description,
+    List<DivisionDto> Devisions,
+    List<StopGroupDto> StopGroups
+    );
 public class StopFunctions(
     StopGroupFunctions stopGroupFunctions,
     DivisionFunctions divisionFunctions,
@@ -14,12 +23,17 @@ public class StopFunctions(
     private readonly StopGroupFunctions stopGroupFunctions = stopGroupFunctions;
     private readonly DivisionFunctions divisionFunctions = divisionFunctions;
 
-    public async Task<List<Stop>> GetAllStops()
+    public async Task<List<StopWithAssignmentsDto>> GetAllStops()
     {
-        // TODO: Create a DTO for Stop to avoid circular references, and load associated Stop group into it
         return await this.context.Stops
-            .Include(s => s.StopGroupAssignments)
-            //.OrderBy(s => s.StopOrder)
+            .Select(stop => new StopWithAssignmentsDto(
+                stop.Id, 
+                stop.Name, 
+                stop.Description,
+                stop.Divisions.Select(d => new DivisionDto(d.Name, d.Color)).ToList(),
+                stop.StopGroupAssignments.Select(a => new StopGroupDto(a.StopGroup!.Name, a.Order)).ToList()
+                ))
+            .OrderBy(s => s.Name)
             .ToListAsync();
     }
 

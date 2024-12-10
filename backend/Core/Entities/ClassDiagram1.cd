@@ -11,14 +11,15 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Core.Entities.Stop">
-    <Position X="7.5" Y="0.5" Width="1.5" />
+    <Position X="7.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAgAAAAAAAEAAQAABAAAAAACAAAAAAAAAA=</HashCode>
+      <HashCode>AAACAAAAAAAgAAAEAAAEAAQAABAAAAAACAAAAAAAAAA=</HashCode>
       <FileName>Entities\Stop.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="StopGroupAssignments" />
       <Property Name="Divisions" />
+      <Property Name="StopGroupAssignments" />
+      <Property Name="Statistics" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Core.Entities.StopGroup">
@@ -32,7 +33,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Core.Entities.StopStatistic">
-    <Position X="4.25" Y="3" Width="1.5" />
+    <Position X="4" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACACAAAAAAAAAAAAAAAAAAAAAEAAAAIAAAAAAAAQA=</HashCode>
       <FileName>Entities\StopStatistics.cs</FileName>
@@ -44,12 +45,12 @@
   <Class Name="Core.Entities.StopGroupAssignment">
     <Position X="3.75" Y="0.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>CAADAQAAAAAAAAAAAAAAAAAAAAAEAAAAIAAAAAAAAAA=</HashCode>
+      <HashCode>CAECAQAAAAAAAAAAAAAAAAAAAAAEAAAAIAAAAAAAAAA=</HashCode>
       <FileName>Entities\StopGroupAssignment.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="StopGroup" />
       <Property Name="Stop" />
+      <Property Name="StopGroup" />
     </ShowAsAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />

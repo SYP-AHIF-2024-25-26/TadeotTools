@@ -2,6 +2,7 @@ using API.Dtos.ResponseDtos;
 using API.RequestDtos;
 using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
 
@@ -26,8 +27,8 @@ public static class DivisionEndpoints
     {
         try
         {
-            var allDivisions = await divisions.GetAllDivisions();
-            return Results.Ok(allDivisions.Select(division => ResponseDivisionDto.FromDivision(division)));
+            var allDivisions = await divisions.GetAllDivisionsWithoutImageAsync();
+            return Results.Ok(allDivisions);
         }
         catch (Exception)
         {
@@ -52,25 +53,28 @@ public static class DivisionEndpoints
                 return Results.BadRequest("Invalid Color");
             }
 
-            var divisionId = await divisions.AddDivision(new Division
+            var dbDivision = new Division
             {
                 Name = division.Name,
                 Color = division.Color,
                 Image = null,
-            });
-            return Results.Ok(await divisions.GetDivisionById(divisionId));
+            };
+            await divisions.AddDivision(dbDivision);
+            return Results.Ok(dbDivision);
         }
-        catch (TadeoTDatabaseException)
+        catch (TadeoTDatabaseException ex)
         {
-            return Results.StatusCode(500);
+            return Results.BadRequest(ex.Message);
         }
     }
     
+    public record UpdateDivisionDto(string Name, string Color);
     [HttpPut("api/divisions/{divisionId}")]
     public static async Task<IResult> UpdateDivision(
         int divisionId,
-        [FromBody] RequestDivisionDto division,
-        DivisionFunctions divisions
+        [FromBody] UpdateDivisionDto division,
+        DivisionFunctions divisions,
+        TadeoTDbContext context 
     )
     {
         try
@@ -84,17 +88,15 @@ public static class DivisionEndpoints
             {
                 return Results.BadRequest("Invalid Color");
             }
-            // TODO: Really really a bad idea to get the division first and then update a new object instead??
-            // use db context change tracker to update the object
-            // means: fetch the object, update the properties, save changes
-            await divisions.GetDivisionById(divisionId);
-            await divisions.UpdateDivision(new Division
+            var divisionDbEntity = await context.Divisions.FindAsync(divisionId);
+            if (divisionDbEntity == null)
             {
-                Id = divisionId,
-                Name = division.Name,
-                Color = division.Color,
-                Image = null
-            });
+                return Results.NotFound("Could not find Division");
+            }
+            divisionDbEntity.Name = division.Name;
+            divisionDbEntity.Color = division.Color;
+            await context.SaveChangesAsync();
+
             return Results.Ok();
         }
         catch (TadeoTNotFoundException)
@@ -114,7 +116,6 @@ public static class DivisionEndpoints
     {
         try
         {
-            await divisions.GetDivisionById(divisionId);
             await divisions.DeleteDivisionById(divisionId);
             return Results.Ok();
         }
@@ -122,9 +123,9 @@ public static class DivisionEndpoints
         {
             return Results.NotFound("Could not find Division");
         }
-        catch (TadeoTDatabaseException)
+        catch (TadeoTDatabaseException e)
         {
-            return Results.StatusCode(500);
+            return Results.BadRequest(e.Message);
         }
     }
 
@@ -136,6 +137,10 @@ public static class DivisionEndpoints
         try
         {
             var division = await divisions.GetDivisionById(divisionId);
+            if (division == null)
+            {
+                return Results.NotFound("Could not find Division");
+            }
             if (division.Image == null)
             {
                 return Results.NoContent();
@@ -153,7 +158,8 @@ public static class DivisionEndpoints
     public static async Task<IResult> UpdateDivisionImage(
         int divisionId,
         IFormFile image,
-        DivisionFunctions divisions
+        DivisionFunctions divisions,
+        TadeoTDbContext context
     )
     {
         try
@@ -164,24 +170,21 @@ public static class DivisionEndpoints
             using var memoryStream = new MemoryStream();
             await image.CopyToAsync(memoryStream);
 
-            Division division = await divisions.GetDivisionById(divisionId);
-            // TODO: NOOOO This is not how you update  a Division
-            await divisions.UpdateDivision(new Division
+            Division? division = await divisions.GetDivisionById(divisionId);
+            if (division == null)
             {
-                Id = divisionId,
-                Name = division.Name,
-                Color = division.Color,
-                Image = memoryStream.ToArray()
-            });
+                return Results.NotFound("Could not find Division");
+            }
+            division.Image = memoryStream.ToArray();
+            await context.SaveChangesAsync();
+
             return Results.Ok();
         }
-        catch (TadeoTNotFoundException)
+
+        catch (DbUpdateException dbEx)
         {
-            return Results.NotFound("Could not find Division");
-        }
-        catch (TadeoTDatabaseException)
-        {
-            return Results.StatusCode(500);
+            var message = dbEx.InnerException?.Message ?? dbEx.Message;
+            return Results.BadRequest(message);
         }
     }
 }
