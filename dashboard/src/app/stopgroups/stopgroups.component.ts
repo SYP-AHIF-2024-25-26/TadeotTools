@@ -6,12 +6,12 @@ import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} f
 import {RouterLink} from "@angular/router";
 import {DivisionService} from "../division.service";
 import {NgStyle} from "@angular/common";
-import {StopgroupsInfoPopupComponent} from "../stopgroups-info-popup/stopgroups-info-popup.component";
+import {InfoPopupComponent} from "../info-popup/info-popup.component";
 
 @Component({
   selector: 'app-stopgroups',
   standalone: true,
-  imports: [CdkDropList, CdkDrag, RouterLink, NgStyle, StopgroupsInfoPopupComponent],
+  imports: [CdkDropList, CdkDrag, RouterLink, NgStyle, InfoPopupComponent],
   templateUrl: './stopgroups.component.html',
   styleUrl: './stopgroups.component.css'
 })
@@ -28,6 +28,7 @@ export class StopGroupsComponent implements OnInit {
   infos = signal<Info[]>([]);
 
   async ngOnInit() {
+    this.addInfo('info', 'Retrieving Data');
     await this.initialiseData();
   }
 
@@ -74,8 +75,8 @@ export class StopGroupsComponent implements OnInit {
     } else {
       this.dropStopFromUnassignedToAssigned(event);
     }
-    // console.log(this.stopGroups());
-    // console.log(this.privateStops());
+
+    this.addInfo('info', 'Updating Stop');
   }
 
   dropStopFromUnassignedToUnassigned(event: CdkDragDrop<any[]>) {
@@ -128,6 +129,16 @@ export class StopGroupsComponent implements OnInit {
     this.stopGroupFetcher.updateStopGroupOrder(stopGroupOrder);
 
     this.hasChanged.set(false);
+  }
+
+  addInfo(type: string, message: string): void {
+    const maxId = this.infos().reduce((max, item) => (item.id > max ? item.id : max), 0);
+    const info = {
+      id: maxId + 1,
+      type: type,
+      message: message,
+    } as Info;
+    this.infos.update(oldInfos => [...oldInfos, info]);
   }
 
   deleteInfo(index: number) {

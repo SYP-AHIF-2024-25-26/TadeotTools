@@ -7,8 +7,8 @@ using TadeoT.Database.Functions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TadeoTDbContext>(options =>
-    options.UseMySql(TadeoTDbContextFactory.GetConnectionString(),
-        new MySqlServerVersion(new Version(8, 0, 32))), ServiceLifetime.Transient);
+    options.UseMySql(TadeoTDbContextFactory.GetConnectionString(), 
+        ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString())), ServiceLifetime.Transient);
 
 builder.Services.AddScoped<DivisionFunctions>();
 builder.Services.AddScoped<APIKeyFunctions>();
@@ -23,9 +23,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("test",
         policyBuilder =>
         {
-            policyBuilder.WithOrigins("http://localhost:4200")
+            policyBuilder
+                .AllowAnyOrigin()
                 .AllowAnyHeader()
-                .AllowAnyMethod();
+                .AllowAnyMethod()
+                .AllowCredentials();
         });
 });
 

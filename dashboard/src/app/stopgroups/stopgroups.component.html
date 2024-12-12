@@ -91,7 +91,7 @@
   </div>
   <div class="fixed bottom-4 right-4 w-96">
     @for (info of infos(); track info) {
-      <app-stopgroups-info-popup (deleted)="deleteInfo($event)" [info]="info"></app-stopgroups-info-popup>
+      <app-info-popup (deleted)="deleteInfo($event)" [info]="info"></app-info-popup>
     }
   </div>
 </div>
