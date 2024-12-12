@@ -21,170 +21,35 @@ public static class DivisionEndpoints
         group.MapGet("divisions/{divisionId}/image", GetImageByDivisionId).DisableAntiforgery();
     }
     
-    public static async Task<IResult> GetDivisions(
-        DivisionFunctions divisions
-    )
+    public static async Task<IResult> GetDivisions()
     {
-        try
-        {
-            var allDivisions = await divisions.GetAllDivisionsWithoutImageAsync();
-            return Results.Ok(allDivisions);
-        }
-        catch (Exception)
-        {
-            return Results.StatusCode(500);
-        }
+        throw new NotImplementedException();
     }
 
-    public static async Task<IResult> CreateDivision(
-        [FromBody] RequestDivisionDto division,
-        DivisionFunctions divisions
-    )
+    public static async Task<IResult> CreateDivision()
     {
-        try
-        {
-            if (division.Name.Length > 50)
-            {
-                return Results.BadRequest("Invalid Name");
-            }
-
-            if (division.Color.Length > 7)
-            {
-                return Results.BadRequest("Invalid Color");
-            }
-
-            var dbDivision = new Division
-            {
-                Name = division.Name,
-                Color = division.Color,
-                Image = null,
-            };
-            await divisions.AddDivision(dbDivision);
-            return Results.Ok(dbDivision);
-        }
-        catch (TadeoTDatabaseException ex)
-        {
-            return Results.BadRequest(ex.Message);
-        }
+        throw new NotImplementedException();
     }
     
     public record UpdateDivisionDto(string Name, string Color);
-    [HttpPut("api/divisions/{divisionId}")]
-    public static async Task<IResult> UpdateDivision(
-        int divisionId,
-        [FromBody] UpdateDivisionDto division,
-        DivisionFunctions divisions,
-        TadeoTDbContext context 
-    )
+    
+    public static async Task<IResult> UpdateDivision()
     {
-        try
-        {
-            if (division.Name.Length > 50)
-            {
-                return Results.BadRequest("Invalid Name");
-            }
-
-            if (division.Color.Length > 7)
-            {
-                return Results.BadRequest("Invalid Color");
-            }
-            var divisionDbEntity = await context.Divisions.FindAsync(divisionId);
-            if (divisionDbEntity == null)
-            {
-                return Results.NotFound("Could not find Division");
-            }
-            divisionDbEntity.Name = division.Name;
-            divisionDbEntity.Color = division.Color;
-            await context.SaveChangesAsync();
-
-            return Results.Ok();
-        }
-        catch (TadeoTNotFoundException)
-        {
-            return Results.NotFound("Could not find Division");
-        }
-        catch (TadeoTDatabaseException)
-        {
-            return Results.StatusCode(500);
-        }
+        throw new NotImplementedException();
     }
     
-    public static async Task<IResult> DeleteDivisionById(
-        int divisionId,
-        DivisionFunctions divisions
-    )
+    public static async Task<IResult> DeleteDivisionById()
     {
-        try
-        {
-            await divisions.DeleteDivisionById(divisionId);
-            return Results.Ok();
-        }
-        catch (TadeoTNotFoundException)
-        {
-            return Results.NotFound("Could not find Division");
-        }
-        catch (TadeoTDatabaseException e)
-        {
-            return Results.BadRequest(e.Message);
-        }
+        throw new NotImplementedException();
     }
 
-    public static async Task<IResult> GetImageByDivisionId(
-        int divisionId,
-        DivisionFunctions divisions
-    )
+    public static async Task<IResult> GetImageByDivisionId()
     {
-        try
-        {
-            var division = await divisions.GetDivisionById(divisionId);
-            if (division == null)
-            {
-                return Results.NotFound("Could not find Division");
-            }
-            if (division.Image == null)
-            {
-                return Results.NoContent();
-            }
-
-            return Results.File(division.Image, "image/jpeg");
-        }
-        catch (TadeoTNotFoundException)
-        {
-            return Results.NotFound("Could not find Division");
-        }
+        throw new NotImplementedException();
     }
     
-    [HttpPut("api/divisions/{divisionId}/image")]
-    public static async Task<IResult> UpdateDivisionImage(
-        int divisionId,
-        IFormFile image,
-        DivisionFunctions divisions,
-        TadeoTDbContext context
-    )
+    public static async Task<IResult> UpdateDivisionImage()
     {
-        try
-        {
-            if (image.Length == 0)
-                return Results.BadRequest("No image uploaded.");
-
-            using var memoryStream = new MemoryStream();
-            await image.CopyToAsync(memoryStream);
-
-            Division? division = await divisions.GetDivisionById(divisionId);
-            if (division == null)
-            {
-                return Results.NotFound("Could not find Division");
-            }
-            division.Image = memoryStream.ToArray();
-            await context.SaveChangesAsync();
-
-            return Results.Ok();
-        }
-
-        catch (DbUpdateException dbEx)
-        {
-            var message = dbEx.InnerException?.Message ?? dbEx.Message;
-            return Results.BadRequest(message);
-        }
+        throw new NotImplementedException();
     }
 }

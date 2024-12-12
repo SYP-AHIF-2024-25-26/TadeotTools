@@ -21,170 +21,33 @@ public static class StopGroupEndpoints
         group.MapPut("api/groups/order", UpdateOrder);
     }
 
-    public static async Task<IResult> GetGroups(
-        StopGroupFunctions stopGroups
-    )
+    public static async Task<IResult> GetGroups()
     {
-        try
-        {
-            var allStopGroups = await stopGroups.GetAllStopGroups();
-            return Results.Ok(allStopGroups
-                .Where(stopGroup => stopGroup.IsPublic)
-                .Select(stopGroup => new ResponseStopGroupDto()
-                {
-                    StopGroupID = stopGroup.Id,
-                    Name = stopGroup.Name,
-                    Description = stopGroup.Description,
-                })
-                .ToList());
-        }
-        catch (TadeoTDatabaseException)
-        {
-            return Results.StatusCode(500);
-        }
+        throw new NotImplementedException();
     }
 
-    public static async Task<IResult> GetGroupsApi(
-        StopGroupFunctions stopGroups
-    )
+    public static async Task<IResult> GetGroupsApi()
     {
-        try
-        {
-            var allStopGroups = await stopGroups.GetAllStopGroups();
-            return Results.Ok(allStopGroups.Select(stopGroup => new ResponseApiStopGroupDto()
-            {
-                StopGroupID = stopGroup.Id,
-                Name = stopGroup.Name,
-                Description = stopGroup.Description,
-                IsPublic = stopGroup.IsPublic
-            }));
-        }
-        catch (TadeoTDatabaseException)
-        {
-            return Results.StatusCode(500);
-        }
+        throw new NotImplementedException();
     }
 
-    public static async Task<IResult> CreateGroup(
-        [FromBody] RequestStopGroupDto group,
-        StopGroupFunctions stopGroups
-    )
+    public static async Task<IResult> CreateGroup()
     {
-        try
-        {
-            if (group.Name.Length > 50)
-            {
-                return Results.BadRequest("Invalid Name");
-            }
-
-            if (group.Description.Length > 255)
-            {
-                return Results.BadRequest("Invalid Description");
-            }
-
-            var stopGroupToAdd = new StopGroup
-            {
-                Name = group.Name,
-                Description = group.Description,
-                IsPublic = group.IsPublic
-            };
-            var stopGroupId = await stopGroups.AddStopGroup(stopGroupToAdd);
-            stopGroupToAdd.Id = stopGroupId;
-            return Results.Ok(stopGroupToAdd);
-        }
-        catch (TadeoTDatabaseException)
-        {
-            return Results.StatusCode(500);
-        }
+        throw new NotImplementedException();
     }
 
-    public static async Task<IResult> UpdateGroup(
-        int groupId,
-        [FromBody] RequestStopGroupDto group,
-        StopGroupFunctions stopGroups
-    )
+    public static async Task<IResult> UpdateGroup()
     {
-        try
-        {
-            var oldStopGroup = await stopGroups.GetStopGroupById(groupId);
-            if (group.Name.Length > 50)
-            {
-                return Results.BadRequest("Invalid Name");
-            }
-
-            if (group.Description.Length > 255)
-            {
-                return Results.BadRequest("Invalid Description");
-            }
-
-            // TODO: NO! This is not how you update a StopGroup
-            var stopGroup = new StopGroup
-            {
-                Id = groupId,
-                Name = group.Name,
-                Description = group.Description,
-                IsPublic = group.IsPublic,
-                //StopGroupOrder = oldStopGroup.StopGroupOrder
-            };
-
-            await stopGroups.UpdateStopGroup(stopGroup);
-            return Results.Ok();
-        }
-        catch (TadeoTNotFoundException)
-        {
-            return Results.NotFound("StopGroup not found!");
-        }
-        catch (TadeoTDatabaseException)
-        {
-            return Results.StatusCode(500);
-        }
+        throw new NotImplementedException();
     }
 
-    public static async Task<IResult> DeleteGroup(
-        int groupId,
-        StopGroupFunctions stopGroups
-    )
+    public static async Task<IResult> DeleteGroup()
     {
-        try
-        {
-            await stopGroups.GetStopGroupById(groupId);
-            await stopGroups.DeleteStopGroupById(groupId);
-            return Results.Ok();
-        }
-        catch (TadeoTNotFoundException)
-        {
-            return Results.NotFound("StopGroup not found!");
-        }
-        catch (TadeoTDatabaseException)
-        {
-            return Results.StatusCode(500);
-        }
+        throw new NotImplementedException();
     }
 
-    public static async Task<IResult> UpdateOrder(
-        RequestOrderDto order,
-        StopGroupFunctions stopGroups
-    )
+    public static async Task<IResult> UpdateOrder()
     {
-        try
-        {
-            for (var i = 0; i < order.Order.Length; i++)
-            {
-                var stopGroup = await stopGroups.GetStopGroupById(order.Order[i]);
-                // NOOOO This is not how you update the order of a StopGroup
-                //stopGroup.StopGroupOrder = i;
-                await stopGroups.UpdateStopGroup(stopGroup);
-            }
-
-            return Results.Ok();
-        }
-        catch (TadeoTNotFoundException)
-        {
-            return Results.NotFound();
-        }
-        catch (TadeoTDatabaseException)
-        {
-            return Results.StatusCode(500);
-        }
+        throw new NotImplementedException();
     }
 }
