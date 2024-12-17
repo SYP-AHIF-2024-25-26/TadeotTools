@@ -1,11 +1,7 @@
-using API.Dtos.RequestDtos;
-using API.Dtos.ResponseDtos;
-using API.RequestDto;
-using Core.Entities;
+using Database.Entities;
+using Database.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TadeoT.Database;
-using TadeoT.Database.Functions;
 
 namespace API.Endpoints;
 
@@ -18,7 +14,7 @@ public static class StopEndpoints
         group.MapPost("api/stops", CreateStop);
         group.MapPut("api/stops", UpdateStop);
         group.MapDelete("api/stops/{stopId}", DeleteStop);
-        group.MapGet("stops/groups/{groupId}", GetStopsByGroupId);
+        //group.MapGet("stops/assignments", GetAssignments);
         group.MapPut("api/stops/order", UpdateOrder);
     }
 
@@ -98,7 +94,7 @@ public static class StopEndpoints
 
         if (updateStopDto.Description.Length == 255)
         {
-            return Results.BadRequest("Description must be 50 characters or less.");
+            return Results.BadRequest("Description must be 255 characters or less.");
         }
 
         if (updateStopDto.RoomNr.Length == 50)
@@ -106,31 +102,55 @@ public static class StopEndpoints
             return Results.BadRequest("RoomNr must be 50 characters or less.");
         }
 
-        await context
-            .Stops
-            .Where(s => s.Id == updateStopDto.Id)
-            .ExecuteUpdateAsync(s => s
-                    .SetProperty(s => s.Name, updateStopDto.Name)
-                    .SetProperty(s => s.Description, updateStopDto.Description)
-                    .SetProperty(s => s.RoomNr, updateStopDto.RoomNr)
-                //.SetProperty(s => s.Divisions, context.Divisions.Where(di => updateStopDto.DivisionIds.Contains(di.Id)).ToList())
-            );
+        var newDivisions = context.Divisions.Where(di => updateStopDto.DivisionIds.Contains(di.Id)).ToList();
+        var stop = await context.Stops
+            .Include(stop => stop.Divisions)
+            .SingleOrDefaultAsync(stop => stop.Id == updateStopDto.Id);
+        
+        if (stop == null)
+        {
+            return Results.NotFound($"Stop with ID {updateStopDto.Id} not found");
+        }
+
+        stop.Divisions.Clear();
+        stop.Divisions.AddRange(newDivisions);
+        
+        stop.Name = updateStopDto.Name;
+        stop.Description = updateStopDto.Description;
+        stop.RoomNr = updateStopDto.RoomNr;
+
         await context.SaveChangesAsync();
         return Results.Ok();
     }
 
-    private static async Task<IResult> DeleteStop()
+    private static async Task<IResult> DeleteStop(TadeoTDbContext context, [FromRoute] int stopId)
     {
-        throw new NotImplementedException();
+        var stop = await context.Stops.FindAsync(stopId);
+        if (stop == null)
+        {
+            return Results.NotFound($"Stop with ID {stopId} not found");
+        }
+
+        context.Stops.Remove(stop);
+        await context.SaveChangesAsync();
+        return Results.Ok();
     }
 
-    private static async Task<IResult> GetStopsByGroupId()
+    private static async Task<IResult> GetAssignments(TadeoTDbContext context, [FromRoute] int groupId)
     {
-        throw new NotImplementedException();
+        var stopGroups = context.StopGroupAssignments
+            .Where(a => a.StopGroupId == groupId);
+
+        var stopIds = stopGroups.Select(a => a.StopId)
+            .Select(id => context.Stops.Find(id))
+            .ToList();
+        return Results.Ok(stopIds);
     }
 
-    private static async Task<IResult> UpdateOrder()
+    private static async Task<IResult> UpdateAssignments()
     {
+        
+        
         throw new NotImplementedException();
     }
 
