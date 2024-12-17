@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using TadeoT.Database;
 using TadeoT.Database.Functions;
 
-namespace TadeoT;
+namespace database;
 
 public class Program
 {
