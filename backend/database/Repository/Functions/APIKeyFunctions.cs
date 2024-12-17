@@ -1,7 +1,7 @@
-﻿using database.Entities;
+﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace database.Repository.Functions;
+namespace Database.Repository.Functions;
 
 public class APIKeyFunctions(TadeoTDbContext context)
 {

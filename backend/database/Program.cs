@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Core.Entities;
+using Database.Entities;
+using Database.Repository;
 using Microsoft.EntityFrameworkCore;
-using TadeoT.Database;
-using TadeoT.Database.Functions;
+using Database.Repository.Functions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
-namespace database;
+namespace Database;
 
 public class Program
 {
@@ -33,12 +35,13 @@ public class Program
 
     public static async Task InitializeDatabaseAsync()
     {
+        
         DotNetEnv.Env.Load();
 
         ServiceProvider ??= BuildServiceProvider();
 
         using var scope = ServiceProvider!.CreateScope();
-
+        /*
         var context = scope.ServiceProvider.GetRequiredService<TadeoTDbContext>();
         await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
@@ -47,7 +50,7 @@ public class Program
         if ((await apiKeyFunctions.GetAllAPIKeys()).Count <= 0)
         {
             await apiKeyFunctions.AddAPIKey(new APIKey { APIKeyValue = APIKeyGenerator.GenerateApiKey() });
-        }
+        }*/
     }
 
     static async Task Main(string[] args)

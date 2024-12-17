@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace TadeoT.Database;
+namespace Database.Repository;
 
 public static class APIKeyGenerator
 {

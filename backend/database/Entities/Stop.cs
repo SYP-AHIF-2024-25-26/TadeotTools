@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace database.Entities;
+namespace Database.Entities;
 
 [Index(nameof(Name), IsUnique = true)]
 public class Stop

@@ -1,5 +1,5 @@
-﻿using Core.Entities;
-using TadeoT.Database;
+﻿using Database.Entities;
+using Database.Repository;
 
 namespace ImportConsoleApp
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace database.Entities;
+namespace Database.Entities;
 public class APIKey
 {
     public required string APIKeyValue { get; set; }

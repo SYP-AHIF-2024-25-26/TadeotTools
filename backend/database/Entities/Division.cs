@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace database.Entities;
+namespace Database.Entities;
 
 [Index(nameof(Name), IsUnique = true)]
 public class Division

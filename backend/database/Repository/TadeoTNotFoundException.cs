@@ -1,4 +1,4 @@
-namespace TadeoT.Database;
+namespace Database.Repository;
 public class TadeoTNotFoundException : TadeoTDatabaseException
 {
     public TadeoTNotFoundException(string message) : base(message) { }

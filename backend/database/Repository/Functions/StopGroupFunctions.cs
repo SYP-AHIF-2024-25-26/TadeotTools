@@ -1,7 +1,7 @@
-﻿using database.Entities;
+﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace TadeoT.Database.Functions;
+namespace Database.Repository.Functions;
 
 public class StopGroupFunctions(TadeoTDbContext context)
 {
@@ -51,7 +51,8 @@ public class StopGroupFunctions(TadeoTDbContext context)
             throw new TadeoTArgumentNullException("Could not update StopGroup because it was null");
         }
         try
-        {
+        {   
+            /*
             await this.context
                 .StopGroups
                 .Where(sg => sg.Id == group.Id)
@@ -61,7 +62,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
                     .SetProperty(g => g.IsPublic, group.IsPublic)
                     .SetProperty(g => g.Rank, group.Rank)
                 );
-            await this.context.SaveChangesAsync();
+            await this.context.SaveChangesAsync();*/
         } catch (Exception e)
         {
             throw new TadeoTDatabaseException("Could not update StopGroup: " + e.Message);

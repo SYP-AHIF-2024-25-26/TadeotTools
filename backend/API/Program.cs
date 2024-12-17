@@ -1,14 +1,14 @@
 using API.Endpoints;
 using API.Middleware;
 using Microsoft.EntityFrameworkCore;
-using TadeoT.Database;
-using TadeoT.Database.Functions;
+using Database.Repository;
+using Database.Repository.Functions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TadeoTDbContext>(options =>
     options.UseMySql(TadeoTDbContextFactory.GetConnectionString(),
-        new MySqlServerVersion(new Version(8, 0, 32))), ServiceLifetime.Transient);
+                        ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString()))); //ServiceLifetime Transient
 
 builder.Services.AddScoped<DivisionFunctions>();
 builder.Services.AddScoped<APIKeyFunctions>();

@@ -1,7 +1,7 @@
-﻿using database.Entities;
+﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace TadeoT.Database.Functions;
+namespace Database.Repository.Functions;
 
 public class StopStatisticFunctions(StopFunctions stopFunctions, TadeoTDbContext context)
 {
