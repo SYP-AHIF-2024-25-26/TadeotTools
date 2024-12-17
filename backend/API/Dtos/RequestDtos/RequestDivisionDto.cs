@@ -1,4 +1,4 @@
-namespace API.RequestDtos;
+namespace API.Dtos.RequestDtos;
 
 public class RequestDivisionDto
 {

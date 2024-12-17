@@ -1,7 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using TadeoT.Database;
-using TadeoT.Database.Functions;
+using Database.Repository.Functions;
 
 namespace API.Middleware;
 

@@ -1,5 +1,4 @@
-using Core.Entities;
-using TadeoT.Database.Functions;
+using Database.Entities;
 
 namespace API.Dtos.ResponseDtos;
 

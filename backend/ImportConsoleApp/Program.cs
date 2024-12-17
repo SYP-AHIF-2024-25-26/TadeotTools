@@ -1,10 +1,10 @@
-﻿using Core.Entities;
+﻿using Database.Entities;
 using ImportConsoleApp;
-using TadeoT.Database;
-using TadeoT.Database.Functions;
+using Database.Repository;
+using Database.Repository.Functions;
 
 Console.WriteLine("Recreate database ...");
-using var context = new TadeoTDbContextFactory().CreateDbContext(args); 
+using var context = TadeoTDbContextFactory.CreateDbContext(); 
 await context.Database.EnsureDeletedAsync();
 await context.Database.EnsureCreatedAsync();
 
@@ -23,4 +23,3 @@ Console.WriteLine("Imported " + context.Stops.Count() + " stops");
 Console.WriteLine("Imported " + context.StopGroups.Count() + " stop groups");
 Console.WriteLine("Imported " + context.Divisions.Count() + " divisions");
 Console.WriteLine("Imported " + context.StopGroupAssignments.Count() + " stop group assignments");
-

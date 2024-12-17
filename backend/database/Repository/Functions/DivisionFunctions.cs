@@ -1,9 +1,8 @@
-﻿
-using Core.Entities;
+﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
-namespace TadeoT.Database.Functions;
+namespace Database.Repository.Functions;
 public class DivisionFunctions(TadeoTDbContext context)
 {
     private readonly TadeoTDbContext context = context;
@@ -34,29 +33,6 @@ public class DivisionFunctions(TadeoTDbContext context)
         {
             var message = e.InnerException?.Message ?? e.Message;
             throw new TadeoTDatabaseException("Could not add Division: " + message);
-        }
-    }
-
-    public async Task UpdateDivision(Division division)
-    {
-        // TODO: Add validation! division cannot be null by design
-        if (division == null)
-        {
-            throw new TadeoTArgumentNullException("Could not update Division because it was null");
-        }
-        try
-        {
-            await this.context
-                .Divisions
-                .Where(d => d.Id == division.Id)
-                .ExecuteUpdateAsync(d => d
-                    .SetProperty(d => d.Name, division.Name)
-                    .SetProperty(d => d.Color, division.Color)
-                    .SetProperty(d => d.Image, division.Image));
-            await this.context.SaveChangesAsync();
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not update Division: " + e.Message);
         }
     }
 

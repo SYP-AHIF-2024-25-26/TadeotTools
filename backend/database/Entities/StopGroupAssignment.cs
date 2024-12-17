@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Entities
+namespace Database.Entities
 {
     public class StopGroupAssignment
     {
@@ -16,6 +16,5 @@ namespace Core.Entities
         public int StopGroupId { get; set; }
         public StopGroup? StopGroup { get; set; }
         public int Order { get; set; }
-
     }
 }

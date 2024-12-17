@@ -1,5 +1,4 @@
-
-using Core.Entities;
+using Database.Entities;
 
 namespace API.Dtos.ResponseDtos;
 

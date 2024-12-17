@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Core.Entities;
+namespace Database.Entities;
 
 public class StopStatistic
 {

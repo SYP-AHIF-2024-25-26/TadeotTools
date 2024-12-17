@@ -1,18 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
-namespace TadeoT.Database;
+namespace Database.Repository;
 
 public class TadeoTDbContextFactory
 {
-    public TadeoTDbContext CreateDbContext(string[] args)
+    public static TadeoTDbContext CreateDbContext()
     {
-
         var optionsBuilder = new DbContextOptionsBuilder<TadeoTDbContext>();
         optionsBuilder.UseMySql(GetConnectionString(), ServerVersion.AutoDetect(GetConnectionString()));
 
         return new TadeoTDbContext(optionsBuilder.Options);
     }
-    public static String GetConnectionString()
+    public static string GetConnectionString()
     {
         var config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")

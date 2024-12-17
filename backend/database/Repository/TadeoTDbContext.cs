@@ -1,7 +1,7 @@
-﻿using Core.Entities;
+﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace TadeoT.Database;
+namespace Database.Repository;
 
 public class TadeoTDbContext(DbContextOptions<TadeoTDbContext> options) : DbContext(options)
 {

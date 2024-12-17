@@ -1,11 +1,3 @@
-using System.Text.RegularExpressions;
-using API.Dtos.RequestDtos;
-using API.Dtos.ResponseDtos;
-using Core.Entities;
-using Microsoft.AspNetCore.Mvc;
-using TadeoT.Database;
-using TadeoT.Database.Functions;
-
 namespace API.Endpoints;
 
 public static class StopGroupEndpoints

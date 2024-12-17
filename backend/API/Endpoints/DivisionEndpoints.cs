@@ -1,10 +1,10 @@
 using API.Dtos.ResponseDtos;
-using API.RequestDtos;
-using Core.Entities;
+using API.Dtos.RequestDtos;
+using Database.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TadeoT.Database;
-using TadeoT.Database.Functions;
+using Database.Repository;
+using Database.Repository.Functions;
 
 namespace API.Endpoints;
 

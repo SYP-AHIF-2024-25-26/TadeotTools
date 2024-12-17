@@ -1,8 +1,7 @@
-﻿using Core.Entities;
+﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 
-namespace TadeoT.Database.Functions;
+namespace Database.Repository.Functions;
 
 public record DivisionDto(string Name, string Color);
 public record StopGroupDto(string Name, int Order);
@@ -25,7 +24,7 @@ public class StopFunctions(
 
     public async Task<List<StopWithAssignmentsDto>> GetAllStops()
     {
-        return await this.context.Stops
+        return await context.Stops
             .Select(stop => new StopWithAssignmentsDto(
                 stop.Id, 
                 stop.Name, 
@@ -40,7 +39,7 @@ public class StopFunctions(
     public async Task<Stop> GetStopById(int id)
     {
         // TODO: Check if StopGroup and Division are required and loaded correctly
-        Stop? stop = await this.context.Stops
+        Stop? stop = await context.Stops
             .Include(s => s.StopGroupAssignments)
             .SingleOrDefaultAsync(s => s.Id == id);
         return stop ?? throw new TadeoTNotFoundException("Stop not found");
@@ -91,7 +90,8 @@ public class StopFunctions(
         try
         {
             // TODO: Update Rank of stopgroupassignment separately, also division relationship
-            await this.context
+            /*
+            await context
                 .Stops
                 .Where(s => s.Id == stop.Id)
                 .ExecuteUpdateAsync(s => s
@@ -100,7 +100,7 @@ public class StopFunctions(
                     //.SetProperty(s => s.Rank, stop.StopOrder)
                     //.SetProperty(s => s.StopGroupID, stop.StopGroupID)
                     //.SetProperty(s => s.DivisionID, stop.DivisionID)
-                );
+                );*/
             await this.context.SaveChangesAsync();
         } catch (Exception e)
         {

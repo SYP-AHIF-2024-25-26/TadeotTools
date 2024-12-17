@@ -1,4 +1,4 @@
-namespace API.RequestDto;
+namespace API.Dtos.RequestDtos;
 
 public class RequestStopDto
 {
