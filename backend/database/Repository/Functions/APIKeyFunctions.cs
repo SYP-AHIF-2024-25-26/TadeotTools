@@ -11,7 +11,7 @@ public class APIKeyFunctions(TadeoTDbContext context)
     {
         try
         {
-            return await this.context.APIKeys.ToListAsync();
+            return await context.APIKeys.ToListAsync();
         } catch (Exception e)
         {
             throw new TadeoTDatabaseException("Could not retrieve APIKeys: " + e.Message);
@@ -26,8 +26,8 @@ public class APIKeyFunctions(TadeoTDbContext context)
         }
         try
         {
-            this.context.APIKeys.Add(apiKey);
-            await this.context.SaveChangesAsync();
+            context.APIKeys.Add(apiKey);
+            await context.SaveChangesAsync();
             return apiKey;
         } catch (Exception e)
         {
@@ -39,8 +39,8 @@ public class APIKeyFunctions(TadeoTDbContext context)
     {
         try
         {
-            this.context.APIKeys.Remove(apiKey);
-            await this.context.SaveChangesAsync();
+            context.APIKeys.Remove(apiKey);
+            await context.SaveChangesAsync();
         } catch (Exception e)
         {
             throw new TadeoTDatabaseException("Could not delete APIKey: " + e.Message);

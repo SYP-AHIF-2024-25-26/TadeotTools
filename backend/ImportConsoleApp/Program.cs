@@ -14,6 +14,7 @@ public class Program
         await context.Database.EnsureDeletedAsync();
         await context.Database.EnsureCreatedAsync();
 
+
         Console.WriteLine("Generating a new api key ...");
         var apiKeyFunctions = new APIKeyFunctions(context);
         if ((await apiKeyFunctions.GetAllAPIKeys()).Count <= 0)
