@@ -1,3 +1,5 @@
+using Database.Repository;
+
 namespace API.Endpoints;
 
 public static class StopGroupEndpoints
@@ -13,14 +15,31 @@ public static class StopGroupEndpoints
         group.MapPut("api/groups/order", UpdateOrder);
     }
 
-    public static async Task<IResult> GetGroups()
+    public record GetGroupsResponse(int Id, string Name, string Description, int Rank, int[] StopIds);
+
+    // TODO: Put this in Functions File
+    public static GetGroupsResponse[] GetAllGroups(TadeoTDbContext context, bool onlyPublic)
+        => context.StopGroups
+            .Where(g => onlyPublic ? g.IsPublic : true)
+            .Select(g => new GetGroupsResponse(
+                g.Id,
+                g.Name,
+                g.Description,
+                g.Rank,
+                context.StopGroupAssignments
+                    .Where(a => a.StopGroupId == g.Id)
+                    .OrderBy(a => a.Order)
+                    .Select(a => a.StopId).ToArray()
+            )).ToArray();
+
+    public static async Task<IResult> GetGroups(TadeoTDbContext context)
     {
-        throw new NotImplementedException();
+        return Results.Ok(GetAllGroups(context, true));
     }
 
-    public static async Task<IResult> GetGroupsApi()
+    public static async Task<IResult> GetGroupsApi(TadeoTDbContext context)
     {
-        throw new NotImplementedException();
+        return Results.Ok(GetAllGroups(context, false));
     }
 
     public static async Task<IResult> CreateGroup()
