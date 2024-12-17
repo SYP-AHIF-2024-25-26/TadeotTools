@@ -14,8 +14,6 @@ public static class StopEndpoints
         group.MapPost("api/stops", CreateStop);
         group.MapPut("api/stops", UpdateStop);
         group.MapDelete("api/stops/{stopId}", DeleteStop);
-        //group.MapGet("stops/assignments", GetAssignments);
-        group.MapPut("api/stops/order", UpdateOrder);
     }
 
     private static async Task<IResult> GetAllStops(TadeoTDbContext context)
@@ -84,7 +82,6 @@ public static class StopEndpoints
             createStopDto.DivisionIds, createStopDto.StopGroupIds));
     }
 
-    // Update name, description, roomNr, divisions, stopgroups
     private static async Task<IResult> UpdateStop(TadeoTDbContext context, UpdateStopRequestDto updateStopDto)
     {
         if (updateStopDto.Name.Length == 50)
@@ -103,10 +100,11 @@ public static class StopEndpoints
         }
 
         var newDivisions = context.Divisions.Where(di => updateStopDto.DivisionIds.Contains(di.Id)).ToList();
+        
         var stop = await context.Stops
             .Include(stop => stop.Divisions)
             .SingleOrDefaultAsync(stop => stop.Id == updateStopDto.Id);
-        
+
         if (stop == null)
         {
             return Results.NotFound($"Stop with ID {updateStopDto.Id} not found");
@@ -114,7 +112,7 @@ public static class StopEndpoints
 
         stop.Divisions.Clear();
         stop.Divisions.AddRange(newDivisions);
-        
+
         stop.Name = updateStopDto.Name;
         stop.Description = updateStopDto.Description;
         stop.RoomNr = updateStopDto.RoomNr;
@@ -135,25 +133,6 @@ public static class StopEndpoints
         await context.SaveChangesAsync();
         return Results.Ok();
     }
-
-    private static async Task<IResult> GetAssignments(TadeoTDbContext context, [FromRoute] int groupId)
-    {
-        var stopGroups = context.StopGroupAssignments
-            .Where(a => a.StopGroupId == groupId);
-
-        var stopIds = stopGroups.Select(a => a.StopId)
-            .Select(id => context.Stops.Find(id))
-            .ToList();
-        return Results.Ok(stopIds);
-    }
-
-    private static async Task<IResult> UpdateAssignments()
-    {
-        
-        
-        throw new NotImplementedException();
-    }
-
 
     public record UpdateStopRequestDto(
         int Id,
