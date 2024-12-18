@@ -9,41 +9,19 @@ public class APIKeyFunctions(TadeoTDbContext context)
 
     public async Task<List<APIKey>> GetAllAPIKeys()
     {
-        try
-        {
-            return await context.APIKeys.ToListAsync();
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not retrieve APIKeys: " + e.Message);
-        }
+        return await context.APIKeys.ToListAsync();
     }
 
     public async Task<APIKey> AddAPIKey(APIKey apiKey)
     {
-        if (apiKey == null)
-        {
-            throw new TadeoTArgumentNullException("Could not add APIKey because it was null");
-        }
-        try
-        {
-            context.APIKeys.Add(apiKey);
-            await context.SaveChangesAsync();
-            return apiKey;
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not add APIKey: " + e.Message);
-        }
+        context.APIKeys.Add(apiKey);
+        await context.SaveChangesAsync();
+        return apiKey;
     }
 
     public async Task DeleteAPIKey(APIKey apiKey)
     {
-        try
-        {
-            context.APIKeys.Remove(apiKey);
-            await context.SaveChangesAsync();
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not delete APIKey: " + e.Message);
-        }
+        context.APIKeys.Remove(apiKey);
+        await context.SaveChangesAsync();
     }
 }

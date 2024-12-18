@@ -8,6 +8,8 @@ public class DivisionFunctions(TadeoTDbContext context)
     private readonly TadeoTDbContext context = context;
 
     public record DivisionWithoutImageDto(int Id, string Name, string Color);
+    public record DivisionWithImageDto(int Id, string Name, byte[]? Image);
+
     public async Task<List<DivisionWithoutImageDto>> GetAllDivisionsWithoutImageAsync()
     {
         return await
@@ -16,23 +18,25 @@ public class DivisionFunctions(TadeoTDbContext context)
             .ToListAsync();
     }
 
-    public async Task<Division?> GetDivisionById(int id)
+    // TODO: do we need that?
+    public async Task<List<DivisionWithImageDto>> GetAllDivisionsWithImageAsync()
     {
-        Division? division = await context.Divisions
-            .SingleOrDefaultAsync(d => d.Id == id);
-        return division;
+        return await
+            context.Divisions
+            .Select(d => new DivisionWithImageDto(d.Id, d.Name, d.Image))
+            .ToListAsync();
     }
 
-    public async Task<List<Stop>> GetStopsOfDivisionId(int id)
+    public async Task<byte[]?> GetImageOfDivision(int divisionId)
     {
-        try
-        {
-            return await context.Stops
-                .Where(s => s.Divisions.Any(d => d.Id == id))
-                .ToListAsync();
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not get Stops: " + e.Message);
-        }
+        return await context.Divisions
+            .Where(d => d.Id == divisionId)
+            .Select(d => d.Image)
+            .SingleOrDefaultAsync();
+    }
+
+    public async Task<bool> DoesDivisionExistAsync(int id)
+    {
+        return await context.Divisions.SingleOrDefaultAsync(d => d.Id == id) == null;
     }
 }

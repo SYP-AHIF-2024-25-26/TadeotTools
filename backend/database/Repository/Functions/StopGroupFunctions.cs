@@ -1,5 +1,4 @@
-﻿using Database.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Database.Repository.Functions;
 
@@ -7,40 +6,41 @@ public class StopGroupFunctions(TadeoTDbContext context)
 {
     private readonly TadeoTDbContext context = context;
 
-    public async Task<List<StopGroup>> GetAllStopGroups()
+    public record StopGroupWithStops(int Id, string Name, string Description, int Rank, int[] StopIds);
+
+    public async Task<StopGroupWithStops[]> GetAllStopGroupsAsync()
     {
-        try
-        {
-            return await
-                context.StopGroups
-                .OrderBy(s => s.Rank)
-                .ToListAsync();
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not retrieve StopGroups: " + e.Message);
-        }
+        return [.. context.StopGroups
+           .Select(g => new StopGroupWithStops(
+               g.Id,
+               g.Name,
+               g.Description,
+               g.Rank,
+               context.StopGroupAssignments
+                   .Where(a => a.StopGroupId == g.Id)
+                   .OrderBy(a => a.Order)
+                   .Select(a => a.StopId).ToArray()
+           ))];
     }
 
-    public async Task<StopGroup> GetStopGroupById(int id)
+    public async Task<StopGroupWithStops[]> GetPublicStopGroupsAsync()
     {
-        StopGroup? group = await context.StopGroups
-            .SingleOrDefaultAsync(sg => sg.Id == id);
-        return group ?? throw new TadeoTNotFoundException("StopGroup not found");
+        return [.. context.StopGroups
+           .Where(g => g.IsPublic)
+           .Select(g => new StopGroupWithStops(
+               g.Id,
+               g.Name,
+               g.Description,
+               g.Rank,
+               context.StopGroupAssignments
+                   .Where(a => a.StopGroupId == g.Id)
+                   .OrderBy(a => a.Order)
+                   .Select(a => a.StopId).ToArray()
+           ))];
     }
 
-    public async Task<List<Stop>> GetStopsOfStopGroup(int groupId)
+    public async Task<bool> DoesStopGroupExistAsync(int id)
     {
-        try
-        {
-            return await context.StopGroupAssignments
-                        .Include(s => s.Stop)
-                        .Where(s => s.StopGroupId == groupId)
-                        .OrderBy(s => s.Order)
-                        .Select(sg => sg.Stop!)
-                        .ToListAsync();
-        } catch (Exception e)
-        {
-            throw new TadeoTDatabaseException("Could not get Stops: " + e.Message);
-        }
+        return await context.StopGroups.SingleOrDefaultAsync(sg => sg.Id == id) == null;
     }
 }
