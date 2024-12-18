@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using API.Endpoints;
 using API.Middleware;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +13,13 @@ builder.Services.AddDbContext<TadeoTDbContext>(options =>
     options.UseMySql(TadeoTDbContextFactory.GetConnectionString(),
                         ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString()))); //ServiceLifetime Transient
 
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
 builder.Services.AddScoped<DivisionFunctions>();
 builder.Services.AddScoped<APIKeyFunctions>();
 builder.Services.AddScoped<StopGroupFunctions>();
 builder.Services.AddScoped<StopFunctions>();
+builder.Services.AddScoped<TadeoTDbContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -50,6 +54,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseMiddleware<ApiKeyMiddleware>();
+//app.UseMiddleware<ApiKeyMiddleware>();
+
+
 
 app.Run();
