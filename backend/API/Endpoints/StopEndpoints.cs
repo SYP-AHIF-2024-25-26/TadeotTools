@@ -18,6 +18,7 @@ public static class StopEndpoints
 
     private static async Task<IResult> GetAllStops(TadeoTDbContext context)
     {
+        // TODO: use Stopfunctions
         return Results.Ok(context.Stops
             .Select(stop => new StopResponseDto(
                     stop.Id,

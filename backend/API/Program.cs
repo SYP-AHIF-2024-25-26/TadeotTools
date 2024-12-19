@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Database.Repository;
 using Database.Repository.Functions;
 
+ImportConsoleApp.Program.Main(["isAPI"]);
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TadeoTDbContext>(options =>

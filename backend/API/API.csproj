@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\database\Database.csproj" />
+    <ProjectReference Include="..\ImportConsoleApp\ImportConsoleApp.csproj" />
   </ItemGroup>
 
 </Project>

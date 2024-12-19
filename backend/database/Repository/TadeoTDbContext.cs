@@ -11,14 +11,4 @@ public class TadeoTDbContext(DbContextOptions<TadeoTDbContext> options) : DbCont
     public DbSet<Division> Divisions { get; set; }
     public DbSet<StopStatistic> StopStatistics { get; set; }
     public DbSet<APIKey> APIKeys { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-
-        modelBuilder.Entity<APIKey>()
-            .HasKey(k => k.APIKeyValue);
-
-        //modelBuilder.Entity<Division>().Property(d => d.Image)
-        //          .HasColumnType("varbinary(max)");
-    }
 }
