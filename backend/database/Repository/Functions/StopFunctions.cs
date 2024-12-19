@@ -16,7 +16,7 @@ public class StopFunctions(TadeoTDbContext context)
 {
     private readonly TadeoTDbContext context = context;
 
-    public async Task<List<StopWithAssignmentsAndDivisionsDto>> GetAllStopsAync()
+    public async Task<List<StopWithAssignmentsAndDivisionsDto>> GetAllStopsAsync()
     {
         return await context.Stops
             .Select(stop => new StopWithAssignmentsAndDivisionsDto(
@@ -30,7 +30,7 @@ public class StopFunctions(TadeoTDbContext context)
             .ToListAsync();
     }
 
-    public async Task<List<StopWithAssignmentsAndDivisionsDto>> GetPrivateStopsAync()
+    public async Task<List<StopWithAssignmentsAndDivisionsDto>> GetPrivateStopsAsync()
     {
         return await context.Stops
             .Where(stop => stop.StopGroupAssignments.Count == 0)
