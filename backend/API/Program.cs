@@ -54,6 +54,4 @@ if (app.Environment.IsDevelopment())
 
 //app.UseMiddleware<ApiKeyMiddleware>();
 
-
-
 app.Run();

@@ -1,4 +1,7 @@
+using Database.Entities;
 using Database.Repository;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Endpoints;
 
@@ -12,7 +15,7 @@ public static class StopGroupEndpoints
         group.MapPost("api/groups", CreateGroup);
         group.MapPut("api/groups/{groupId}", UpdateGroup);
         group.MapDelete("api/groups/{groupId}", DeleteGroup);
-        group.MapPut("api/groups/order", UpdateOrder);
+        group.MapPut("api/groups/order/{groupId}", UpdateOrder);
     }
 
     public record GetGroupsResponse(int Id, string Name, string Description, int Rank, int[] StopIds);
@@ -42,23 +45,89 @@ public static class StopGroupEndpoints
         return Results.Ok(GetAllGroups(context, false));
     }
 
-    public static async Task<IResult> CreateGroup()
+    public record CreateGroupRequestDto(string Name, string Description, bool IsPublic);
+    
+    public static async Task<IResult> CreateGroup(TadeoTDbContext context, CreateGroupRequestDto dto)
     {
-        throw new NotImplementedException();
+        var group = new StopGroup()
+        {
+            Name = dto.Name,
+            Description = dto.Description,
+            IsPublic = dto.IsPublic,
+        };
+
+        context.StopGroups.Add(group);
+        await context.SaveChangesAsync();
+        
+        return Results.Ok(group);
     }
 
-    public static async Task<IResult> UpdateGroup()
+    
+    public record UpdateGroupRequestDto(int Id, string Name, string Description, bool IsPublic, int[] StopIds);
+    public static async Task<IResult> UpdateGroup(TadeoTDbContext context, UpdateGroupRequestDto dto)
     {
-        throw new NotImplementedException();
+        var group = await context.StopGroups.FindAsync(dto.Id);
+        if (group == null)
+        {
+            return Results.NotFound("Group not found");
+        }
+        
+        group.Name = dto.Name;
+        group.Description = dto.Description;
+        group.IsPublic = dto.IsPublic;
+
+        var assignments = dto.StopIds.Select((id, index) => new StopGroupAssignment()
+        {
+            StopGroupId = group.Id,
+            StopGroup = group,
+            StopId = id,
+            Stop = context.Stops.Find(id),
+            Order = index
+        });
+        group.StopAssignments.Clear();
+        group.StopAssignments.AddRange(assignments);
+
+        return Results.Ok();
     }
 
-    public static async Task<IResult> DeleteGroup()
+    public static async Task<IResult> DeleteGroup(TadeoTDbContext context, [FromRoute] int groupId)
     {
-        throw new NotImplementedException();
+        var group = await context.StopGroups.FindAsync(groupId);
+        if (group == null)
+        {
+            return Results.NotFound($"StopGroup with ID {groupId} not found");
+        }
+
+        context.StopGroups.Remove(group);
+        await context.SaveChangesAsync();
+        return Results.Ok();
     }
 
-    public static async Task<IResult> UpdateOrder()
+    public static async Task<IResult> UpdateOrder(TadeoTDbContext context, [FromRoute] int groupId, int[] order)
     {
-        throw new NotImplementedException();
+        // TODO: Check if StopGroups exist
+        var group = await context.StopGroups
+            .Include(group => group.StopAssignments)
+            .SingleOrDefaultAsync(group => group.Id == groupId);
+        if (group == null)
+        {
+            return Results.NotFound($"StopGroup with ID {groupId} not found");
+        }
+
+        var assignments = order.Select((id, index) => new StopGroupAssignment()
+        {
+            StopGroupId = group.Id,
+            StopGroup = group,
+            StopId = id,
+            Stop = context.Stops.Find(id),
+            Order = index,
+        });
+        
+        group.StopAssignments.Clear();
+        group.StopAssignments.AddRange(assignments);
+
+        await context.SaveChangesAsync();
+        
+        return Results.Ok();
     }
 }
