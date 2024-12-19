@@ -7,6 +7,22 @@ public class StopGroupFunctions(TadeoTDbContext context)
     private readonly TadeoTDbContext context = context;
 
     public record StopGroupWithStops(int Id, string Name, string Description, int Rank, int[] StopIds);
+    
+    public record GetGroupsResponse(int Id, string Name, string Description, int Rank, int[] StopIds);
+
+    public GetGroupsResponse[] GetAllGroups(TadeoTDbContext context, bool onlyPublic)
+        => context.StopGroups
+            .Where(g => onlyPublic ? g.IsPublic : true)
+            .Select(g => new GetGroupsResponse(
+                g.Id,
+                g.Name,
+                g.Description,
+                g.Rank,
+                context.StopGroupAssignments
+                    .Where(a => a.StopGroupId == g.Id)
+                    .OrderBy(a => a.Order)
+                    .Select(a => a.StopId).ToArray()
+            )).ToArray();
 
     public async Task<StopGroupWithStops[]> GetAllStopGroupsAsync()
     {
