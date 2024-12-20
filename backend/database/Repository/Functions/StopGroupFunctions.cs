@@ -9,9 +9,10 @@ public class StopGroupFunctions(TadeoTDbContext context)
     public record StopGroupWithStops(int Id, string Name, string Description, int Rank, int[] StopIds);
     
     public record GetGroupsResponse(int Id, string Name, string Description, int Rank, int[] StopIds);
-
-    public GetGroupsResponse[] GetAllGroups(TadeoTDbContext context, bool onlyPublic)
-        => context.StopGroups
+    
+    public async Task<GetGroupsResponse[]> GetAllGroups(TadeoTDbContext context, bool onlyPublic)
+    {
+        return await context.StopGroups
             .Where(g => onlyPublic ? g.IsPublic : true)
             .Select(g => new GetGroupsResponse(
                 g.Id,
@@ -21,12 +22,14 @@ public class StopGroupFunctions(TadeoTDbContext context)
                 context.StopGroupAssignments
                     .Where(a => a.StopGroupId == g.Id)
                     .OrderBy(a => a.Order)
-                    .Select(a => a.StopId).ToArray()
-            )).ToArray();
+                    .Select(a => a.StopId)
+                    .ToArray()
+            )).ToArrayAsync();
+    }
 
     public async Task<StopGroupWithStops[]> GetAllStopGroupsAsync()
     {
-        return [.. context.StopGroups
+        return await context.StopGroups
            .Select(g => new StopGroupWithStops(
                g.Id,
                g.Name,
@@ -36,12 +39,12 @@ public class StopGroupFunctions(TadeoTDbContext context)
                    .Where(a => a.StopGroupId == g.Id)
                    .OrderBy(a => a.Order)
                    .Select(a => a.StopId).ToArray()
-           ))];
+           )).ToArrayAsync();
     }
 
     public async Task<StopGroupWithStops[]> GetPublicStopGroupsAsync()
     {
-        return [.. context.StopGroups
+        return await context.StopGroups
            .Where(g => g.IsPublic)
            .Select(g => new StopGroupWithStops(
                g.Id,
@@ -52,7 +55,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
                    .Where(a => a.StopGroupId == g.Id)
                    .OrderBy(a => a.Order)
                    .Select(a => a.StopId).ToArray()
-           ))];
+           )).ToArrayAsync();
     }
 
     public async Task<bool> DoesStopGroupExistAsync(int id)

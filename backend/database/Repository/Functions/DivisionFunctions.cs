@@ -1,6 +1,4 @@
-﻿using Database.Entities;
-using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Database.Repository.Functions;
 public class DivisionFunctions(TadeoTDbContext context)
