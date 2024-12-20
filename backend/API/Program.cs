@@ -54,6 +54,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+/* Comment next line for No API-Key-Validation*/
 //app.UseMiddleware<ApiKeyMiddleware>();
 
 app.Run();

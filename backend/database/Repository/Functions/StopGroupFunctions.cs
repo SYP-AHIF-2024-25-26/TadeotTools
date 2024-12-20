@@ -2,32 +2,13 @@
 
 namespace Database.Repository.Functions;
 
-public class StopGroupFunctions(TadeoTDbContext context)
+public class StopGroupFunctions
 {
-    private readonly TadeoTDbContext context = context;
-
     public record StopGroupWithStops(int Id, string Name, string Description, int Rank, int[] StopIds);
     
     public record GetGroupsResponse(int Id, string Name, string Description, int Rank, int[] StopIds);
-    
-    public async Task<GetGroupsResponse[]> GetAllGroups(TadeoTDbContext context, bool onlyPublic)
-    {
-        return await context.StopGroups
-            .Where(g => onlyPublic ? g.IsPublic : true)
-            .Select(g => new GetGroupsResponse(
-                g.Id,
-                g.Name,
-                g.Description,
-                g.Rank,
-                context.StopGroupAssignments
-                    .Where(a => a.StopGroupId == g.Id)
-                    .OrderBy(a => a.Order)
-                    .Select(a => a.StopId)
-                    .ToArray()
-            )).ToArrayAsync();
-    }
 
-    public async Task<StopGroupWithStops[]> GetAllStopGroupsAsync()
+    public static async Task<StopGroupWithStops[]> GetAllStopGroupsAsync(TadeoTDbContext context)
     {
         return await context.StopGroups
            .Select(g => new StopGroupWithStops(
@@ -38,11 +19,12 @@ public class StopGroupFunctions(TadeoTDbContext context)
                context.StopGroupAssignments
                    .Where(a => a.StopGroupId == g.Id)
                    .OrderBy(a => a.Order)
-                   .Select(a => a.StopId).ToArray()
+                   .Select(a => a.StopId)
+                   .ToArray()
            )).ToArrayAsync();
     }
 
-    public async Task<StopGroupWithStops[]> GetPublicStopGroupsAsync()
+    public static async Task<StopGroupWithStops[]> GetPublicStopGroupsAsync(TadeoTDbContext context)
     {
         return await context.StopGroups
            .Where(g => g.IsPublic)
@@ -58,7 +40,7 @@ public class StopGroupFunctions(TadeoTDbContext context)
            )).ToArrayAsync();
     }
 
-    public async Task<bool> DoesStopGroupExistAsync(int id)
+    public async Task<bool> DoesStopGroupExistAsync(TadeoTDbContext context, int id)
     {
         return await context.StopGroups.SingleOrDefaultAsync(sg => sg.Id == id) != null;
     }

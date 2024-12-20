@@ -1,5 +1,6 @@
 using Database.Entities;
 using Database.Repository;
+using Database.Repository.Functions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,24 +19,8 @@ public static class StopEndpoints
 
     private static async Task<IResult> GetAllStops(TadeoTDbContext context)
     {
-        // TODO: use Stopfunctions
-        return Results.Ok(context.Stops
-            .Select(stop => new StopResponseDto(
-                    stop.Id,
-                    stop.Name,
-                    stop.Description,
-                    stop.RoomNr,
-                    stop.Divisions
-                        .Select(d => d.Id)
-                        .ToArray(),
-                    stop.StopGroupAssignments
-                        .Select(a => a.StopGroupId)
-                        .ToArray()
-                )
-            )
-        );
+        return Results.Ok(await StopFunctions.GetAllStopsAsync(context));
     }
-
 
     private static async Task<IResult> CreateStop(TadeoTDbContext context, CreateStopRequestDto createStopDto)
     {
@@ -101,7 +86,7 @@ public static class StopEndpoints
         }
 
         var newDivisions = context.Divisions.Where(di => updateStopDto.DivisionIds.Contains(di.Id)).ToList();
-        
+
         var stop = await context.Stops
             .Include(stop => stop.Divisions)
             .SingleOrDefaultAsync(stop => stop.Id == updateStopDto.Id);

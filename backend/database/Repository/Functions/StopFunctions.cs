@@ -7,45 +7,33 @@ public record StopGroupDto(string Name, int Order);
 public record StopWithAssignmentsAndDivisionsDto(
     int Id,
     string Name,
+    string RoomNr,
     string Description,
-    List<DivisionDto> Devisions,
-    List<StopGroupDto> StopGroups
+    int[] DivisionIds,
+    int[] StopGroupIds
 );
 
-public class StopFunctions(TadeoTDbContext context)
+public class StopFunctions
 {
-    private readonly TadeoTDbContext context = context;
-
-    public async Task<List<StopWithAssignmentsAndDivisionsDto>> GetAllStopsAsync()
+    public static async Task<List<StopWithAssignmentsAndDivisionsDto>> GetAllStopsAsync(TadeoTDbContext context)
     {
-        return await context.Stops
-            .Select(stop => new StopWithAssignmentsAndDivisionsDto(
-                stop.Id,
-                stop.Name,
-                stop.Description,
-                stop.Divisions.Select(d => new DivisionDto(d.Name, d.Color)).ToList(),
-                stop.StopGroupAssignments.Select(a => new StopGroupDto(a.StopGroup!.Name, a.Order)).ToList()
-                ))
-            .OrderBy(s => s.Name)
+        var stops = await context.Stops
+            .Include(stop => stop.Divisions)
+            .Include(stop => stop.StopGroupAssignments)
+            .OrderBy(stop => stop.Name)
             .ToListAsync();
+
+        return stops.Select(stop => new StopWithAssignmentsAndDivisionsDto(
+            stop.Id,
+            stop.Name,
+            stop.Description,
+            stop.RoomNr,
+            stop.Divisions.Select(d => d.Id).ToArray(),
+            stop.StopGroupAssignments.Select(a => a.StopGroupId).ToArray()
+        )).ToList();
     }
 
-    public async Task<List<StopWithAssignmentsAndDivisionsDto>> GetPrivateStopsAsync()
-    {
-        return await context.Stops
-            .Where(stop => stop.StopGroupAssignments.Count == 0)
-            .Select(stop => new StopWithAssignmentsAndDivisionsDto(
-                stop.Id,
-                stop.Name,
-                stop.Description,
-                stop.Divisions.Select(d => new DivisionDto(d.Name, d.Color)).ToList(),
-                stop.StopGroupAssignments.Select(a => new StopGroupDto(a.StopGroup!.Name, a.Order)).ToList()
-                ))
-            .OrderBy(s => s.Name)
-            .ToListAsync();
-    }
-
-    public async Task<bool> DoesStopExistAsync(int id)
+    public static async Task<bool> DoesStopExistAsync(TadeoTDbContext context, int id)
     {
         return await context.Stops.SingleOrDefaultAsync(s => s.Id == id) != null;
     }

@@ -1,8 +1,5 @@
-using API.Dtos.ResponseDtos;
-using API.Dtos.RequestDtos;
 using Database.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Database.Repository;
 using Database.Repository.Functions;
 
@@ -20,10 +17,9 @@ public static class DivisionEndpoints
         group.MapGet("divisions/{divisionId}/image", GetImageByDivisionId).DisableAntiforgery();
     }
 
-    public record GetDivisionResponseDto(int Id, string Name, string Color);
     public static async Task<IResult> GetDivisions(TadeoTDbContext context)
     {
-        return Results.Ok(context.Divisions.Select(d => new GetDivisionResponseDto(d.Id, d.Name, d.Color)));
+        return Results.Ok(await DivisionFunctions.GetAllDivisionsWithoutImageAsync(context));
     }
 
     public record CreateDivisionDto(string Name, string Color, IFormFile Image);
@@ -101,21 +97,20 @@ public static class DivisionEndpoints
         return Results.Ok();
     }
 
-    public static async Task<IResult> GetImageByDivisionId(TadeoTDbContext context, DivisionFunctions divisions,
-        int divisionId)
+    public static async Task<IResult> GetImageByDivisionId(TadeoTDbContext context, int divisionId)
     {
         var division = await context.Divisions.FindAsync(divisionId);
-        if (division == null)
+        if (!await DivisionFunctions.DoesDivisionExistAsync(context, divisionId))
         {
             return Results.NotFound();
         }
-
-        var image = division.Image;
-        if (image == null)
+        var image = await DivisionFunctions.GetImageOfDivision(context, divisionId);
+        if (image != null)
         {
-            return Results.NotFound();
+            return Results.File(image, "image/png");
         }
 
-        return Results.File(image, "image/png");
+        return Results.NotFound();
+
     }
 }

@@ -21,14 +21,14 @@ public static class StopGroupEndpoints
 
     public record GetGroupsResponse(int Id, string Name, string Description, int Rank, int[] StopIds);
 
-    public static async Task<IResult> GetGroups(TadeoTDbContext context, StopGroupFunctions groups)
+    public static async Task<IResult> GetGroups(TadeoTDbContext context)
     {
-        return Results.Ok(groups.GetAllGroups(context, true));
+        return Results.Ok(await StopGroupFunctions.GetPublicStopGroupsAsync(context));
     }
 
-    public static async Task<IResult> GetGroupsApi(TadeoTDbContext context, StopGroupFunctions groups)
+    public static async Task<IResult> GetGroupsApi(TadeoTDbContext context)
     {
-        return Results.Ok(groups.GetAllGroups(context, false));
+        return Results.Ok(await StopGroupFunctions.GetAllStopGroupsAsync(context));
     }
 
     public record CreateGroupRequestDto(string Name, string Description, bool IsPublic);
