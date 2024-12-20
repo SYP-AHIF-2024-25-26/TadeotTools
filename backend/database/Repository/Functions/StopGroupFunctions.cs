@@ -41,6 +41,6 @@ public class StopGroupFunctions(TadeoTDbContext context)
 
     public async Task<bool> DoesStopGroupExistAsync(int id)
     {
-        return await context.StopGroups.SingleOrDefaultAsync(sg => sg.Id == id) == null;
+        return await context.StopGroups.SingleOrDefaultAsync(sg => sg.Id == id) != null;
     }
 }

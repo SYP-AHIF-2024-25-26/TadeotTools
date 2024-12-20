@@ -47,6 +47,6 @@ public class StopFunctions(TadeoTDbContext context)
 
     public async Task<bool> DoesStopExistAsync(int id)
     {
-        return await context.Stops.SingleOrDefaultAsync(s => s.Id == id) == null;
+        return await context.Stops.SingleOrDefaultAsync(s => s.Id == id) != null;
     }
 }

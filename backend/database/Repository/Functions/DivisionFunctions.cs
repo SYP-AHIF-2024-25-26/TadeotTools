@@ -37,6 +37,6 @@ public class DivisionFunctions(TadeoTDbContext context)
 
     public async Task<bool> DoesDivisionExistAsync(int id)
     {
-        return await context.Divisions.SingleOrDefaultAsync(d => d.Id == id) == null;
+        return await context.Divisions.SingleOrDefaultAsync(d => d.Id == id) != null;
     }
 }
