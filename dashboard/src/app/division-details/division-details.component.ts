@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { BASE_URL } from '../app.config';
 import { isValid } from '../utilfunctions';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-division-details',
@@ -27,12 +28,11 @@ export class DivisionDetailsComponent {
   errorMessage = signal<string | null>(null);
   selectedFile: File | null = null;
 
-  ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.divisionId.set(params['id'] || -1);
-      this.name.set(params['name'] || '');
-      this.color.set(params['color'] || '');
-    });
+  async ngOnInit() {
+    const params = await firstValueFrom(this.route.queryParams);
+    this.divisionId.set(params['id'] || -1);
+    this.name.set(params['name'] || '');
+    this.color.set(params['color'] || '');
     this.color.set(this.color() !== '' ? '#' + this.color().substring(1) : '');
   }
 

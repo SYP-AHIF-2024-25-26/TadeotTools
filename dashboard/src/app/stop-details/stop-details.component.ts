@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { Division } from '../types';
 import { DivisionService } from '../division.service';
 import { isValid } from '../utilfunctions';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-stop-details',
@@ -34,21 +35,16 @@ export class StopDetailsComponent {
 
   errorMessage = signal<string | null>(null);
 
-  ngOnInit() {
-    this.loadDivisions();
-    this.route.queryParams.subscribe((params) => {
-      this.stopId.set(params['id'] || -1);
-      this.name.set(params['name'] || '');
-      this.description.set(params['description'] || '');
-      this.roomNr.set(params['roomNr'] || '');
-      this.stopGroupId.set(params['stopGroupID'] || null);
-    });
-    this.divisionService.getDivisions().then((divisions) => {
-      this.divisions.set(divisions);
-    });
-  }
-  async loadDivisions() {
+  async ngOnInit() {
     this.divisions.set(await this.divisionService.getDivisions());
+    const params = await firstValueFrom(this.route.queryParams);
+
+    this.stopId.set(params['id'] || -1);
+    this.name.set(params['name'] || '');
+    this.description.set(params['description'] || '');
+    this.roomNr.set(params['roomNr'] || '');
+    this.stopGroupId.set(params['stopGroupID'] || null);
+    this.divisionId.set(params['divisionID']);
   }
 
   isInputValid() {

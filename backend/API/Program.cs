@@ -1,39 +1,44 @@
+using System.Text.Json.Serialization;
 using API.Endpoints;
 using API.Middleware;
 using Microsoft.EntityFrameworkCore;
-using TadeoT.Database;
-using TadeoT.Database.Functions;
+using Database.Repository;
+using Database.Repository.Functions;
+
+ImportConsoleApp.Program.Main(["isAPI"]);
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TadeoTDbContext>(options =>
-    options.UseMySql(TadeoTDbContextFactory.GetConnectionString(), 
-        ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString())), ServiceLifetime.Transient);
+    options.UseMySql(TadeoTDbContextFactory.GetConnectionString(),
+                        ServerVersion.AutoDetect(TadeoTDbContextFactory.GetConnectionString()))); //ServiceLifetime Transient
+
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddScoped<DivisionFunctions>();
 builder.Services.AddScoped<APIKeyFunctions>();
 builder.Services.AddScoped<StopGroupFunctions>();
 builder.Services.AddScoped<StopFunctions>();
+builder.Services.AddScoped<TadeoTDbContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("test",
+    options.AddPolicy(name: "default",
         policyBuilder =>
         {
-            policyBuilder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
+            policyBuilder.WithOrigins("http://localhost:4200", "http://localhost:4300");
+            policyBuilder.AllowAnyHeader();
+            policyBuilder.AllowAnyMethod();
+            policyBuilder.AllowCredentials();
         });
 });
 
 var app = builder.Build();
 
-app.UseCors("test");
+app.UseCors("default");
 
 app.MapStopGroupEndpoints();
 app.MapStopEndpoints();
@@ -49,6 +54,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseMiddleware<ApiKeyMiddleware>();
+/* Comment next line for No API-Key-Validation*/
+//app.UseMiddleware<ApiKeyMiddleware>();
 
 app.Run();

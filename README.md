@@ -4,7 +4,7 @@
 1. Milestone 8. Oktober: GUI-Mockups für Mobile als Prototyp
 2. Milestone 5. November: Leitfaden + Unterpages der Touren, Datenmodell + Datenbank mit Zugriffsfunktionen + Schnittstellen
 3. Milestone 5. Dezember: Admin-Dashboard + Stationen separate View 
-4. Milestone 7. Jänner: Karte + Dockern
+4. Milestone 7. Jänner: Deployment, Authentication, Admin-Dashboard Anpassungen, 1:m bei Divisions, Init-Script automatisieren, About Page
 5. Milestone 23. und 24. Jänner: Datenbank mit Echtdaten befüllen, Bugfixes, Tag der offenen Tür, System muss funktionieren + ein QR Code für generelle Website, falls noch Zeit Feedback
 
 Weitere Milestones werden nach Feedback hinzugefügt.

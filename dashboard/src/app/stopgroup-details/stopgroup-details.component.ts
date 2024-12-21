@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { StopGroupService } from '../stopgroup.service';
 import { isValid } from '../utilfunctions';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-stopgroup-details',
@@ -22,16 +23,14 @@ export class StopgroupDetailsComponent implements OnInit {
   description = signal<string>('');
   isPublic = signal<boolean>(false);
 
-  ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.stopGroupId.set(params['id'] || -1);
-      console.log('stopGroupId', this.stopGroupId());
-      this.name.set(params['name'] || '');
-      this.description.set(params['description'] || '');
-      let isPublic = params['isPublic'] || "";
-      this.isPublic.set(isPublic !== "" && isPublic === "true");
-      console.log("test: " + typeof(this.isPublic()));
-    });
+  async ngOnInit() {
+    const params = await firstValueFrom(this.route.queryParams);
+    this.stopGroupId.set(params['id'] || -1);
+    this.name.set(params['name'] || '');
+    this.description.set(params['description'] || '');
+
+    let isPublic = params['isPublic'] || "";
+    this.isPublic.set(isPublic !== "" && isPublic === "true");
   }
 
   isInputValid(): boolean {
